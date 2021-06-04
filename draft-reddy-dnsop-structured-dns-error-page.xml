@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std" docName="draft-reddy-dnsop-structured-dns-error-page-00"
+     ipr="trust200902">
+  <front>
+    <title abbrev="DNS Access Denied Error Page">DNS Access Denied Error
+    Page</title>
+
+    <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
+      <organization abbrev="McAfee">McAfee, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Embassy Golf Link Business Park</street>
+
+          <city>Bangalore</city>
+
+          <region>Karnataka</region>
+
+          <code>560071</code>
+
+          <country>India</country>
+        </postal>
+
+        <email>kondtir@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Neil Cook" initials="N." surname="Cook">
+      <organization>Open-Xchange</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>UK</country>
+        </postal>
+
+        <email>neil.cook@noware.co.uk</email>
+      </address>
+    </author>
+
+    <author fullname="Dan Wing" initials="D." surname="Wing">
+      <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>USA</country>
+        </postal>
+
+        <email>dwing-ietf@fuggles.com</email>
+      </address>
+    </author>
+
+    <author fullname="Mohamed Boucadair" initials="M." surname="Boucadair">
+      <organization>Orange</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <city>Rennes</city>
+
+          <code>35000</code>
+
+          <country>France</country>
+        </postal>
+
+        <email>mohamed.boucadair@orange.com</email>
+      </address>
+    </author>
+
+    <date />
+
+    <workgroup>DNSOP WG</workgroup>
+
+    <abstract>
+      <t>It can be valuable to communicate computer-parsable details about
+      DNS filtering to assist troubleshooting, problem resolution, and end
+      users.  This document describes structured data to provide these
+      details.</t>
+            </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t>In DNS filtering scnearios where DNS filtering is provided by an
+      entity other than the recursive resolver itself, it is desirable to
+      propagate information from the DNS filter provider to the end user
+      to assist with understanding the reason the DNS response was filtered
+      and to troubleshoot false positives.  There are two architectures
+      commonly deployed from the perspective of the local recursive
+      resolver when it receives a DNS query from an endpoint:
+      <list style="symbols">
+	<t>parallel: Two DNS queries are generated, one to a DNS
+	filtering service, the other to recursive resolver.  If the
+	response from the filtering service indicates the DNS query
+	should be filtered, the response from the recursive resolver
+	is dropped and a filtered response is sent in response to the
+	original query.</t>
+	<t>serial: One DNS query is generated to the recursive
+      resolver, which itself interacts with a DNS filtering service.
+      This relationship with the DNS filtering service might be
+      partially or fully withheld (that is, not disclosed) from the end-
+      user or might be information available to the end user.</t>
+    </list></t>
+  </section>
+  
+    <section anchor="notation" title="Terminology">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119"></xref><xref target="RFC8174"></xref> when, and
+      only when, they appear in all capitals, as shown here.</t>
+
+      <t>This document makes use of the terms defined in <xref
+      target="RFC8499"></xref>.</t>
+
+      <t>'Encrypted DNS' refers to any encrypted scheme to convey DNS
+      messages, for example, DNS-over-HTTPS <xref target="RFC8484"></xref>,
+      DNS-over-TLS <xref target="RFC7858"></xref>, or DNS-over-QUIC <xref
+      target="I-D.ietf-dprive-dnsoquic"></xref>.</t>
+    </section>
+
+    <section anchor="format-sec" title="Structured Data">
+      <t>To receive structured DNS error page data, the client queries
+      the Error Page URI returned in
+      [reddy-dnsop-structured-dns-error] with Content-Type:
+      application/json+structured-dns-error.  The JSON has one
+      top-level name, responsible, containing an array of dictionaries
+      for each party responsible for this particular DNS filter.  An
+      array of responsible parties are possible in deployment
+      scenarios where two or more entities both performed DNS
+      filtering (perhaps for the same reason, perhaps for different
+      reasons).  The contents of the array are as follows:</t>
+      
+      <t><list style="hanging">
+	<t hangText="complaint:">an array of URIs for the user to report mis-classified
+	DNS filtering.  This will often solely contain an https URI, but an array is
+	provided in case telephone or email or other URIs are necessary.  This field
+	is mandatory, and MUST contain at least one URI.</t>
+	<t hangText="justification:">textual justification for this particular DNS
+	filtering.  This field is optional.</t>
+	<t hangText="name">the human-friendly name of the organization that
+	filtered this particular DNS query.  This field is optional.</t>
+	<t hangText="regulation">the URI of the regulation authority for this
+	DNS query being filtered.  This might point at an employment agreement (for
+	an enterprise performing filtering) or a national government
+	regulation (for an ISP performing filtering).  This field is optional.</t>
+      </list></t>
+
+
+      <t>The JSON data can be displayed to the user, logged, or otherwise used
+      to assist the end-user or IT staff with troubleshooting and diagnosing
+      the cause of the DNS filtering.</t>
+    </section>
+
+
+    <section title="Examples">
+      <t>In all examples, line wraps are necessary for formatting this document, not
+      for the JSON.</t>
+      
+      <t>Example with one entity, example.net, that has filtered a DNS query:</t>
+      <t><figure><artwork><![CDATA[
+{
+  "responsible": [{
+    "complaint": ["mailto:mistakes@example.net?subject=\"incorrect
+filtering of example.org at 1621902483\"",
+"https://mistakes.example.net?mistake=example.org?time=1621902483",
+"tel:+18305551212"
+    ],
+    "justification" : "malware present for 23 days", 
+    "name": "Example.net Filtering Service",
+    "regulation": "https://laws.example.net?country=atlantis"
+  }]
+}]]></artwork></figure></t>
+
+
+      <t>Example with two entities, example.com and example.net, that have filtered a DNS query:</t>
+<t>      <figure><artwork><![CDATA[
+{
+  "responsible": [{
+    "complaint": ["mailto:mistakes@example.net?subject=\"incorrect 
+filtering of example.org at 1621902483\"",
+"https://mistake.example.net?mistake=example.org?time=1621902483",
+"tel:+18305551212"   
+    ],
+    "justification" : "malware present for 23 days", 
+    "name": "Example.net Filtering Service",
+    "regulation": "https://laws.example.net?country=atlantis"
+  }, {
+    "complaint": ["mailto:abuse@example.com?subject=\"false positive 
+filtering example.org on 24-May-2021 5:03 GMT\"",
+                  "https://example.net/report?d=example.org?t=38233",
+                  "tel:+5305551212"
+    ],
+    "justification" : "command and control malware", 
+    "name": "Example.Com IT department",
+    "regulation": "https://hr.example.com?state=AK"
+ }]
+}]]></artwork></figure></t>
+
+
+  </section>
+    
+    <section title="Deployment Considerations">
+      <t>Over time a domain may be considered risky, then safe, then
+      risky again, and minutes or hours can elapse between the DNS
+      EDNS0 error and the user reporting a false positive and the DNS
+      filtering service receiving the user's complaint.  Thus the URI
+      is RECOMMENDED to include sufficient detail to determine the
+      state when the DNS EDNS0 response was generated.  How this is
+      encoded into the URI is an implementation decision.</t>
+      <t>As discussed in the Introduction, some deployment models allow
+      the DNS filter provider to be conveyed to the end user.  This can be
+      conveyed with a single Responsible array by encoding the upstream
+      DNS error URI as a URL encoded parameter.</t>
+      <t>An array allows multiple DNS filters to be provided by specialized
+      services.  For example, one service might filter malware distribution
+      while another service filters malware command and control, another
+      filters malicious look-like login pages, and the fourth is a bespoke
+      system used by a consortium of enterprises in the same business
+      space (e.g., financial companies).</t>
+    </section>
+    
+    <section title="Usability Considerations">
+      <t>The JSON values returned SHOULD be returned in the user's
+      preferred language as expressed by the Accept-Language HTTP
+      header.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>TBD.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>New registry for application/json+structured-dns-error.</t>
+    </section>
+    
+<!--    <section title="Acknowledgements">
+</section>
+-->
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <references title="Normative References">
+      <?rfc include='reference.RFC.2119'?>
+
+      <?rfc include='reference.RFC.8174'?>
+
+      <?rfc include='reference.RFC.4648'?>
+
+      <?rfc include='reference.RFC.7540'?>
+
+      <?rfc include='reference.RFC.6891'?>
+
+      <?rfc include='reference.RFC.8310'?>
+
+      <?rfc include='reference.RFC.8624'?>
+
+      <?rfc include='reference.RFC.5198'?>
+
+      <?rfc include='reference.RFC.5280'?>
+
+      <?rfc include='reference.RFC.6125'?>
+
+      <?rfc include='reference.RFC.7525'?>
+
+      <?rfc include='reference.RFC.5625'?>
+
+      <?rfc include='reference.RFC.6570'?>
+
+      <?rfc include='reference.RFC.8914' ?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.8499'?>
+
+      <?rfc include='reference.RFC.8484'?>
+
+      <?rfc include='reference.RFC.7858'?>
+
+      <?rfc include='reference.RFC.8910'?>
+
+      <?rfc include='reference.I-D.ietf-dprive-dnsoquic'?>
+
+      <?rfc include='reference.I-D.reddy-add-resolver-info'?>
+
+      <reference anchor="Chrome-Install-Cert"
+                 target="support.securly.com/hc/en-us/articles/206081828-How-to-manually-install-the-Securly-SSL-certificate-in-Chrome">
+        <front>
+          <title>How to manually install the Securly SSL certificate in
+          Chrome</title>
+
+          <author></author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="Facebook-Container"
+                 target="https://www.mozilla.org/en-US/firefox/facebookcontainer/">
+        <front>
+          <title>Facebook container for Firefox</title>
+
+          <author></author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="Safari-Cookie"
+                 target="https://support.apple.com/en-us/HT205732">
+        <front>
+          <title>Isolated cookie store (CVE-2016-1730)</title>
+
+          <author></author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>
