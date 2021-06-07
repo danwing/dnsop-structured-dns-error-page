@@ -31,11 +31,25 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-reddy-dnsop-structured-dns-error-page-00"
+<rfc category="std" docName="draft-wing-dnsop-structured-dns-error-page-00"
      ipr="trust200902">
   <front>
     <title abbrev="DNS Access Denied Error Page">DNS Access Denied Error
     Page</title>
+
+    <author fullname="Dan Wing" initials="D." surname="Wing">
+      <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>USA</country>
+        </postal>
+
+        <email>dwing-ietf@fuggles.com</email>
+      </address>
+    </author>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
       <organization abbrev="McAfee">McAfee, Inc.</organization>
@@ -71,38 +85,6 @@
       </address>
     </author>
 
-    <author fullname="Dan Wing" initials="D." surname="Wing">
-      <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street></street>
-
-          <country>USA</country>
-        </postal>
-
-        <email>dwing-ietf@fuggles.com</email>
-      </address>
-    </author>
-
-    <author fullname="Mohamed Boucadair" initials="M." surname="Boucadair">
-      <organization>Orange</organization>
-
-      <address>
-        <postal>
-          <street></street>
-
-          <city>Rennes</city>
-
-          <code>35000</code>
-
-          <country>France</country>
-        </postal>
-
-        <email>mohamed.boucadair@orange.com</email>
-      </address>
-    </author>
-
     <date />
 
     <workgroup>DNSOP WG</workgroup>
@@ -112,30 +94,32 @@
       DNS filtering to assist troubleshooting, problem resolution, and end
       users.  This document describes structured data to provide these
       details.</t>
-            </abstract>
+    </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>In DNS filtering scnearios where DNS filtering is provided by an
-      entity other than the recursive resolver itself, it is desirable to
-      propagate information from the DNS filter provider to the end user
-      to assist with understanding the reason the DNS response was filtered
-      and to troubleshoot false positives.  There are two architectures
-      commonly deployed from the perspective of the local recursive
-      resolver when it receives a DNS query from an endpoint:
+      <t>In DNS filtering scenarios where DNS filtering is provided by an
+   entity other than the DNS forwarder itself, it is desirable to
+   propagate information from the DNS filter provider to the end user to
+   assist with understanding the reason the DNS response was filtered
+   and to troubleshoot false positives.  There are two architectures
+   commonly deployed from the perspective of the DNS forwarder
+   when it receives a DNS query from an endpoint
       <list style="symbols">
 	<t>parallel: Two DNS queries are generated, one to a DNS
 	filtering service, the other to recursive resolver.  If the
 	response from the filtering service indicates the DNS query
 	should be filtered, the response from the recursive resolver
 	is dropped and a filtered response is sent in response to the
-	original query.</t>
+	original query.  This architecture is often used in home
+	network deployments.</t>
 	<t>serial: One DNS query is generated to the recursive
       resolver, which itself interacts with a DNS filtering service.
       This relationship with the DNS filtering service might be
       partially or fully withheld (that is, not disclosed) from the end-
-      user or might be information available to the end user.</t>
+      user or might be information available to the end user.  This
+	architecture is often used in enterprise networks.</t>
     </list></t>
   </section>
   
@@ -228,8 +212,8 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
                   "tel:+5305551212"
     ],
     "justification" : "command and control malware", 
-    "name": "Example.Com IT department",
-    "regulation": "https://hr.example.com?state=AK"
+    "name": "Example.com IT department",
+    "regulation": "https://hr.example.com?state=CA"
  }]
 }]]></artwork></figure></t>
 
@@ -248,12 +232,11 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
       the DNS filter provider to be conveyed to the end user.  This can be
       conveyed with a single Responsible array by encoding the upstream
       DNS error URI as a URL encoded parameter.</t>
-      <t>An array allows multiple DNS filters to be provided by specialized
-      services.  For example, one service might filter malware distribution
-      while another service filters malware command and control, another
-      filters malicious look-like login pages, and the fourth is a bespoke
-      system used by a consortium of enterprises in the same business
-      space (e.g., financial companies).</t>
+
+      <t>An array allows multiple DNS filters to be provided by
+      specialized services.  For example, one service might filter
+      access to malicious domains and another filters domains due to
+      an internal security policy or court order.</t>
     </section>
     
     <section title="Usability Considerations">
@@ -283,29 +266,6 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 
       <?rfc include='reference.RFC.8174'?>
 
-      <?rfc include='reference.RFC.4648'?>
-
-      <?rfc include='reference.RFC.7540'?>
-
-      <?rfc include='reference.RFC.6891'?>
-
-      <?rfc include='reference.RFC.8310'?>
-
-      <?rfc include='reference.RFC.8624'?>
-
-      <?rfc include='reference.RFC.5198'?>
-
-      <?rfc include='reference.RFC.5280'?>
-
-      <?rfc include='reference.RFC.6125'?>
-
-      <?rfc include='reference.RFC.7525'?>
-
-      <?rfc include='reference.RFC.5625'?>
-
-      <?rfc include='reference.RFC.6570'?>
-
-      <?rfc include='reference.RFC.8914' ?>
     </references>
 
     <references title="Informative References">
@@ -315,12 +275,9 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 
       <?rfc include='reference.RFC.7858'?>
 
-      <?rfc include='reference.RFC.8910'?>
-
       <?rfc include='reference.I-D.ietf-dprive-dnsoquic'?>
 
-      <?rfc include='reference.I-D.reddy-add-resolver-info'?>
-
+<!--
       <reference anchor="Chrome-Install-Cert"
                  target="support.securly.com/hc/en-us/articles/206081828-How-to-manually-install-the-Securly-SSL-certificate-in-Chrome">
         <front>
@@ -332,28 +289,8 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
           <date day="" month="" year="" />
         </front>
       </reference>
+-->
 
-      <reference anchor="Facebook-Container"
-                 target="https://www.mozilla.org/en-US/firefox/facebookcontainer/">
-        <front>
-          <title>Facebook container for Firefox</title>
-
-          <author></author>
-
-          <date day="" month="" year="" />
-        </front>
-      </reference>
-
-      <reference anchor="Safari-Cookie"
-                 target="https://support.apple.com/en-us/HT205732">
-        <front>
-          <title>Isolated cookie store (CVE-2016-1730)</title>
-
-          <author></author>
-
-          <date day="" month="" year="" />
-        </front>
-      </reference>
     </references>
   </back>
 </rfc>

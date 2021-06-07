@@ -2,19 +2,17 @@
 
 
 
-DNSOP WG                                                        T. Reddy
-Internet-Draft                                                    McAfee
-Intended status: Standards Track                                 N. Cook
-Expires: December 6, 2021                                   Open-Xchange
-                                                                 D. Wing
-                                                                  Citrix
-                                                            M. Boucadair
-                                                                  Orange
-                                                            June 4, 2021
+DNSOP WG                                                         D. Wing
+Internet-Draft                                                    Citrix
+Intended status: Standards Track                                T. Reddy
+Expires: December 9, 2021                                         McAfee
+                                                                 N. Cook
+                                                            Open-Xchange
+                                                            June 7, 2021
 
 
                       DNS Access Denied Error Page
-             draft-reddy-dnsop-structured-dns-error-page-00
+             draft-wing-dnsop-structured-dns-error-page-00
 
 Abstract
 
@@ -38,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 6, 2021.
+   This Internet-Draft will expire on December 9, 2021.
 
 Copyright Notice
 
@@ -50,16 +48,16 @@ Copyright Notice
    (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
 
 
 
-Reddy, et al.           Expires December 6, 2021                [Page 1]
+Wing, et al.            Expires December 9, 2021                [Page 1]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
-   to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
@@ -75,30 +73,32 @@ Table of Contents
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
-   In DNS filtering scnearios where DNS filtering is provided by an
-   entity other than the recursive resolver itself, it is desirable to
+   In DNS filtering scenarios where DNS filtering is provided by an
+   entity other than the DNS forwarder itself, it is desirable to
    propagate information from the DNS filter provider to the end user to
    assist with understanding the reason the DNS response was filtered
    and to troubleshoot false positives.  There are two architectures
-   commonly deployed from the perspective of the local recursive
-   resolver when it receives a DNS query from an endpoint:
+   commonly deployed from the perspective of the DNS forwarder when it
+   receives a DNS query from an endpoint
 
    o  parallel: Two DNS queries are generated, one to a DNS filtering
       service, the other to recursive resolver.  If the response from
       the filtering service indicates the DNS query should be filtered,
       the response from the recursive resolver is dropped and a filtered
-      response is sent in response to the original query.
+      response is sent in response to the original query.  This
+      architecture is often used in home network deployments.
 
    o  serial: One DNS query is generated to the recursive resolver,
       which itself interacts with a DNS filtering service.  This
       relationship with the DNS filtering service might be partially or
       fully withheld (that is, not disclosed) from the end- user or
-      might be information available to the end user.
+      might be information available to the end user.  This architecture
+      is often used in enterprise networks.
 
 2.  Terminology
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Reddy, et al.           Expires December 6, 2021                [Page 2]
+Wing, et al.            Expires December 9, 2021                [Page 2]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -165,7 +165,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Reddy, et al.           Expires December 6, 2021                [Page 3]
+Wing, et al.            Expires December 9, 2021                [Page 3]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -205,8 +205,8 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
                      "tel:+5305551212"
        ],
        "justification" : "command and control malware",
-       "name": "Example.Com IT department",
-       "regulation": "https://hr.example.com?state=AK"
+       "name": "Example.com IT department",
+       "regulation": "https://hr.example.com?state=CA"
     }]
    }
 
@@ -221,7 +221,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Reddy, et al.           Expires December 6, 2021                [Page 4]
+Wing, et al.            Expires December 9, 2021                [Page 4]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -235,11 +235,9 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
    error URI as a URL encoded parameter.
 
    An array allows multiple DNS filters to be provided by specialized
-   services.  For example, one service might filter malware distribution
-   while another service filters malware command and control, another
-   filters malicious look-like login pages, and the fourth is a bespoke
-   system used by a consortium of enterprises in the same business space
-   (e.g., financial companies).
+   services.  For example, one service might filter access to malicious
+   domains and another filters domains due to an internal security
+   policy or court order.
 
 6.  Usability Considerations
 
@@ -263,113 +261,26 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
-              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
-              <https://www.rfc-editor.org/info/rfc4648>.
-
-   [RFC5198]  Klensin, J. and M. Padlipsky, "Unicode Format for Network
-              Interchange", RFC 5198, DOI 10.17487/RFC5198, March 2008,
-              <https://www.rfc-editor.org/info/rfc5198>.
-
-
-
-
-
-
-
-Reddy, et al.           Expires December 6, 2021                [Page 5]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
-
-   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
-              Housley, R., and W. Polk, "Internet X.509 Public Key
-              Infrastructure Certificate and Certificate Revocation List
-              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
-              <https://www.rfc-editor.org/info/rfc5280>.
-
-   [RFC5625]  Bellis, R., "DNS Proxy Implementation Guidelines",
-              BCP 152, RFC 5625, DOI 10.17487/RFC5625, August 2009,
-              <https://www.rfc-editor.org/info/rfc5625>.
-
-   [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
-              Verification of Domain-Based Application Service Identity
-              within Internet Public Key Infrastructure Using X.509
-              (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
-              2011, <https://www.rfc-editor.org/info/rfc6125>.
-
-   [RFC6570]  Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
-              and D. Orchard, "URI Template", RFC 6570,
-              DOI 10.17487/RFC6570, March 2012,
-              <https://www.rfc-editor.org/info/rfc6570>.
-
-   [RFC6891]  Damas, J., Graff, M., and P. Vixie, "Extension Mechanisms
-              for DNS (EDNS(0))", STD 75, RFC 6891,
-              DOI 10.17487/RFC6891, April 2013,
-              <https://www.rfc-editor.org/info/rfc6891>.
-
-   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
-              "Recommendations for Secure Use of Transport Layer
-              Security (TLS) and Datagram Transport Layer Security
-              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
-              2015, <https://www.rfc-editor.org/info/rfc7525>.
-
-   [RFC7540]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
-              Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
-              DOI 10.17487/RFC7540, May 2015,
-              <https://www.rfc-editor.org/info/rfc7540>.
-
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-   [RFC8310]  Dickinson, S., Gillmor, D., and T. Reddy, "Usage Profiles
-              for DNS over TLS and DNS over DTLS", RFC 8310,
-              DOI 10.17487/RFC8310, March 2018,
-              <https://www.rfc-editor.org/info/rfc8310>.
-
-
-
-
-
-Reddy, et al.           Expires December 6, 2021                [Page 6]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
-
-   [RFC8624]  Wouters, P. and O. Sury, "Algorithm Implementation
-              Requirements and Usage Guidance for DNSSEC", RFC 8624,
-              DOI 10.17487/RFC8624, June 2019,
-              <https://www.rfc-editor.org/info/rfc8624>.
-
-   [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
-              Lawrence, "Extended DNS Errors", RFC 8914,
-              DOI 10.17487/RFC8914, October 2020,
-              <https://www.rfc-editor.org/info/rfc8914>.
-
 9.2.  Informative References
-
-   [Chrome-Install-Cert]
-              "How to manually install the Securly SSL certificate in
-              Chrome", <support.securly.com/hc/en-us/articles/206081828-
-              How-to-manually-install-the-Securly-SSL-certificate-in-
-              Chrome>.
-
-   [Facebook-Container]
-              "Facebook container for Firefox",
-              <https://www.mozilla.org/en-US/firefox/
-              facebookcontainer/>.
 
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Mankin, A., and S. Dickinson, "Specification
               of DNS over Dedicated QUIC Connections", draft-ietf-
               dprive-dnsoquic-02 (work in progress), February 2021.
 
-   [I-D.reddy-add-resolver-info]
-              Reddy, T. and M. Boucadair, "DNS Resolver Information",
-              draft-reddy-add-resolver-info-03 (work in progress), April
-              2021.
+
+
+
+
+
+Wing, et al.            Expires December 9, 2021                [Page 5]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
 
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
@@ -384,26 +295,14 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
               Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
               January 2019, <https://www.rfc-editor.org/info/rfc8499>.
 
-
-
-
-
-
-Reddy, et al.           Expires December 6, 2021                [Page 7]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
-
-   [RFC8910]  Kumari, W. and E. Kline, "Captive-Portal Identification in
-              DHCP and Router Advertisements (RAs)", RFC 8910,
-              DOI 10.17487/RFC8910, September 2020,
-              <https://www.rfc-editor.org/info/rfc8910>.
-
-   [Safari-Cookie]
-              "Isolated cookie store (CVE-2016-1730)",
-              <https://support.apple.com/en-us/HT205732>.
-
 Authors' Addresses
+
+   Dan Wing
+   Citrix Systems, Inc.
+   USA
+
+   Email: dwing-ietf@fuggles.com
+
 
    Tirumaleswar Reddy
    McAfee, Inc.
@@ -421,19 +320,6 @@ Authors' Addresses
    Email: neil.cook@noware.co.uk
 
 
-   Dan Wing
-   Citrix Systems, Inc.
-   USA
-
-   Email: dwing-ietf@fuggles.com
-
-
-   Mohamed Boucadair
-   Orange
-   Rennes  35000
-   France
-
-   Email: mohamed.boucadair@orange.com
 
 
 
@@ -445,4 +331,6 @@ Authors' Addresses
 
 
 
-Reddy, et al.           Expires December 6, 2021                [Page 8]
+
+
+Wing, et al.            Expires December 9, 2021                [Page 6]
