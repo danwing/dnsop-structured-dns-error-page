@@ -5,10 +5,12 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: December 9, 2021                                         McAfee
+Expires: December 11, 2021                                        McAfee
                                                                  N. Cook
                                                             Open-Xchange
-                                                            June 7, 2021
+                                                            M. Boucadair
+                                                                  Orange
+                                                            June 9, 2021
 
 
                       DNS Access Denied Error Page
@@ -17,7 +19,7 @@ Expires: December 9, 2021                                         McAfee
 Abstract
 
    It can be valuable to communicate computer-parsable details about DNS
-   filtering to assist troubleshooting, problem resolution, and end
+   filtering to assist troubleshooting, problem resolution, and end-
    users.  This document describes structured data to provide these
    details.
 
@@ -36,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 9, 2021.
+   This Internet-Draft will expire on December 11, 2021.
 
 Copyright Notice
 
@@ -48,72 +50,75 @@ Copyright Notice
    (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
-   to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in Section 4.e of
 
 
 
-Wing, et al.            Expires December 9, 2021                [Page 1]
+Wing, et al.            Expires December 11, 2021               [Page 1]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Structured Data . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  Deployment Considerations . . . . . . . . . . . . . . . . . .   4
-   6.  Usability Considerations  . . . . . . . . . . . . . . . . . .   5
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .   5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
+   4.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Deployment Considerations . . . . . . . . . . . . . . . . . .   5
+   6.  Usability Considerations  . . . . . . . . . . . . . . . . . .   6
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
-   In DNS filtering scenarios where DNS filtering is provided by an
+   In DNS filtering scenarios where such filtering is provided by an
    entity other than the DNS forwarder itself, it is desirable to
-   propagate information from the DNS filter provider to the end user to
-   assist with understanding the reason the DNS response was filtered
-   and to troubleshoot false positives.  There are two architectures
-   commonly deployed from the perspective of the DNS forwarder when it
-   receives a DNS query from an endpoint
+   propagate some information from the DNS filter provider to the end-
+   user to assist with understanding the reason for which a DNS query/
+   response was filtered.  Also, such information is meant to help to
+   troubleshoot false positives.  There are two architectures commonly
+   deployed from the perspective of the DNS forwarder when it receives a
+   DNS query from an endpoint:
 
-   o  parallel: Two DNS queries are generated, one to a DNS filtering
-      service, the other to recursive resolver.  If the response from
-      the filtering service indicates the DNS query should be filtered,
-      the response from the recursive resolver is dropped and a filtered
-      response is sent in response to the original query.  This
-      architecture is often used in home network deployments.
+   Parallel:  Two DNS queries are generated, one to a DNS filtering
+      service and another one to a recursive resolver.  If the response
+      from the DNS filtering service indicates that the DNS query should
+      be filtered, the response from the recursive resolver is dropped
+      and a filtered response is sent in response to the original query.
+      This architecture is often used in home network deployments.
 
-   o  serial: One DNS query is generated to the recursive resolver,
-      which itself interacts with a DNS filtering service.  This
-      relationship with the DNS filtering service might be partially or
-      fully withheld (that is, not disclosed) from the end- user or
-      might be information available to the end user.  This architecture
-      is often used in enterprise networks.
+   Serial:  One DNS query is generated to the recursive resolver, which
+      itself interacts with a DNS filtering service.  This relationship
+      with the DNS filtering service might be partially or fully
+      withheld (that is, not disclosed) from the end-user or might be
+      information available to the end-user.  This architecture is often
+      used in enterprise networks.
+
+
+
+
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 2]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
 
 2.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in BCP
-
-
-
-
-Wing, et al.            Expires December 9, 2021                [Page 2]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
-
    14 [RFC2119][RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
@@ -125,29 +130,30 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 3.  Structured Data
 
-   To receive structured DNS error page data, the client queries the
-   Error Page URI returned in [reddy-dnsop-structured-dns-error] with
-   Content-Type: application/json+structured-dns-error.  The JSON has
-   one top-level name, responsible, containing an array of dictionaries
-   for each party responsible for this particular DNS filter.  An array
-   of responsible parties are possible in deployment scenarios where two
-   or more entities both performed DNS filtering (perhaps for the same
-   reason, perhaps for different reasons).  The contents of the array
+   To receive structured DNS error page data, the client MUST query the
+   Error Page URI returned in [I-D.reddy-dnsop-error-page] with Content-
+   Type set to "application/json+structured-dns-error".  The JSON has
+   one top-level name, "responsible", containing an array of
+   dictionaries for each party responsible for this particular DNS
+   filter.  An array of responsible parties are possible in deployment
+   scenarios where two or more entities are involved in a DNS filtering
+   (the filtering may be for the same or distinct reasons by each
+   involved DNS filter service).  The content of the array is structured
    are as follows:
 
-   complaint:  an array of URIs for the user to report mis-classified
-      DNS filtering.  This will often solely contain an https URI, but
-      an array is provided in case telephone or email or other URIs are
-      necessary.  This field is mandatory, and MUST contain at least one
-      URI.
+   complaint:  Is an array of URIs for the user to report mis-classified
+      DNS filtering.  This is likely to solely contain an "https" URI,
+      but an array is provided in case telephone numbers or email or
+      other URIs are necessary.  This field is mandatory and MUST
+      contain at least one URI.
 
-   justification:  textual justification for this particular DNS
-      filtering.  This field is optional.
+   justification:  Includes the textual justification for this
+      particular DNS filtering.  This field is optional.
 
-   name  the human-friendly name of the organization that filtered this
-      particular DNS query.  This field is optional.
+   name:  is the human-friendly name of the organization that filtered
+      this particular DNS query.  This field is optional.
 
-   regulation  the URI of the regulation authority for this DNS query
+   regulation:  the URI of the regulation authority for this DNS query
       being filtered.  This might point at an employment agreement (for
       an enterprise performing filtering) or a national government
       regulation (for an ISP performing filtering).  This field is
@@ -157,85 +163,125 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
    to assist the end-user or IT staff with troubleshooting and
    diagnosing the cause of the DNS filtering.
 
-4.  Examples
-
-   In all examples, line wraps are necessary for formatting this
-   document, not for the JSON.
 
 
-
-
-Wing, et al.            Expires December 9, 2021                [Page 3]
+Wing, et al.            Expires December 11, 2021               [Page 3]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
-   Example with one entity, example.net, that has filtered a DNS query:
+4.  Examples
+
+   The examples use the folding defined in [RFC8792] for long lines.
+
+   An example with one entity, "example.net", that has filtered a DNS
+   query is shown in Figure 1.
 
    {
-     "responsible": [{
-       "complaint": ["mailto:mistakes@example.net?subject=\"incorrect
-   filtering of example.org at 1621902483\"",
-   "https://mistakes.example.net?mistake=example.org?time=1621902483",
-   "tel:+18305551212"
-       ],
-       "justification" : "malware present for 23 days",
-       "name": "Example.net Filtering Service",
-       "regulation": "https://laws.example.net?country=atlantis"
-     }]
+     "responsible": [
+       {
+         "complaint": [
+           "mailto:mistakes@example.net?subject=\"incorrect filtering\
+            of example.org at 1621902483\"",
+           "https://mistakes.example.net?mistake=example.org?\
+            time=1621902483",
+           "tel:+18305551212"
+         ],
+         "justification": "malware present for 23 days",
+         "name": "example.net Filtering Service",
+         "regulation": "https://laws.example.net?country=atlantis"
+       }
+     ]
    }
 
-   Example with two entities, example.com and example.net, that have
-   filtered a DNS query:
+                                 Figure 1
+
+   An example with two entities, "example.com" and "example.net", that
+   have filtered a DNS query is shown in Figure 2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 4]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
 
    {
-     "responsible": [{
-       "complaint": ["mailto:mistakes@example.net?subject=\"incorrect
-   filtering of example.org at 1621902483\"",
-   "https://mistake.example.net?mistake=example.org?time=1621902483",
-   "tel:+18305551212"
-       ],
-       "justification" : "malware present for 23 days",
-       "name": "Example.net Filtering Service",
-       "regulation": "https://laws.example.net?country=atlantis"
-     }, {
-       "complaint": ["mailto:abuse@example.com?subject=\"false positive
-   filtering example.org on 24-May-2021 5:03 GMT\"",
-                     "https://example.net/report?d=example.org?t=38233",
-                     "tel:+5305551212"
-       ],
-       "justification" : "command and control malware",
-       "name": "Example.com IT department",
-       "regulation": "https://hr.example.com?state=CA"
-    }]
-   }
+     "responsible": [
+       {
+         "complaint": [
+           "mailto:mistakes@example.net?subject=\"incorrect filtering\
+            of example.org at 1621902483\"",
+           "https://mistake.example.net?mistake=example.org?\
+            time=1621902483",
+           "tel:+18305551212"
+         ],
+         "justification": "malware present for 23 days",
+         "name": "Example.net Filtering Service",
+         "regulation": "https://laws.example.net?country=atlantis"
+       },
+       {
+         "complaint": [
+           "mailto:abuse@example.com?subject=\"false positive filtering\
+            example.org on 24-May-2021 5:03 GMT\"",
+           "https://example.net/report?d=example.org?t=38233",
+           "tel:+5305551212"
+         ],
+         "justification": "command and control malware",
+         "name": "Example.com IT department",
+         "regulation": "https://hr.example.com?state=CA"
+       }
+     ]
+   }}
+
+           Figure 2: Example of Filtering with One single Entity
 
 5.  Deployment Considerations
 
-   Over time a domain may be considered risky, then safe, then risky
-   again, and minutes or hours can elapse between the DNS EDNS0 error
-   and the user reporting a false positive and the DNS filtering service
+   Over time a domain name may be considered risky, then safe, then
+   risky again, and later can elapse between the DNS EDNS0 error and the
+   user reporting a false positive and the DNS filtering service
    receiving the user's complaint.  Thus the URI is RECOMMENDED to
    include sufficient detail to determine the state when the DNS EDNS0
-
-
-
-
-Wing, et al.            Expires December 9, 2021                [Page 4]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
-
    response was generated.  How this is encoded into the URI is an
    implementation decision.
 
    As discussed in the Introduction, some deployment models allow the
-   DNS filter provider to be conveyed to the end user.  This can be
-   conveyed with a single Responsible array by encoding the upstream DNS
-   error URI as a URL encoded parameter.
+   DNS filter provider to be conveyed to the end-user.  This can be
+   conveyed with a single "responsible" array by encoding the upstream
+   DNS Error URI as an URL encoded parameter.
 
    An array allows multiple DNS filters to be provided by specialized
    services.  For example, one service might filter access to malicious
+
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 5]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
+
    domains and another filters domains due to an internal security
    policy or court order.
 
@@ -250,16 +296,108 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 8.  IANA Considerations
 
-   New registry for application/json+structured-dns-error.
+   This document requests IANA to register the "application/
+   json+structured-dns-error" media type in the "Media Types" registry
+   [IANA-MediaTypes].  This registration follows the procedures
+   specified in [RFC6838]:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 6]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
+
+      Type name: application
+
+      Subtype name: json+structured-dns-error
+
+      Required parameters: N/A
+
+      Optional parameters: N/A
+
+      Encoding considerations: as defined in Section 3 of [RFCXXXX].
+
+      Security considerations: See Section 7 of [RFCXXXX].
+
+      Interoperability considerations: N/A
+
+      Published specification: [RFCXXXX]
+
+      Applications that use this media type: Section 3 of [RFCXXXX].
+
+      Fragment identifier considerations: N/A
+
+      Additional information: N/A
+
+      Person & email address to contact for further information: IETF,
+         iesg@ietf.org
+
+      Intended usage: COMMON
+
+      Restrictions on usage: none
+
+      Author: See Authors' Addresses section.
+
+      Change controller: IESG
+
+      Provisional registration?  No
 
 9.  References
 
 9.1.  Normative References
 
+   [I-D.reddy-dnsop-error-page]
+              Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
+              Access Denied Error Page", draft-reddy-dnsop-error-page-08
+              (work in progress), June 2021.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 7]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
+
+   [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
+              Specifications and Registration Procedures", BCP 13,
+              RFC 6838, DOI 10.17487/RFC6838, January 2013,
+              <https://www.rfc-editor.org/info/rfc6838>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -272,15 +410,9 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
               of DNS over Dedicated QUIC Connections", draft-ietf-
               dprive-dnsoquic-02 (work in progress), February 2021.
 
-
-
-
-
-
-Wing, et al.            Expires December 9, 2021                [Page 5]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
+   [IANA-MediaTypes]
+              IANA, "Media Types",
+              <https://www.iana.org/assignments/media-types>.
 
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
@@ -295,6 +427,11 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
               Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
               January 2019, <https://www.rfc-editor.org/info/rfc8499>.
 
+   [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
+              "Handling Long Lines in Content of Internet-Drafts and
+              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
+              <https://www.rfc-editor.org/info/rfc8792>.
+
 Authors' Addresses
 
    Dan Wing
@@ -302,6 +439,15 @@ Authors' Addresses
    USA
 
    Email: dwing-ietf@fuggles.com
+
+
+
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 8]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
    Tirumaleswar Reddy
@@ -320,6 +466,12 @@ Authors' Addresses
    Email: neil.cook@noware.co.uk
 
 
+   Mohamed Boucadair
+   Orange
+   Rennes  35000
+   France
+
+   Email: mohamed.boucadair@orange.com
 
 
 
@@ -333,4 +485,20 @@ Authors' Addresses
 
 
 
-Wing, et al.            Expires December 9, 2021                [Page 6]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.            Expires December 11, 2021               [Page 9]

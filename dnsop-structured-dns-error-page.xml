@@ -85,44 +85,64 @@
       </address>
     </author>
 
+    <author fullname="Mohamed Boucadair" initials="M." surname="Boucadair">
+      <organization>Orange</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <city>Rennes</city>
+
+          <region></region>
+
+          <code>35000</code>
+
+          <country>France</country>
+        </postal>
+
+        <email>mohamed.boucadair@orange.com</email>
+      </address>
+    </author>
+
     <date />
 
     <workgroup>DNSOP WG</workgroup>
 
     <abstract>
-      <t>It can be valuable to communicate computer-parsable details about
-      DNS filtering to assist troubleshooting, problem resolution, and end
-      users.  This document describes structured data to provide these
-      details.</t>
+      <t>It can be valuable to communicate computer-parsable details about DNS
+      filtering to assist troubleshooting, problem resolution, and end-users.
+      This document describes structured data to provide these details.</t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>In DNS filtering scenarios where DNS filtering is provided by an
-   entity other than the DNS forwarder itself, it is desirable to
-   propagate information from the DNS filter provider to the end user to
-   assist with understanding the reason the DNS response was filtered
-   and to troubleshoot false positives.  There are two architectures
-   commonly deployed from the perspective of the DNS forwarder
-   when it receives a DNS query from an endpoint
-      <list style="symbols">
-	<t>parallel: Two DNS queries are generated, one to a DNS
-	filtering service, the other to recursive resolver.  If the
-	response from the filtering service indicates the DNS query
-	should be filtered, the response from the recursive resolver
-	is dropped and a filtered response is sent in response to the
-	original query.  This architecture is often used in home
-	network deployments.</t>
-	<t>serial: One DNS query is generated to the recursive
-      resolver, which itself interacts with a DNS filtering service.
-      This relationship with the DNS filtering service might be
-      partially or fully withheld (that is, not disclosed) from the end-
-      user or might be information available to the end user.  This
-	architecture is often used in enterprise networks.</t>
-    </list></t>
-  </section>
-  
+      <t>In DNS filtering scenarios where such filtering is provided by an
+      entity other than the DNS forwarder itself, it is desirable to propagate
+      some information from the DNS filter provider to the end-user to assist
+      with understanding the reason for which a DNS query/response was
+      filtered. Also, such information is meant to help to troubleshoot false
+      positives. There are two architectures commonly deployed from the
+      perspective of the DNS forwarder when it receives a DNS query from an
+      endpoint: <list style="hanging">
+          <t hangText="Parallel:">Two DNS queries are generated, one to a DNS
+          filtering service and another one to a recursive resolver. If the
+          response from the DNS filtering service indicates that the DNS query
+          should be filtered, the response from the recursive resolver is
+          dropped and a filtered response is sent in response to the original
+          query. This architecture is often used in home network
+          deployments.</t>
+
+          <t hangText="Serial:">One DNS query is generated to the recursive
+          resolver, which itself interacts with a DNS filtering service. This
+          relationship with the DNS filtering service might be partially or
+          fully withheld (that is, not disclosed) from the end-user or might
+          be information available to the end-user. This architecture is often
+          used in enterprise networks.</t>
+        </list></t>
+    </section>
+
     <section anchor="notation" title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -140,109 +160,125 @@
     </section>
 
     <section anchor="format-sec" title="Structured Data">
-      <t>To receive structured DNS error page data, the client queries
-      the Error Page URI returned in
-      [reddy-dnsop-structured-dns-error] with Content-Type:
-      application/json+structured-dns-error.  The JSON has one
-      top-level name, responsible, containing an array of dictionaries
-      for each party responsible for this particular DNS filter.  An
-      array of responsible parties are possible in deployment
-      scenarios where two or more entities both performed DNS
-      filtering (perhaps for the same reason, perhaps for different
-      reasons).  The contents of the array are as follows:</t>
-      
-      <t><list style="hanging">
-	<t hangText="complaint:">an array of URIs for the user to report mis-classified
-	DNS filtering.  This will often solely contain an https URI, but an array is
-	provided in case telephone or email or other URIs are necessary.  This field
-	is mandatory, and MUST contain at least one URI.</t>
-	<t hangText="justification:">textual justification for this particular DNS
-	filtering.  This field is optional.</t>
-	<t hangText="name">the human-friendly name of the organization that
-	filtered this particular DNS query.  This field is optional.</t>
-	<t hangText="regulation">the URI of the regulation authority for this
-	DNS query being filtered.  This might point at an employment agreement (for
-	an enterprise performing filtering) or a national government
-	regulation (for an ISP performing filtering).  This field is optional.</t>
-      </list></t>
+      <t>To receive structured DNS error page data, the client MUST query the
+      Error Page URI returned in <xref
+      target="I-D.reddy-dnsop-error-page"></xref> with Content-Type set to
+      "application/json+structured-dns-error". The JSON has one top-level
+      name, "responsible", containing an array of dictionaries for each party
+      responsible for this particular DNS filter. An array of responsible
+      parties are possible in deployment scenarios where two or more entities
+      are involved in a DNS filtering (the filtering may be for the same or
+      distinct reasons by each involved DNS filter service). The content of
+      the array is structured are as follows:</t>
 
+      <t><list style="hanging">
+          <t hangText="complaint:">Is an array of URIs for the user to report
+          mis-classified DNS filtering. This is likely to solely contain an
+          "https" URI, but an array is provided in case telephone numbers or
+          email or other URIs are necessary. This field is mandatory and MUST
+          contain at least one URI.</t>
+
+          <t hangText="justification:">Includes the textual justification for
+          this particular DNS filtering. This field is optional.</t>
+
+          <t hangText="name:">is the human-friendly name of the organization
+          that filtered this particular DNS query. This field is optional.</t>
+
+          <t hangText="regulation:">the URI of the regulation authority for
+          this DNS query being filtered. This might point at an employment
+          agreement (for an enterprise performing filtering) or a national
+          government regulation (for an ISP performing filtering). This field
+          is optional.</t>
+        </list></t>
 
       <t>The JSON data can be displayed to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.</t>
     </section>
 
-
     <section title="Examples">
-      <t>In all examples, line wraps are necessary for formatting this document, not
-      for the JSON.</t>
-      
-      <t>Example with one entity, example.net, that has filtered a DNS query:</t>
-      <t><figure><artwork><![CDATA[
-{
-  "responsible": [{
-    "complaint": ["mailto:mistakes@example.net?subject=\"incorrect
-filtering of example.org at 1621902483\"",
-"https://mistakes.example.net?mistake=example.org?time=1621902483",
-"tel:+18305551212"
-    ],
-    "justification" : "malware present for 23 days", 
-    "name": "Example.net Filtering Service",
-    "regulation": "https://laws.example.net?country=atlantis"
-  }]
-}]]></artwork></figure></t>
+      <t>The examples use the folding defined in <xref
+      target="RFC8792"></xref> for long lines. </t>
 
+      <t>An example with one entity, "example.net", that has filtered a DNS
+      query is shown in <xref target="ex1"></xref>.</t>
 
-      <t>Example with two entities, example.com and example.net, that have filtered a DNS query:</t>
-<t>      <figure><artwork><![CDATA[
-{
-  "responsible": [{
-    "complaint": ["mailto:mistakes@example.net?subject=\"incorrect 
-filtering of example.org at 1621902483\"",
-"https://mistake.example.net?mistake=example.org?time=1621902483",
-"tel:+18305551212"   
-    ],
-    "justification" : "malware present for 23 days", 
-    "name": "Example.net Filtering Service",
-    "regulation": "https://laws.example.net?country=atlantis"
-  }, {
-    "complaint": ["mailto:abuse@example.com?subject=\"false positive 
-filtering example.org on 24-May-2021 5:03 GMT\"",
-                  "https://example.net/report?d=example.org?t=38233",
-                  "tel:+5305551212"
-    ],
-    "justification" : "command and control malware", 
-    "name": "Example.com IT department",
-    "regulation": "https://hr.example.com?state=CA"
- }]
-}]]></artwork></figure></t>
+      <t><figure align="center" anchor="ex1">
+          <artwork><![CDATA[{
+  "responsible": [
+    {
+      "complaint": [
+        "mailto:mistakes@example.net?subject=\"incorrect filtering\
+         of example.org at 1621902483\"",
+        "https://mistakes.example.net?mistake=example.org?\
+         time=1621902483",
+        "tel:+18305551212"
+      ],
+      "justification": "malware present for 23 days",
+      "name": "example.net Filtering Service",
+      "regulation": "https://laws.example.net?country=atlantis"
+    }
+  ]
+}]]></artwork>
+        </figure></t>
 
+      <t>An example with two entities, "example.com" and "example.net", that
+      have filtered a DNS query is shown in <xref target="ex2"></xref>.</t>
 
-  </section>
-    
-    <section title="Deployment Considerations">
-      <t>Over time a domain may be considered risky, then safe, then
-      risky again, and minutes or hours can elapse between the DNS
-      EDNS0 error and the user reporting a false positive and the DNS
-      filtering service receiving the user's complaint.  Thus the URI
-      is RECOMMENDED to include sufficient detail to determine the
-      state when the DNS EDNS0 response was generated.  How this is
-      encoded into the URI is an implementation decision.</t>
-      <t>As discussed in the Introduction, some deployment models allow
-      the DNS filter provider to be conveyed to the end user.  This can be
-      conveyed with a single Responsible array by encoding the upstream
-      DNS error URI as a URL encoded parameter.</t>
-
-      <t>An array allows multiple DNS filters to be provided by
-      specialized services.  For example, one service might filter
-      access to malicious domains and another filters domains due to
-      an internal security policy or court order.</t>
+      <t><figure align="center" anchor="ex2"
+          title="Example of Filtering with One single Entity">
+          <artwork><![CDATA[{
+  "responsible": [
+    {
+      "complaint": [
+        "mailto:mistakes@example.net?subject=\"incorrect filtering\
+         of example.org at 1621902483\"",
+        "https://mistake.example.net?mistake=example.org?\
+         time=1621902483",
+        "tel:+18305551212"
+      ],
+      "justification": "malware present for 23 days",
+      "name": "Example.net Filtering Service",
+      "regulation": "https://laws.example.net?country=atlantis"
+    },
+    {
+      "complaint": [
+        "mailto:abuse@example.com?subject=\"false positive filtering\
+         example.org on 24-May-2021 5:03 GMT\"",
+        "https://example.net/report?d=example.org?t=38233",
+        "tel:+5305551212"
+      ],
+      "justification": "command and control malware",
+      "name": "Example.com IT department",
+      "regulation": "https://hr.example.com?state=CA"
+    }
+  ]
+}}]]></artwork>
+        </figure></t>
     </section>
-    
+
+    <section title="Deployment Considerations">
+      <t>Over time a domain name may be considered risky, then safe, then
+      risky again, and later can elapse between the DNS EDNS0 error and the
+      user reporting a false positive and the DNS filtering service receiving
+      the user's complaint. Thus the URI is RECOMMENDED to include sufficient
+      detail to determine the state when the DNS EDNS0 response was generated.
+      How this is encoded into the URI is an implementation decision.</t>
+
+      <t>As discussed in the Introduction, some deployment models allow the
+      DNS filter provider to be conveyed to the end-user. This can be conveyed
+      with a single "responsible" array by encoding the upstream DNS Error URI
+      as an URL encoded parameter.</t>
+
+      <t>An array allows multiple DNS filters to be provided by specialized
+      services. For example, one service might filter access to malicious
+      domains and another filters domains due to an internal security policy
+      or court order.</t>
+    </section>
+
     <section title="Usability Considerations">
-      <t>The JSON values returned SHOULD be returned in the user's
-      preferred language as expressed by the Accept-Language HTTP
-      header.</t>
+      <t>The JSON values returned SHOULD be returned in the user's preferred
+      language as expressed by the Accept-Language HTTP header.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -250,10 +286,51 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>New registry for application/json+structured-dns-error.</t>
+      <t>This document requests IANA to register the
+      "application/json+structured-dns-error" media type in the "Media Types"
+      registry <xref target="IANA-MediaTypes"></xref>. This registration
+      follows the procedures specified in <xref target="RFC6838"></xref>:
+      <figure>
+          <artwork><![CDATA[   Type name: application
+
+   Subtype name: json+structured-dns-error
+
+   Required parameters: N/A
+
+   Optional parameters: N/A
+
+   Encoding considerations: as defined in Section 3 of [RFCXXXX].
+
+   Security considerations: See Section 7 of [RFCXXXX].
+
+   Interoperability considerations: N/A
+
+   Published specification: [RFCXXXX]
+
+   Applications that use this media type: Section 3 of [RFCXXXX].
+
+   Fragment identifier considerations: N/A
+
+   Additional information: N/A
+
+   Person & email address to contact for further information: IETF,
+      iesg@ietf.org
+
+   Intended usage: COMMON
+
+   Restrictions on usage: none
+
+   Author: See Authors' Addresses section.
+
+   Change controller: IESG
+
+   Provisional registration?  No]]></artwork>
+        </figure></t>
+
+      <t></t>
     </section>
-    
-<!--    <section title="Acknowledgements">
+
+    <!--    <section title="Acknowledgements">
 </section>
 -->
   </middle>
@@ -266,10 +343,15 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 
       <?rfc include='reference.RFC.8174'?>
 
+      <?rfc include='reference.RFC.6838'?>
+
+      <?rfc include='reference.I-D.reddy-dnsop-error-page'?>
     </references>
 
     <references title="Informative References">
       <?rfc include='reference.RFC.8499'?>
+
+      <?rfc include='reference.RFC.8792'?>
 
       <?rfc include='reference.RFC.8484'?>
 
@@ -277,7 +359,20 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 
       <?rfc include='reference.I-D.ietf-dprive-dnsoquic'?>
 
-<!--
+      <reference anchor="IANA-MediaTypes"
+                 target="https://www.iana.org/assignments/media-types">
+        <front>
+          <title>Media Types</title>
+
+          <author fullname="IANA">
+            <organization></organization>
+          </author>
+
+          <date />
+        </front>
+      </reference>
+
+      <!--
       <reference anchor="Chrome-Install-Cert"
                  target="support.securly.com/hc/en-us/articles/206081828-How-to-manually-install-the-Securly-SSL-certificate-in-Chrome">
         <front>
@@ -290,7 +385,6 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
         </front>
       </reference>
 -->
-
     </references>
   </back>
 </rfc>
