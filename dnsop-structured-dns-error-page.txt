@@ -17,9 +17,8 @@ Expires: December 9, 2021                                         McAfee
 Abstract
 
    It can be valuable to communicate computer-parsable details about DNS
-   filtering to assist troubleshooting, problem resolution, and end
-   users.  This document describes structured data to provide these
-   details.
+   filtering to assist troubleshooting and problem resolution.  This
+   document describes structured data to provide these details.
 
 Status of This Memo
 
@@ -53,6 +52,7 @@ Copyright Notice
 
 
 
+
 Wing, et al.            Expires December 9, 2021                [Page 1]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
@@ -64,16 +64,16 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Structured Data . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  Deployment Considerations . . . . . . . . . . . . . . . . . .   4
+   4.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Deployment Considerations . . . . . . . . . . . . . . . . . .   5
    6.  Usability Considerations  . . . . . . . . . . . . . . . . . .   5
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .   6
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
@@ -82,9 +82,12 @@ Table of Contents
    entity other than the DNS forwarder itself, it is desirable to
    propagate information from the DNS filter provider to the end user to
    assist with understanding the reason the DNS response was filtered
-   and to troubleshoot false positives.  There are two architectures
-   commonly deployed from the perspective of the DNS forwarder when it
-   receives a DNS query from an endpoint
+   and to troubleshoot false positives.  This document describes a
+   complement to [I-D.reddy-dnsop-error-page] where computer-parsable
+   data can be exchanged between systems.
+
+   There are two architectures commonly deployed from the perspective of
+   the DNS forwarder when it receives a DNS query from an endpoint
 
    o  parallel: Two DNS queries are generated, one to a DNS filtering
       service, the other to recursive resolver.  If the response from
@@ -100,11 +103,8 @@ Table of Contents
       might be information available to the end user.  This architecture
       is often used in enterprise networks.
 
-2.  Terminology
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
+
 
 
 
@@ -114,6 +114,11 @@ Wing, et al.            Expires December 9, 2021                [Page 2]
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
+2.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119][RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
@@ -157,11 +162,6 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
    to assist the end-user or IT staff with troubleshooting and
    diagnosing the cause of the DNS filtering.
 
-4.  Examples
-
-   In all examples, line wraps are necessary for formatting this
-   document, not for the JSON.
-
 
 
 
@@ -169,6 +169,11 @@ Wing, et al.            Expires December 9, 2021                [Page 3]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
+
+4.  Examples
+
+   In all examples, line wraps are necessary for formatting this
+   document, not for the JSON.
 
    Example with one entity, example.net, that has filtered a DNS query:
 
@@ -210,13 +215,8 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
     }]
    }
 
-5.  Deployment Considerations
 
-   Over time a domain may be considered risky, then safe, then risky
-   again, and minutes or hours can elapse between the DNS EDNS0 error
-   and the user reporting a false positive and the DNS filtering service
-   receiving the user's complaint.  Thus the URI is RECOMMENDED to
-   include sufficient detail to determine the state when the DNS EDNS0
+
 
 
 
@@ -226,6 +226,13 @@ Wing, et al.            Expires December 9, 2021                [Page 4]
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
+5.  Deployment Considerations
+
+   Over time a domain may be considered risky, then safe, then risky
+   again, and minutes or hours can elapse between the DNS EDNS0 error
+   and the user reporting a false positive and the DNS filtering service
+   receiving the user's complaint.  Thus the URI is RECOMMENDED to
+   include sufficient detail to determine the state when the DNS EDNS0
    response was generated.  How this is encoded into the URI is an
    implementation decision.
 
@@ -256,10 +263,24 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 9.1.  Normative References
 
+   [I-D.reddy-dnsop-error-page]
+              Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
+              Access Denied Error Page", draft-reddy-dnsop-error-page-08
+              (work in progress), June 2021.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+
+Wing, et al.            Expires December 9, 2021                [Page 5]
+
+Internet-Draft        DNS Access Denied Error Page             June 2021
+
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -271,16 +292,6 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
               Huitema, C., Mankin, A., and S. Dickinson, "Specification
               of DNS over Dedicated QUIC Connections", draft-ietf-
               dprive-dnsoquic-02 (work in progress), February 2021.
-
-
-
-
-
-
-Wing, et al.            Expires December 9, 2021                [Page 5]
-
-Internet-Draft        DNS Access Denied Error Page             June 2021
-
 
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
@@ -318,17 +329,6 @@ Authors' Addresses
    UK
 
    Email: neil.cook@noware.co.uk
-
-
-
-
-
-
-
-
-
-
-
 
 
 

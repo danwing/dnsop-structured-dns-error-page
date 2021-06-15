@@ -90,20 +90,24 @@
     <workgroup>DNSOP WG</workgroup>
 
     <abstract>
-      <t>It can be valuable to communicate computer-parsable details about
-      DNS filtering to assist troubleshooting, problem resolution, and end
-      users.  This document describes structured data to provide these
-      details.</t>
+      <t>It can be valuable to communicate computer-parsable details
+      about DNS filtering to assist troubleshooting and problem
+      resolution.  This document describes structured data to provide
+      these details.</t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>In DNS filtering scenarios where DNS filtering is provided by an
+      <t>In DNS filtering scenarios where DNS filtering 
+       is provided by an
    entity other than the DNS forwarder itself, it is desirable to
    propagate information from the DNS filter provider to the end user to
    assist with understanding the reason the DNS response was filtered
-   and to troubleshoot false positives.  There are two architectures
+   and to troubleshoot false positives.  This document describes
+   a complement to <xref target="I-D.reddy-dnsop-error-page"></xref>
+   where computer-parsable data can be exchanged between systems.</t>
+   <t>There are two architectures
    commonly deployed from the perspective of the DNS forwarder
    when it receives a DNS query from an endpoint
       <list style="symbols">
@@ -265,6 +269,8 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
       <?rfc include='reference.RFC.2119'?>
 
       <?rfc include='reference.RFC.8174'?>
+
+      <?rfc include='reference.I-D.draft-reddy-dnsop-error-page'?>
 
     </references>
 

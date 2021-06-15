@@ -394,8 +394,8 @@
   <meta name="dct.creator" content="Wing, D., Reddy, T., and N. Cook" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-wing-dnsop-structured-dns-error-page-00" />
   <meta name="dct.issued" scheme="ISO8601" content="2021-07" />
-  <meta name="dct.abstract" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting, problem resolution, and end users.  This document describes structured data to provide these details. " />
-  <meta name="description" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting, problem resolution, and end users.  This document describes structured data to provide these details. " />
+  <meta name="dct.abstract" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution.  This document describes structured data to provide these details. " />
+  <meta name="description" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution.  This document describes structured data to provide these details. " />
 
 </head>
 
@@ -441,7 +441,7 @@
   <span class="filename">draft-wing-dnsop-structured-dns-error-page-00</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
-<p>It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting, problem resolution, and end users.  This document describes structured data to provide these details.</p>
+<p>It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution.  This document describes structured data to provide these details.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
@@ -487,7 +487,8 @@
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">In DNS filtering scenarios where DNS filtering is provided by an entity other than the DNS forwarder itself, it is desirable to propagate information from the DNS filter provider to the end user to assist with understanding the reason the DNS response was filtered and to troubleshoot false positives.  There are two architectures commonly deployed from the perspective of the DNS forwarder when it receives a DNS query from an endpoint </p>
+<p id="rfc.section.1.p.1">In DNS filtering scenarios where DNS filtering is provided by an entity other than the DNS forwarder itself, it is desirable to propagate information from the DNS filter provider to the end user to assist with understanding the reason the DNS response was filtered and to troubleshoot false positives.  This document describes a complement to <a href="#I-D.reddy-dnsop-error-page" class="xref">[I-D.reddy-dnsop-error-page]</a> where computer-parsable data can be exchanged between systems.</p>
+<p id="rfc.section.1.p.2">There are two architectures commonly deployed from the perspective of the DNS forwarder when it receives a DNS query from an endpoint </p>
 
 <ul>
 <li>parallel: Two DNS queries are generated, one to a DNS filtering service, the other to recursive resolver.  If the response from the filtering service indicates the DNS query should be filtered, the response from the recursive resolver is dropped and a filtered response is sent in response to the original query.  This architecture is often used in home network deployments.</li>
@@ -579,6 +580,11 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 <h1 id="rfc.references.1">
 <a href="#rfc.references.1">9.1.</a> Normative References</h1>
 <table><tbody>
+<tr>
+<td class="reference"><b id="I-D.reddy-dnsop-error-page">[I-D.reddy-dnsop-error-page]</b></td>
+<td class="top">
+<a title="McAfee, Inc.">Reddy, T.</a>, <a title="Open-Xchange">Cook, N.</a>, <a title="Citrix Systems, Inc.">Wing, D.</a> and <a title="Orange">M. Boucadair</a>, "<a href="https://tools.ietf.org/html/draft-reddy-dnsop-error-page-08">DNS Access Denied Error Page</a>", Internet-Draft draft-reddy-dnsop-error-page-08, June 2021.</td>
+</tr>
 <tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
 <td class="top">
