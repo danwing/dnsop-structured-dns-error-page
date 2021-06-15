@@ -216,9 +216,9 @@
   "responsible": [
     {
       "complaint": [
-        "mailto:mistakes@example.net?subject=\"incorrect filtering\
+        "mailto:helpdesk@example.net?subject=\"incorrect filtering\
          of example.org at 1621902483\"",
-        "https://mistakes.example.net?mistake=example.org?\
+        "https://mistakes.example.net?domain=example.org?\
          time=1621902483",
         "tel:+18305551212"
       ],
@@ -239,9 +239,9 @@
   "responsible": [
     {
       "complaint": [
-        "mailto:mistakes@example.net?subject=\"incorrect filtering\
+        "mailto:helpdesk@example.net?subject=\"incorrect filtering\
          of example.org at 1621902483\"",
-        "https://mistake.example.net?mistake=example.org?\
+        "https://mistake.example.net?domain=example.org?\
          time=1621902483",
         "tel:+18305551212"
       ],
@@ -355,9 +355,6 @@
       <?rfc include='reference.RFC.6838'?>
 
       <?rfc include='reference.I-D.reddy-dnsop-error-page'?>
-
-      <?rfc include='reference.I-D.draft-reddy-dnsop-error-page'?>
-
 
     </references>
 

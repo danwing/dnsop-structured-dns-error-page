@@ -391,9 +391,9 @@
   <meta name="generator" content="xml2rfc version 2.47.0 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Wing, D., Reddy, T., and N. Cook" />
+  <meta name="dct.creator" content="Wing, D., Reddy, T., Cook, N., and M. Boucadair" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-wing-dnsop-structured-dns-error-page-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2021-07" />
+  <meta name="dct.issued" scheme="ISO8601" content="2021-15" />
   <meta name="dct.abstract" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution.  This document describes structured data to provide these details. " />
   <meta name="description" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution.  This document describes structured data to provide these details. " />
 
@@ -417,7 +417,7 @@
 <td class="right">T. Reddy</td>
 </tr>
 <tr>
-<td class="left">Expires: December 9, 2021</td>
+<td class="left">Expires: December 17, 2021</td>
 <td class="right">McAfee</td>
 </tr>
 <tr>
@@ -430,7 +430,15 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">June 7, 2021</td>
+<td class="right">M. Boucadair</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">Orange</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">June 15, 2021</td>
 </tr>
 
     	
@@ -446,7 +454,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 9, 2021.</p>
+<p>This Internet-Draft will expire on December 17, 2021.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2021 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -487,13 +495,15 @@
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">In DNS filtering scenarios where DNS filtering is provided by an entity other than the DNS forwarder itself, it is desirable to propagate information from the DNS filter provider to the end user to assist with understanding the reason the DNS response was filtered and to troubleshoot false positives.  This document describes a complement to <a href="#I-D.reddy-dnsop-error-page" class="xref">[I-D.reddy-dnsop-error-page]</a> where computer-parsable data can be exchanged between systems.</p>
-<p id="rfc.section.1.p.2">There are two architectures commonly deployed from the perspective of the DNS forwarder when it receives a DNS query from an endpoint </p>
+<p id="rfc.section.1.p.1">In DNS filtering scenarios where such filtering is provided by an entity other than the DNS forwarder itself, it is desirable to propagate some information from the DNS filter provider to the end-user to assist with understanding the reason for which a DNS query/response was filtered. Also, such information is meant to help to troubleshoot false positives.  This document describes a complement to <a href="#I-D.reddy-dnsop-error-page" class="xref">[I-D.reddy-dnsop-error-page]</a> where computer-parsable data can be exchanged between systems.</p>
+<p id="rfc.section.1.p.2">There are two architectures commonly deployed from the perspective of the DNS forwarder when it receives a DNS query from an endpoint: </p>
 
-<ul>
-<li>parallel: Two DNS queries are generated, one to a DNS filtering service, the other to recursive resolver.  If the response from the filtering service indicates the DNS query should be filtered, the response from the recursive resolver is dropped and a filtered response is sent in response to the original query.  This architecture is often used in home network deployments.</li>
-<li>serial: One DNS query is generated to the recursive resolver, which itself interacts with a DNS filtering service.  This relationship with the DNS filtering service might be partially or fully withheld (that is, not disclosed) from the end- user or might be information available to the end user.  This architecture is often used in enterprise networks.</li>
-</ul>
+<dl>
+<dt>Parallel:</dt>
+<dd style="margin-left: 8">Two DNS queries are generated, one to a DNS filtering service and another one to a recursive resolver. If the response from the DNS filtering service indicates that the DNS query should be filtered, the response from the recursive resolver is dropped and a filtered response is sent in response to the original query. This architecture is often used in home network deployments.</dd>
+<dt>Serial:</dt>
+<dd style="margin-left: 8">One DNS query is generated to the recursive resolver, which itself interacts with a DNS filtering service. This relationship with the DNS filtering service might be partially or fully withheld (that is, not disclosed) from the end-user or might be information available to the end-user. This architecture is often used in enterprise networks.</dd>
+</dl>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#notation" id="notation">Terminology</a>
 </h1>
@@ -503,67 +513,81 @@
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#format-sec" id="format-sec">Structured Data</a>
 </h1>
-<p id="rfc.section.3.p.1">To receive structured DNS error page data, the client queries the Error Page URI returned in [reddy-dnsop-structured-dns-error] with Content-Type: application/json+structured-dns-error.  The JSON has one top-level name, responsible, containing an array of dictionaries for each party responsible for this particular DNS filter.  An array of responsible parties are possible in deployment scenarios where two or more entities both performed DNS filtering (perhaps for the same reason, perhaps for different reasons).  The contents of the array are as follows:</p>
+<p id="rfc.section.3.p.1">To receive structured DNS error page data, the client MUST query the Error Page URI returned in <a href="#I-D.reddy-dnsop-error-page" class="xref">[I-D.reddy-dnsop-error-page]</a> with Content-Type set to "application/json+structured-dns-error". The JSON has one top-level name, "responsible", containing an array of dictionaries for each party responsible for this particular DNS filter. An array of responsible parties are possible in deployment scenarios where two or more entities are involved in a DNS filtering (the filtering may be for the same or distinct reasons by each involved DNS filter service). The content of the array is structured are as follows:</p>
 <p></p>
 
 <dl>
 <dt>complaint:</dt>
-<dd style="margin-left: 8">an array of URIs for the user to report mis-classified DNS filtering.  This will often solely contain an https URI, but an array is provided in case telephone or email or other URIs are necessary.  This field is mandatory, and MUST contain at least one URI.</dd>
+<dd style="margin-left: 8">Is an array of URIs for the user to report mis-classified DNS filtering. This is likely to solely contain an "https" URI, but an array is provided in case telephone numbers or email or other URIs are necessary. This field is mandatory and MUST contain at least one URI.</dd>
 <dt>justification:</dt>
-<dd style="margin-left: 8">textual justification for this particular DNS filtering.  This field is optional.</dd>
-<dt>name</dt>
-<dd style="margin-left: 8">the human-friendly name of the organization that filtered this particular DNS query.  This field is optional.</dd>
-<dt>regulation</dt>
-<dd style="margin-left: 8">the URI of the regulation authority for this DNS query being filtered.  This might point at an employment agreement (for an enterprise performing filtering) or a national government regulation (for an ISP performing filtering).  This field is optional.</dd>
+<dd style="margin-left: 8">Includes the textual justification for this particular DNS filtering. This field is optional.</dd>
+<dt>name:</dt>
+<dd style="margin-left: 8">is the human-friendly name of the organization that filtered this particular DNS query. This field is optional.</dd>
+<dt>regulation:</dt>
+<dd style="margin-left: 8">the URI of the regulation authority for this DNS query being filtered. This might point at an employment agreement (for an enterprise performing filtering) or a national government regulation (for an ISP performing filtering). This field is optional.</dd>
 </dl>
 <p id="rfc.section.3.p.3">The JSON data can be displayed to the user, logged, or otherwise used to assist the end-user or IT staff with troubleshooting and diagnosing the cause of the DNS filtering.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> Examples</h1>
-<p id="rfc.section.4.p.1">In all examples, line wraps are necessary for formatting this document, not for the JSON.</p>
-<p id="rfc.section.4.p.2">Example with one entity, example.net, that has filtered a DNS query:</p>
-<pre>
-{
-  "responsible": [{
-    "complaint": ["mailto:mistakes@example.net?subject=\"incorrect
-filtering of example.org at 1621902483\"",
-"https://mistakes.example.net?mistake=example.org?time=1621902483",
-"tel:+18305551212"
-    ],
-    "justification" : "malware present for 23 days", 
-    "name": "Example.net Filtering Service",
-    "regulation": "https://laws.example.net?country=atlantis"
-  }]
+<p id="rfc.section.4.p.1">The examples use the folding defined in <a href="#RFC8792" class="xref">[RFC8792]</a> for long lines. </p>
+<p id="rfc.section.4.p.2">An example with one entity, "example.net", that has filtered a DNS query is shown in <a href="#ex1" class="xref">Figure 1</a>.</p>
+<div id="rfc.figure.1"></div>
+<div id="ex1"></div>
+<pre>{
+  "responsible": [
+    {
+      "complaint": [
+        "mailto:helpdesk@example.net?subject=\"incorrect filtering\
+         of example.org at 1621902483\"",
+        "https://mistakes.example.net?domain=example.org?\
+         time=1621902483",
+        "tel:+18305551212"
+      ],
+      "justification": "malware present for 23 days",
+      "name": "example.net Filtering Service",
+      "regulation": "https://laws.example.net?country=atlantis"
+    }
+  ]
 }</pre>
+<p class="figure">Figure 1</p>
 <p></p>
-<p id="rfc.section.4.p.4">Example with two entities, example.com and example.net, that have filtered a DNS query:</p>
-<pre>
-{
-  "responsible": [{
-    "complaint": ["mailto:mistakes@example.net?subject=\"incorrect 
-filtering of example.org at 1621902483\"",
-"https://mistake.example.net?mistake=example.org?time=1621902483",
-"tel:+18305551212"   
-    ],
-    "justification" : "malware present for 23 days", 
-    "name": "Example.net Filtering Service",
-    "regulation": "https://laws.example.net?country=atlantis"
-  }, {
-    "complaint": ["mailto:abuse@example.com?subject=\"false positive 
-filtering example.org on 24-May-2021 5:03 GMT\"",
-                  "https://example.net/report?d=example.org?t=38233",
-                  "tel:+5305551212"
-    ],
-    "justification" : "command and control malware", 
-    "name": "Example.com IT department",
-    "regulation": "https://hr.example.com?state=CA"
- }]
-}</pre>
+<p id="rfc.section.4.p.4">An example with two entities, "example.com" and "example.net", that have filtered a DNS query is shown in <a href="#ex2" class="xref">Figure 2</a>.</p>
+<div id="rfc.figure.2"></div>
+<div id="ex2"></div>
+<pre>{
+  "responsible": [
+    {
+      "complaint": [
+        "mailto:helpdesk@example.net?subject=\"incorrect filtering\
+         of example.org at 1621902483\"",
+        "https://mistake.example.net?domain=example.org?\
+         time=1621902483",
+        "tel:+18305551212"
+      ],
+      "justification": "malware present for 23 days",
+      "name": "Example.net Filtering Service",
+      "regulation": "https://laws.example.net?country=atlantis"
+    },
+    {
+      "complaint": [
+        "mailto:abuse@example.com?subject=\"false positive filtering\
+         example.org on 24-May-2021 5:03 GMT\"",
+        "https://example.net/report?d=example.org?t=38233",
+        "tel:+5305551212"
+      ],
+      "justification": "command and control malware",
+      "name": "Example.com IT department",
+      "regulation": "https://hr.example.com?state=CA"
+    }
+  ]
+}}</pre>
+<p class="figure">Figure 2: Example of Filtering with One single Entity</p>
 <p></p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> Deployment Considerations</h1>
-<p id="rfc.section.5.p.1">Over time a domain may be considered risky, then safe, then risky again, and minutes or hours can elapse between the DNS EDNS0 error and the user reporting a false positive and the DNS filtering service receiving the user's complaint.  Thus the URI is RECOMMENDED to include sufficient detail to determine the state when the DNS EDNS0 response was generated.  How this is encoded into the URI is an implementation decision.</p>
-<p id="rfc.section.5.p.2">As discussed in the Introduction, some deployment models allow the DNS filter provider to be conveyed to the end user.  This can be conveyed with a single Responsible array by encoding the upstream DNS error URI as a URL encoded parameter.</p>
-<p id="rfc.section.5.p.3">An array allows multiple DNS filters to be provided by specialized services.  For example, one service might filter access to malicious domains and another filters domains due to an internal security policy or court order.</p>
+<p id="rfc.section.5.p.1">Over time a domain name may be considered risky, then safe, then risky again, and later can elapse between the DNS EDNS0 error and the user reporting a false positive and the DNS filtering service receiving the user's complaint. Thus the URI is RECOMMENDED to include sufficient detail to determine the state when the DNS EDNS0 response was generated.  How this is encoded into the URI is an implementation decision.</p>
+<p id="rfc.section.5.p.2">As discussed in the Introduction, some deployment models allow the DNS filter provider to be conveyed to the end-user. This can be conveyed with a single "responsible" array by encoding the upstream DNS Error URI as an URL encoded parameter.</p>
+<p id="rfc.section.5.p.3">An array allows multiple DNS filters to be provided by specialized services. For example, one service might filter access to malicious domains and another filters domains due to an internal security policy or court order.</p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> Usability Considerations</h1>
 <p id="rfc.section.6.p.1">The JSON values returned SHOULD be returned in the user's preferred language as expressed by the Accept-Language HTTP header.</p>
@@ -574,7 +598,42 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> <a href="#IANA" id="IANA">IANA Considerations</a>
 </h1>
-<p id="rfc.section.8.p.1">New registry for application/json+structured-dns-error.</p>
+<pre>   Type name: application
+
+   Subtype name: json+structured-dns-error
+
+   Required parameters: N/A
+
+   Optional parameters: N/A
+
+   Encoding considerations: as defined in Section 3 of [RFCXXXX].
+
+   Security considerations: See Section 7 of [RFCXXXX].
+
+   Interoperability considerations: N/A
+
+   Published specification: [RFCXXXX]
+
+   Applications that use this media type: Section 3 of [RFCXXXX].
+
+   Fragment identifier considerations: N/A
+
+   Additional information: N/A
+
+   Person &amp; email address to contact for further information: IETF,
+      iesg@ietf.org
+
+   Intended usage: COMMON
+
+   Restrictions on usage: none
+
+   Author: See Authors' Addresses section.
+
+   Change controller: IESG
+
+   Provisional registration?  No</pre>
+<p id="rfc.section.8.p.1">This document requests IANA to register the "application/json+structured-dns-error" media type in the "Media Types" registry <a href="#IANA-MediaTypes" class="xref">[IANA-MediaTypes]</a>. This registration follows the procedures specified in <a href="#RFC6838" class="xref">[RFC6838]</a>: </p>
+<p></p>
 <h1 id="rfc.references">
 <a href="#rfc.references">9.</a> References</h1>
 <h1 id="rfc.references.1">
@@ -591,6 +650,11 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 <a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
 </tr>
 <tr>
+<td class="reference"><b id="RFC6838">[RFC6838]</b></td>
+<td class="top">
+<a>Freed, N.</a>, <a>Klensin, J.</a> and <a>T. Hansen</a>, "<a href="https://tools.ietf.org/html/rfc6838">Media Type Specifications and Registration Procedures</a>", BCP 13, RFC 6838, DOI 10.17487/RFC6838, January 2013.</td>
+</tr>
+<tr>
 <td class="reference"><b id="RFC8174">[RFC8174]</b></td>
 <td class="top">
 <a>Leiba, B.</a>, "<a href="https://tools.ietf.org/html/rfc8174">Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a>", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.</td>
@@ -603,6 +667,11 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 <td class="reference"><b id="I-D.ietf-dprive-dnsoquic">[I-D.ietf-dprive-dnsoquic]</b></td>
 <td class="top">
 <a title="Private Octopus Inc.">Huitema, C.</a>, <a title="Salesforce">Mankin, A.</a> and <a title="Sinodun IT">S. Dickinson</a>, "<a href="https://tools.ietf.org/html/draft-ietf-dprive-dnsoquic-02">Specification of DNS over Dedicated QUIC Connections</a>", Internet-Draft draft-ietf-dprive-dnsoquic-02, February 2021.</td>
+</tr>
+<tr>
+<td class="reference"><b id="IANA-MediaTypes">[IANA-MediaTypes]</b></td>
+<td class="top">
+<a>IANA</a>, "<a href="https://www.iana.org/assignments/media-types">Media Types</a>"</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7858">[RFC7858]</b></td>
@@ -618,6 +687,11 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 <td class="reference"><b id="RFC8499">[RFC8499]</b></td>
 <td class="top">
 <a>Hoffman, P.</a>, <a>Sullivan, A.</a> and <a>K. Fujiwara</a>, "<a href="https://tools.ietf.org/html/rfc8499">DNS Terminology</a>", BCP 219, RFC 8499, DOI 10.17487/RFC8499, January 2019.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8792">[RFC8792]</b></td>
+<td class="top">
+<a>Watsen, K.</a>, <a>Auerswald, E.</a>, <a>Farrel, A.</a> and <a>Q. Wu</a>, "<a href="https://tools.ietf.org/html/rfc8792">Handling Long Lines in Content of Internet-Drafts and RFCs</a>", RFC 8792, DOI 10.17487/RFC8792, June 2020.</td>
 </tr>
 </tbody></table>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
@@ -683,6 +757,27 @@ filtering example.org on 24-May-2021 5:03 GMT\"",
 	  <span class="country-name vcardline">UK</span>
 	</span>
 	<span class="vcardline">EMail: <a href="mailto:neil.cook@noware.co.uk">neil.cook@noware.co.uk</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Mohamed Boucadair</span> 
+	  <span class="n hidden">
+		<span class="family-name">Boucadair</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Orange</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality">Rennes</span>,  
+		<span class="region"></span>
+		<span class="code">35000</span>
+	  </span>
+	  <span class="country-name vcardline">France</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:mohamed.boucadair@orange.com">mohamed.boucadair@orange.com</a></span>
 
   </address>
 </div>
