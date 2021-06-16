@@ -5,15 +5,15 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: December 17, 2021                                        McAfee
+Expires: December 18, 2021                                        McAfee
                                                                  N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                           June 15, 2021
+                                                           June 16, 2021
 
 
-                      DNS Access Denied Error Page
+            Structured Data for DNS Access Denied Error Page
              draft-wing-dnsop-structured-dns-error-page-00
 
 Abstract
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 17, 2021.
+   This Internet-Draft will expire on December 18, 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 1]
+Wing, et al.            Expires December 18, 2021               [Page 1]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 2]
+Wing, et al.            Expires December 18, 2021               [Page 2]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -165,7 +165,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 3]
+Wing, et al.            Expires December 18, 2021               [Page 3]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -221,7 +221,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 4]
+Wing, et al.            Expires December 18, 2021               [Page 4]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -277,7 +277,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 5]
+Wing, et al.            Expires December 18, 2021               [Page 5]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -292,7 +292,14 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 7.  Security Considerations
 
-   TBD.
+   Security considerations inherent to the use of DNS Error Page URI are
+   discussed in Section 7 of [I-D.reddy-dnsop-error-page].
+
+   The structure data includes URLs that may be misused to return
+   infected or compromised websites.  Means to detect and avoid such URL
+   are recommended.  Likewise, contact URIs and telephone numbers may be
+   misused to return third-party contact points and thus lead to spam
+   these contacts.
 
 8.  IANA Considerations
 
@@ -326,14 +333,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-
-
-
-
-
-
-
-Wing, et al.            Expires December 17, 2021               [Page 6]
+Wing, et al.            Expires December 18, 2021               [Page 6]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -389,7 +389,7 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 7]
+Wing, et al.            Expires December 18, 2021               [Page 7]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -445,7 +445,7 @@ Authors' Addresses
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 8]
+Wing, et al.            Expires December 18, 2021               [Page 8]
 
 Internet-Draft        DNS Access Denied Error Page             June 2021
 
@@ -501,4 +501,4 @@ Internet-Draft        DNS Access Denied Error Page             June 2021
 
 
 
-Wing, et al.            Expires December 17, 2021               [Page 9]
+Wing, et al.            Expires December 18, 2021               [Page 9]
