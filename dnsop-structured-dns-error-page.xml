@@ -34,8 +34,8 @@
 <rfc category="std" docName="draft-wing-dnsop-structured-dns-error-page-00"
      ipr="trust200902">
   <front>
-    <title abbrev="DNS Access Denied Error Page">DNS Access Denied Error
-    Page</title>
+    <title abbrev="DNS Access Denied Error Page">Structured Data for DNS
+    Access Denied Error Page</title>
 
     <author fullname="Dan Wing" initials="D." surname="Wing">
       <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
@@ -110,29 +110,26 @@
     <workgroup>DNSOP WG</workgroup>
 
     <abstract>
-
-      <t>It can be valuable to communicate computer-parsable details
-      about DNS filtering to assist troubleshooting and problem
-      resolution.  This document describes structured data to provide
-      these details.</t>
+      <t>It can be valuable to communicate computer-parsable details about DNS
+      filtering to assist troubleshooting and problem resolution. This
+      document describes structured data to provide these details.</t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction">
-
       <t>In DNS filtering scenarios where such filtering is provided by an
       entity other than the DNS forwarder itself, it is desirable to propagate
       some information from the DNS filter provider to the end-user to assist
       with understanding the reason for which a DNS query/response was
       filtered. Also, such information is meant to help to troubleshoot false
-      positives.  This document describes
-   a complement to <xref target="I-D.reddy-dnsop-error-page"></xref>
-   where computer-parsable data can be exchanged between systems.</t>
-    
-    <t>There are two architectures commonly deployed from the
-      perspective of the DNS forwarder when it receives a DNS query from an
-      endpoint: <list style="hanging">
+      positives. This document describes a complement to <xref
+      target="I-D.reddy-dnsop-error-page"></xref> where computer-parsable data
+      can be exchanged between systems.</t>
+
+      <t>There are two architectures commonly deployed from the perspective of
+      the DNS forwarder when it receives a DNS query from an endpoint: <list
+          style="hanging">
           <t hangText="Parallel:">Two DNS queries are generated, one to a DNS
           filtering service and another one to a recursive resolver. If the
           response from the DNS filtering service indicates that the DNS query
@@ -149,7 +146,6 @@
           used in enterprise networks.</t>
         </list></t>
     </section>
-
 
     <section anchor="notation" title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -206,7 +202,7 @@
 
     <section title="Examples">
       <t>The examples use the folding defined in <xref
-      target="RFC8792"></xref> for long lines. </t>
+      target="RFC8792"></xref> for long lines.</t>
 
       <t>An example with one entity, "example.net", that has filtered a DNS
       query is shown in <xref target="ex1"></xref>.</t>
@@ -290,7 +286,15 @@
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>TBD.</t>
+      <t>Security considerations inherent to the use of DNS Error Page URI are
+      discussed in Section 7 of <xref
+      target="I-D.reddy-dnsop-error-page"></xref>. </t>
+
+      <t>The structure data includes URLs that may be misused to return
+      infected or compromised websites. Means to detect and avoid such URL are
+      recommended. Likewise, contact URIs and telephone numbers may be misused
+      to return third-party contact points and thus lead to spam these
+      contacts.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -351,11 +355,9 @@
 
       <?rfc include='reference.RFC.8174'?>
 
-
       <?rfc include='reference.RFC.6838'?>
 
       <?rfc include='reference.I-D.reddy-dnsop-error-page'?>
-
     </references>
 
     <references title="Informative References">
