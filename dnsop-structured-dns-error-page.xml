@@ -207,7 +207,8 @@
       <t>An example with one entity, "example.net", that has filtered a DNS
       query is shown in <xref target="ex1"></xref>.</t>
 
-      <t><figure align="center" anchor="ex1">
+      <t><figure align="center" anchor="ex1"
+          title="Example of Filtering with One single Entity">
           <artwork><![CDATA[{
   "responsible": [
     {
@@ -230,7 +231,7 @@
       have filtered a DNS query is shown in <xref target="ex2"></xref>.</t>
 
       <t><figure align="center" anchor="ex2"
-          title="Example of Filtering with One single Entity">
+          title="Example of Filtering with Two Entities">
           <artwork><![CDATA[{
   "responsible": [
     {
