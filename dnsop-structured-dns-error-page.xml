@@ -34,7 +34,7 @@
 <rfc category="std" docName="draft-wing-dnsop-structured-dns-error-page-00"
      ipr="trust200902">
   <front>
-    <title abbrev="DNS Access Denied Error Page">Structured Data for DNS
+    <title abbrev="Structured DNS Access Denied Error Page">Structured Data for DNS
     Access Denied Error Page</title>
 
     <author fullname="Dan Wing" initials="D." surname="Wing">
