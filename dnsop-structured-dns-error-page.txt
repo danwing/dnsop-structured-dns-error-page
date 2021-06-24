@@ -5,12 +5,12 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: December 23, 2021                                        McAfee
+Expires: December 26, 2021                                        McAfee
                                                                  N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                           June 21, 2021
+                                                           June 24, 2021
 
 
             Structured Data for DNS Access Denied Error Page
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 23, 2021.
+   This Internet-Draft will expire on December 26, 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 1]
+Wing, et al.            Expires December 26, 2021               [Page 1]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -79,14 +79,12 @@ Table of Contents
 
 1.  Introduction
 
-   In DNS filtering scenarios where such filtering is provided by an
-   entity other than the DNS forwarder itself, it is desirable to
-   propagate some information from the DNS filter provider to the end-
-   user to assist with understanding the reason for which a DNS query/
-   response was filtered.  Also, such information is meant to help to
-   troubleshoot false positives.  This document describes a complement
-   to [I-D.reddy-dnsop-error-page] where computer-parsable data can be
-   exchanged between systems.
+   Where DNS filtering is provided by an entity other than the DNS
+   forwarder itself, it is desirable to propagate some information from
+   the DNS filter provider to the end-user to understand the reason for
+   the filtering and to troubleshoot false positives.  This document
+   describes a complement to [I-D.reddy-dnsop-error-page] where
+   computer-parsable data can be exchanged between systems.
 
    There are two architectures commonly deployed from the perspective of
    the DNS forwarder when it receives a DNS query from an endpoint:
@@ -109,7 +107,9 @@ Table of Contents
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 2]
+
+
+Wing, et al.            Expires December 26, 2021               [Page 2]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -165,7 +165,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 3]
+Wing, et al.            Expires December 26, 2021               [Page 3]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -221,7 +221,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 4]
+Wing, et al.            Expires December 26, 2021               [Page 4]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -277,7 +277,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 5]
+Wing, et al.            Expires December 26, 2021               [Page 5]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -333,7 +333,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 6]
+Wing, et al.            Expires December 26, 2021               [Page 6]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -389,7 +389,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 7]
+Wing, et al.            Expires December 26, 2021               [Page 7]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -445,7 +445,7 @@ Authors' Addresses
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 8]
+Wing, et al.            Expires December 26, 2021               [Page 8]
 
 Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
@@ -501,4 +501,4 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 23, 2021               [Page 9]
+Wing, et al.            Expires December 26, 2021               [Page 9]
