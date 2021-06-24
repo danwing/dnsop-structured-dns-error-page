@@ -118,11 +118,10 @@
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>In DNS filtering scenarios where such filtering is provided by an
+      <t>Where DNS filtering is provided by an
       entity other than the DNS forwarder itself, it is desirable to propagate
-      some information from the DNS filter provider to the end-user to assist
-      with understanding the reason for which a DNS query/response was
-      filtered. Also, such information is meant to help to troubleshoot false
+      some information from the DNS filter provider to the end-user to
+      understand the reason for the filtering and to troubleshoot false
       positives. This document describes a complement to <xref
       target="I-D.reddy-dnsop-error-page"></xref> where computer-parsable data
       can be exchanged between systems.</t>
