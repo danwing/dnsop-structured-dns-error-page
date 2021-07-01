@@ -393,7 +393,7 @@
 
   <meta name="dct.creator" content="Wing, D., Reddy, T., Cook, N., and M. Boucadair" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-wing-dnsop-structured-dns-error-page-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2021-24" />
+  <meta name="dct.issued" scheme="ISO8601" content="2021-01" />
   <meta name="dct.abstract" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution. This document describes structured data to provide these details. " />
   <meta name="description" content="It can be valuable to communicate computer-parsable details about DNS filtering to assist troubleshooting and problem resolution. This document describes structured data to provide these details. " />
 
@@ -417,7 +417,7 @@
 <td class="right">T. Reddy</td>
 </tr>
 <tr>
-<td class="left">Expires: December 26, 2021</td>
+<td class="left">Expires: January 2, 2022</td>
 <td class="right">McAfee</td>
 </tr>
 <tr>
@@ -438,7 +438,7 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">June 24, 2021</td>
+<td class="right">July 1, 2021</td>
 </tr>
 
     	
@@ -454,7 +454,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 26, 2021.</p>
+<p>This Internet-Draft will expire on January 2, 2022.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2021 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -495,15 +495,8 @@
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">Where DNS filtering is provided by an entity other than the DNS forwarder itself, it is desirable to propagate some information from the DNS filter provider to the end-user to understand the reason for the filtering and to troubleshoot false positives. This document describes a complement to <a href="#I-D.reddy-dnsop-error-page" class="xref">[I-D.reddy-dnsop-error-page]</a> where computer-parsable data can be exchanged between systems.</p>
-<p id="rfc.section.1.p.2">There are two architectures commonly deployed from the perspective of the DNS forwarder when it receives a DNS query from an endpoint: </p>
-
-<dl>
-<dt>Parallel:</dt>
-<dd style="margin-left: 8">Two DNS queries are generated, one to a DNS filtering service and another one to a recursive resolver. If the response from the DNS filtering service indicates that the DNS query should be filtered, the response from the recursive resolver is dropped and a filtered response is sent in response to the original query. This architecture is often used in home network deployments.</dd>
-<dt>Serial:</dt>
-<dd style="margin-left: 8">One DNS query is generated to the recursive resolver, which itself interacts with a DNS filtering service. This relationship with the DNS filtering service might be partially or fully withheld (that is, not disclosed) from the end-user or might be information available to the end-user. This architecture is often used in enterprise networks.</dd>
-</dl>
+<p id="rfc.section.1.p.1">DNS clients using services which perform filtering may wish to receive more information about such filtering and the reason for that filtering. To this end, <a href="#RFC8914" class="xref">Extended DNS Error Codes</a> provide information about when different types of filtering have occurred, and <a href="#I-D.reddy-dnsop-error-page" class="xref">DNS Access Denied Error Page</a> provides a URI to give further information to the end-user about the reasons for the filtering. However, the latter draft assumes a client with a user-interface that can display a web page to the end-user, whereas many clients may in fact be "headless", i.e., acting on behalf of other network elements; such clients can include DNS forwarders and proxies. Such clients cannot make use of a web-page designed for presentation to an end-user, but may instead be able to make use of structured data. This draft provides a mechanism for such clients to request and receive structured data from the URI returned by the DNS Access Denied Error Page mechanism.</p>
+<p id="rfc.section.1.p.2">When a third party provides DNS filtering, there are deployments where disclosing that third party to the host (which originated the DNS query) is desirable but other deployments where such disclosure is not desired.  For example, the IT organization might contract filtering to a third party but want trouble-tickets from employees to be handled by IT, rather than having employees interact directly with the third party.  As another example, all the employees at a small business or all the members of a household might be informed of the third party so they can troubleshoot filtering with that third party directly.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#notation" id="notation">Terminology</a>
 </h1>
@@ -586,7 +579,7 @@
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> Deployment Considerations</h1>
 <p id="rfc.section.5.p.1">Over time a domain name may be considered risky, then safe, then risky again, and later can elapse between the DNS EDNS0 error and the user reporting a false positive and the DNS filtering service receiving the user's complaint. Thus the URI is RECOMMENDED to include sufficient detail to determine the state when the DNS EDNS0 response was generated.  How this is encoded into the URI is an implementation decision.</p>
-<p id="rfc.section.5.p.2">As discussed in the Introduction, some deployment models allow the DNS filter provider to be conveyed to the end-user. This can be conveyed with a single "responsible" array by encoding the upstream DNS Error URI as an URL encoded parameter.</p>
+<p id="rfc.section.5.p.2">As discussed in the Introduction, some deployment models allow the DNS filter provider to be conveyed to the end-user. In such a deployment, state can be avoided in the DNS forwarder by conveying the DNS filter provider's URL in the URL sent to the user.  For example, if the upstream DNS filter provider (example.net) indicates their structured DNS error page for a query to example.org is https://example.net?f=example.org&amp;s=38, that URL can be conveyed to the user as the URL-encoded parameter https%3A%2F%2Fexample.net%3Ff%3Dexample.org%26s%3D38229 appended to the DNS forwarder's DNS error page URL.</p>
 <p id="rfc.section.5.p.3">An array allows multiple DNS filters to be provided by specialized services. For example, one service might filter access to malicious domains and another filters domains due to an internal security policy or court order.</p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> Usability Considerations</h1>
@@ -693,6 +686,11 @@
 <td class="reference"><b id="RFC8792">[RFC8792]</b></td>
 <td class="top">
 <a>Watsen, K.</a>, <a>Auerswald, E.</a>, <a>Farrel, A.</a> and <a>Q. Wu</a>, "<a href="https://tools.ietf.org/html/rfc8792">Handling Long Lines in Content of Internet-Drafts and RFCs</a>", RFC 8792, DOI 10.17487/RFC8792, June 2020.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8914">[RFC8914]</b></td>
+<td class="top">
+<a>Kumari, W.</a>, <a>Hunt, E.</a>, <a>Arends, R.</a>, <a>Hardaker, W.</a> and <a>D. Lawrence</a>, "<a href="https://tools.ietf.org/html/rfc8914">Extended DNS Errors</a>", RFC 8914, DOI 10.17487/RFC8914, October 2020.</td>
 </tr>
 </tbody></table>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>

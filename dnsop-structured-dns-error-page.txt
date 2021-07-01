@@ -5,12 +5,12 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: December 26, 2021                                        McAfee
+Expires: January 2, 2022                                          McAfee
                                                                  N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                           June 24, 2021
+                                                            July 1, 2021
 
 
             Structured Data for DNS Access Denied Error Page
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 26, 2021.
+   This Internet-Draft will expire on January 2, 2022.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Wing, et al.            Expires December 26, 2021               [Page 1]
+Wing, et al.             Expires January 2, 2022                [Page 1]
 
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -79,39 +79,39 @@ Table of Contents
 
 1.  Introduction
 
-   Where DNS filtering is provided by an entity other than the DNS
-   forwarder itself, it is desirable to propagate some information from
-   the DNS filter provider to the end-user to understand the reason for
-   the filtering and to troubleshoot false positives.  This document
-   describes a complement to [I-D.reddy-dnsop-error-page] where
-   computer-parsable data can be exchanged between systems.
+   DNS clients using services which perform filtering may wish to
+   receive more information about such filtering and the reason for that
+   filtering.  To this end, Extended DNS Error Codes [RFC8914] provide
+   information about when different types of filtering have occurred,
+   and DNS Access Denied Error Page [I-D.reddy-dnsop-error-page]
+   provides a URI to give further information to the end-user about the
+   reasons for the filtering.  However, the latter draft assumes a
+   client with a user-interface that can display a web page to the end-
+   user, whereas many clients may in fact be "headless", i.e., acting on
+   behalf of other network elements; such clients can include DNS
+   forwarders and proxies.  Such clients cannot make use of a web-page
+   designed for presentation to an end-user, but may instead be able to
+   make use of structured data.  This draft provides a mechanism for
+   such clients to request and receive structured data from the URI
+   returned by the DNS Access Denied Error Page mechanism.
 
-   There are two architectures commonly deployed from the perspective of
-   the DNS forwarder when it receives a DNS query from an endpoint:
-
-   Parallel:  Two DNS queries are generated, one to a DNS filtering
-      service and another one to a recursive resolver.  If the response
-      from the DNS filtering service indicates that the DNS query should
-      be filtered, the response from the recursive resolver is dropped
-      and a filtered response is sent in response to the original query.
-      This architecture is often used in home network deployments.
-
-   Serial:  One DNS query is generated to the recursive resolver, which
-      itself interacts with a DNS filtering service.  This relationship
-      with the DNS filtering service might be partially or fully
-      withheld (that is, not disclosed) from the end-user or might be
-      information available to the end-user.  This architecture is often
-      used in enterprise networks.
-
-
-
-
-
+   When a third party provides DNS filtering, there are deployments
+   where disclosing that third party to the host (which originated the
+   DNS query) is desirable but other deployments where such disclosure
+   is not desired.  For example, the IT organization might contract
+   filtering to a third party but want trouble-tickets from employees to
+   be handled by IT, rather than having employees interact directly with
+   the third party.  As another example, all the employees at a small
+   business or all the members of a household might be informed of the
+   third party so they can troubleshoot filtering with that third party
+   directly.
 
 
-Wing, et al.            Expires December 26, 2021               [Page 2]
+
+
+Wing, et al.             Expires January 2, 2022                [Page 2]
 
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
 2.  Terminology
@@ -165,9 +165,9 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 26, 2021               [Page 3]
+Wing, et al.             Expires January 2, 2022                [Page 3]
 
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
 4.  Examples
@@ -221,9 +221,9 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 26, 2021               [Page 4]
+Wing, et al.             Expires January 2, 2022                [Page 4]
 
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
    {
@@ -267,21 +267,26 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
    implementation decision.
 
    As discussed in the Introduction, some deployment models allow the
-   DNS filter provider to be conveyed to the end-user.  This can be
-   conveyed with a single "responsible" array by encoding the upstream
-   DNS Error URI as an URL encoded parameter.
+   DNS filter provider to be conveyed to the end-user.  In such a
+   deployment, state can be avoided in the DNS forwarder by conveying
+   the DNS filter provider's URL in the URL sent to the user.  For
+   example, if the upstream DNS filter provider (example.net) indicates
+   their structured DNS error page for a query to example.org is
+   https://example.net?f=example.org&s=38, that URL can be conveyed to
+   the user as the URL-encoded parameter
+
+
+
+Wing, et al.             Expires January 2, 2022                [Page 5]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
+
+   https%3A%2F%2Fexample.net%3Ff%3Dexample.org%26s%3D38229 appended to
+   the DNS forwarder's DNS error page URL.
 
    An array allows multiple DNS filters to be provided by specialized
    services.  For example, one service might filter access to malicious
-
-
-
-
-Wing, et al.            Expires December 26, 2021               [Page 5]
-
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
-
-
    domains and another filters domains due to an internal security
    policy or court order.
 
@@ -328,14 +333,9 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-
-
-
-
-
-Wing, et al.            Expires December 26, 2021               [Page 6]
+Wing, et al.             Expires January 2, 2022                [Page 6]
 
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
       Type name: application
@@ -389,9 +389,9 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-Wing, et al.            Expires December 26, 2021               [Page 7]
+Wing, et al.             Expires January 2, 2022                [Page 7]
 
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
    [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
@@ -432,22 +432,29 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
+   [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
+              Lawrence, "Extended DNS Errors", RFC 8914,
+              DOI 10.17487/RFC8914, October 2020,
+              <https://www.rfc-editor.org/info/rfc8914>.
+
 Authors' Addresses
+
+
+
+
+
+
+
+Wing, et al.             Expires January 2, 2022                [Page 8]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
 
    Dan Wing
    Citrix Systems, Inc.
    USA
 
    Email: dwing-ietf@fuggles.com
-
-
-
-
-
-
-Wing, et al.            Expires December 26, 2021               [Page 8]
-
-Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
    Tirumaleswar Reddy
@@ -494,11 +501,4 @@ Internet-Draft   Structured DNS Access Denied Error Page       June 2021
 
 
 
-
-
-
-
-
-
-
-Wing, et al.            Expires December 26, 2021               [Page 9]
+Wing, et al.             Expires January 2, 2022                [Page 9]
