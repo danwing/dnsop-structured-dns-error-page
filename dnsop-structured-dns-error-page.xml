@@ -37,7 +37,7 @@
   <front>
     <title abbrev="Structured DNS Access Denied Error Page">Structured Data for DNS
     Access Denied Error Page</title>
-    <seriesInfo name="Internet-Draft" value="draft-wing-dnsop-structured-dns-error-page-00"/>
+    <seriesInfo name="Internet-Draft" value="draft-wing-dnsop-structured-dns-error-page-01"/>
     <author fullname="Dan Wing" initials="D." surname="Wing">
       <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
       <address>
