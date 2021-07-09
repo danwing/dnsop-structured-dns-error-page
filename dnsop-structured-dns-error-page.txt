@@ -98,14 +98,14 @@ Table of Contents
    designed for presentation to an end-user, but may instead be able to
    make use of structured data.  This draft provides a mechanism for
    such clients to request and receive structured data from the URI
-   returned by the DNS Access Denied Error Page mechanism.
+   returned by the DNS Access Denied Error Page mechanism, allowing the
+   client to parse and display this information using its own user
+   interface.
 
    When a third party provides DNS filtering, there are deployments
    where disclosing that third party to the host (which originated the
    DNS query) is desirable but other deployments where such disclosure
    is not desired.  For example, the IT organization might contract
-   filtering to a third party but want trouble-tickets from employees to
-   be handled by IT, rather than having employees interact directly with
 
 
 
@@ -114,6 +114,8 @@ Wing, et al.             Expires 10 January 2022                [Page 2]
 Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
+   filtering to a third party but want trouble-tickets from employees to
+   be handled by IT, rather than having employees interact directly with
    the third party.  As another example, all the employees at a small
    business or all the members of a household might be informed of the
    third party so they can troubleshoot filtering with that third party
@@ -159,8 +161,6 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
       this particular DNS query.  This field is optional.
 
    regulation:  the URI of the regulation authority for this DNS query
-
-
 
 
 

@@ -43,7 +43,7 @@
       <address>
         <postal>
           <street/>
-          <country>USA</country>
+          <country>United States of America</country>
         </postal>
         <email>dwing-ietf@fuggles.com</email>
       </address>
@@ -66,7 +66,7 @@
       <address>
         <postal>
           <street/>
-          <country>UK</country>
+          <country>United Kingdom</country>
         </postal>
         <email>neil.cook@noware.co.uk</email>
       </address>
@@ -111,7 +111,8 @@
       instead be able to make use of structured data. This draft
       provides a mechanism for such clients to request and receive
       structured data from the URI returned by the DNS Access Denied
-      Error Page mechanism.</t>
+      Error Page mechanism, allowing the client to parse and display
+      this information using its own user interface.</t>
       <t>When a third party provides DNS filtering, there are
       deployments where disclosing that third party to the host (which
       originated the DNS query) is desirable but other deployments
