@@ -5,12 +5,12 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: January 2, 2022                                          McAfee
+Expires: 10 January 2022                                          McAfee
                                                                  N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                            July 1, 2021
+                                                             9 July 2021
 
 
             Structured Data for DNS Access Denied Error Page
@@ -37,30 +37,35 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 2, 2022.
+   This Internet-Draft will expire on 10 January 2022.
 
 Copyright Notice
 
    Copyright (c) 2021 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-   This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
-   publication of this document.  Please review these documents
-   carefully, as they describe your rights and restrictions with respect
-   to this document.  Code Components extracted from this document must
 
 
 
-Wing, et al.             Expires January 2, 2022                [Page 1]
+
+
+
+
+
+
+Wing, et al.             Expires 10 January 2022                [Page 1]
 
 Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
-   include Simplified BSD License text as described in Section 4.e of
-   the Trust Legal Provisions and are provided without warranty as
-   described in the Simplified BSD License.
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Simplified BSD License text
+   as described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Simplified BSD License.
 
 Table of Contents
 
@@ -75,7 +80,7 @@ Table of Contents
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   8
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -101,18 +106,18 @@ Table of Contents
    is not desired.  For example, the IT organization might contract
    filtering to a third party but want trouble-tickets from employees to
    be handled by IT, rather than having employees interact directly with
+
+
+
+Wing, et al.             Expires 10 January 2022                [Page 2]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
+
    the third party.  As another example, all the employees at a small
    business or all the members of a household might be informed of the
    third party so they can troubleshoot filtering with that third party
    directly.
-
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 2]
-
-Internet-Draft   Structured DNS Access Denied Error Page       July 2021
-
 
 2.  Terminology
 
@@ -154,6 +159,17 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
       this particular DNS query.  This field is optional.
 
    regulation:  the URI of the regulation authority for this DNS query
+
+
+
+
+
+
+Wing, et al.             Expires 10 January 2022                [Page 3]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
+
       being filtered.  This might point at an employment agreement (for
       an enterprise performing filtering) or a national government
       regulation (for an ISP performing filtering).  This field is
@@ -162,13 +178,6 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
    The JSON data can be displayed to the user, logged, or otherwise used
    to assist the end-user or IT staff with troubleshooting and
    diagnosing the cause of the DNS filtering.
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 3]
-
-Internet-Draft   Structured DNS Access Denied Error Page       July 2021
-
 
 4.  Examples
 
@@ -194,7 +203,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
      ]
    }
 
-              Figure 1: Example of Filtering with One Entity
+               Figure 1: Example of Filtering with One Entity
 
    An example with two entities, "example.com" and "example.net", that
    have filtered a DNS query is shown in Figure 2, below.
@@ -212,16 +221,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
 
-
-
-
-
-
-
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 4]
+Wing, et al.             Expires 10 January 2022                [Page 4]
 
 Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
@@ -254,7 +254,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
      ]
    }}
 
-             Figure 2: Example of Filtering with Two Entities
+              Figure 2: Example of Filtering with Two Entities
 
 5.  Deployment Considerations
 
@@ -266,6 +266,22 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
    response was generated.  How this is encoded into the URI is an
    implementation decision.
 
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.             Expires 10 January 2022                [Page 5]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
+
    As discussed in the Introduction, some deployment models allow the
    DNS filter provider to be conveyed to the end-user.  In such a
    deployment, state can be avoided in the DNS forwarder by conveying
@@ -274,14 +290,6 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
    their structured DNS error page for a query to example.org is
    https://example.net?f=example.org&s=38, that URL can be conveyed to
    the user as the URL-encoded parameter
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 5]
-
-Internet-Draft   Structured DNS Access Denied Error Page       July 2021
-
-
    https%3A%2F%2Fexample.net%3Ff%3Dexample.org%26s%3D38229 appended to
    the DNS forwarder's DNS error page URL.
 
@@ -325,15 +333,7 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
 
-
-
-
-
-
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 6]
+Wing, et al.             Expires 10 January 2022                [Page 6]
 
 Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
@@ -373,26 +373,31 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
       Provisional registration?  No
 
+
 9.  References
 
 9.1.  Normative References
 
    [I-D.reddy-dnsop-error-page]
               Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
-              Access Denied Error Page", draft-reddy-dnsop-error-page-08
-              (work in progress), June 2021.
+              Access Denied Error Page", Work in Progress, Internet-
+              Draft, draft-reddy-dnsop-error-page-08, 4 June 2021,
+              <https://www.ietf.org/archive/id/draft-reddy-dnsop-error-
+              page-08.txt>.
+
+
+
+
+
+Wing, et al.             Expires 10 January 2022                [Page 7]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 7]
-
-Internet-Draft   Structured DNS Access Denied Error Page       July 2021
-
 
    [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -407,8 +412,10 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Mankin, A., and S. Dickinson, "Specification
-              of DNS over Dedicated QUIC Connections", draft-ietf-
-              dprive-dnsoquic-02 (work in progress), February 2021.
+              of DNS over Dedicated QUIC Connections", Work in Progress,
+              Internet-Draft, draft-ietf-dprive-dnsoquic-02, 22 February
+              2021, <https://www.ietf.org/archive/id/draft-ietf-dprive-
+              dnsoquic-02.txt>.
 
    [IANA-MediaTypes]
               IANA, "Media Types",
@@ -432,6 +439,17 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
+
+
+
+
+
+
+Wing, et al.             Expires 10 January 2022                [Page 8]
+
+Internet-Draft   Structured DNS Access Denied Error Page       July 2021
+
+
    [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
               Lawrence, "Extended DNS Errors", RFC 8914,
               DOI 10.17487/RFC8914, October 2020,
@@ -439,20 +457,9 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 Authors' Addresses
 
-
-
-
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 8]
-
-Internet-Draft   Structured DNS Access Denied Error Page       July 2021
-
-
    Dan Wing
    Citrix Systems, Inc.
-   USA
+   United States of America
 
    Email: dwing-ietf@fuggles.com
 
@@ -460,7 +467,8 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
    Tirumaleswar Reddy
    McAfee, Inc.
    Embassy Golf Link Business Park
-   Bangalore, Karnataka  560071
+   Bangalore 560071
+   Karnataka
    India
 
    Email: kondtir@gmail.com
@@ -468,14 +476,14 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
    Neil Cook
    Open-Xchange
-   UK
+   United Kingdom
 
    Email: neil.cook@noware.co.uk
 
 
    Mohamed Boucadair
    Orange
-   Rennes  35000
+   35000 Rennes
    France
 
    Email: mohamed.boucadair@orange.com
@@ -493,12 +501,4 @@ Internet-Draft   Structured DNS Access Denied Error Page       July 2021
 
 
 
-
-
-
-
-
-
-
-
-Wing, et al.             Expires January 2, 2022                [Page 9]
+Wing, et al.             Expires 10 January 2022                [Page 9]
