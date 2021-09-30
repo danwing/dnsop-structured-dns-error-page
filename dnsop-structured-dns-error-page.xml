@@ -32,7 +32,8 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-wing-dnsop-structured-dns-error-page-00" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3" consensus="true">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-wing-dnsop-structured-dns-error-page-01"
+     ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3" consensus="true">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
   <front>
     <title abbrev="Structured DNS Access Denied Error Page">Structured Data for DNS
@@ -87,65 +88,100 @@
     <date/>
     <workgroup>DNSOP WG</workgroup>
     <abstract>
-      <t>It can be valuable to communicate computer-parsable details about DNS
-      filtering to assist troubleshooting and problem resolution. This
-      document describes structured data to provide these details.</t>
+      <t>DNS filtering is widely deployed for network security, but
+      filtered DNS responses lack information for the end user to
+      understand the reason for the filtering.  Existing mechanisms
+      to provide detail to end users cause harm especially if the
+      blocked DNS response is to an HTTPS website.</t>
+
+      <t>This document defines a protocol to explain the DNS
+      filtering.  This information can be parsed by the client and
+      displayed, logged, or to decide to change using this network.</t>
     </abstract>
   </front>
   <middle>
     <section anchor="intro" numbered="true" toc="default">
       <name>Introduction</name>
-      <t>DNS clients using services which perform filtering may wish
-      to receive more information about such filtering and the reason
-      for that filtering. To this end,
-      <xref target="RFC8914" format="default">Extended DNS Error Codes</xref> provide information about when
-      different types of filtering have occurred, and <xref target="I-D.reddy-dnsop-error-page" format="default">DNS Access                                                                                             
-      Denied Error Page</xref> provides a URI to give further
-      information to the end-user about the reasons for the
-      filtering. However, the latter draft assumes a client with a
-      user-interface that can display a web page to the end-user,
-      whereas many clients may in fact be "headless", i.e., acting on
-      behalf of other network elements; such clients can include DNS
-      forwarders and proxies. Such clients cannot make use of a
-      web-page designed for presentation to an end-user, but may
-      instead be able to make use of structured data. This draft
-      provides a mechanism for such clients to request and receive
-      structured data from the URI returned by the DNS Access Denied
-      Error Page mechanism, allowing the client to parse and display
-      this information using its own user interface.</t>
-      <t>When a third party provides DNS filtering, there are
-      deployments where disclosing that third party to the host (which
-      originated the DNS query) is desirable but other deployments
-      where such disclosure is not desired.  For example, the IT
-      organization might contract filtering to a third party but want
-      trouble-tickets from employees to be handled by IT, rather than
-      having employees interact directly with the third party.  As
-      another example, all the employees at a small business or all
-      the members of a household might be informed of the third party
-      so they can troubleshoot filtering with that third party
-      directly.</t>
-      <!--
+
+<t>DNS filters are deployed for a variety of reasons, including
+endpoint security, parental filtering, and filtering required by law
+enforcement.  Network-based security solutions such as firewalls and
+Intrusion Prevention Systems (IPS) rely upon network traffic
+inspection to implement perimeter-based security policies.  The
+network security services frequently operate by filtering DNS
+responses to prevent malware download, block known malicious
+domains, block phishing sites, etc.  In a home, DNS filtering is
+used for the same reasons as above and additionall for parental
+control.  Internet Service Providers typically block access to some
+      DNS domains due to a requirement imposed by an external entity
+      (e.g., law enforcement agency), which is performed
+      using DNS-based content filtering.</t>
+
+
+
+
+   <t>DNS clients using services which perform filtering may wish to
+   receive more information about such filtering to resolve problems
+   with the filter -- for example to contact the administrator to
+   whitelist a domain that was erroneously filtered.</t>
+
+   <t>This document describes a protocol
+   containing parsable data in <xref target="RFC8914"
+   format="default">Extended DNS Error Codes</xref>.</t>
+
+      <t>Two DNS filtering mechanisms are widely deployed today but are
+      harmful:</t>
+
+	 <dl newline="false" spacing="normal">
+	    <dt>empty answer or NXDOMAIN:</dt>
+	    <dd>The simplest mechanism is simply returning an empty
+	    answer or NXDOMAIN.  This provides no information to the
+	    client and makes the network or its DNS feel broken
+	    because of the 'host not found' error messages typically
+	    presented to the user.  This mechanism also interferes
+	    with client DNSSEC-validating DNS resolvers because the
+	    empty answer has an invalid (or missing) signature.</dd>
       
-      <t>There are two architectures commonly deployed from the perspective of
-      the DNS forwarder when it receives a DNS query from an endpoint: <list
-          style="hanging">
-          <t hangText="Parallel:">Two DNS queries are generated, one to a DNS
-          filtering service and another one to a recursive resolver. If the
-          response from the DNS filtering service indicates that the DNS query
-          should be filtered, the response from the recursive resolver is
-          dropped and a filtered response is sent in response to the original
-          query. This architecture is often used in home network
-          deployments.</t>
+      <dt>Forged response:</dt>
+      <dd>This mechanism returns a forged A (or AAAA) response
+      pointing at a host operated by the DNS operator.  The
+      expectation is the user's browser will visit the server over
+      HTTP and a suitable explanation will be displayed to the user.
+      As HTTPS is now commonplace, this expectaion breaks down because
+      clients are presented with a warning about visiting an
+      un-trusted site (because of an un-trusted certificate), or those
+      users are encouraged to install the certificate as an additional
+      trusted root, eroding their security for all TLS connections.
+      Furthermore, for the user to see the DNS filtering explanation
+      the user needs a web browser which visits the server and often
+      require JavaScript, creating a wider attack surface.  The
+      requirement for a web browser is, itself, a problem on some
+      devices (e.g., IoT or headless devices).  Finally, this mechanism
+      interferes with client DNSSEC-validating DNS resolvers because
+      the forged response has an invalid (or missing) signature.</dd>
 
-          <t hangText="Serial:">One DNS query is generated to the recursive
-          resolver, which itself interacts with a DNS filtering service. This
-          relationship with the DNS filtering service might be partially or
-          fully withheld (that is, not disclosed) from the end-user or might
-          be information available to the end-user. This architecture is often
-          used in enterprise networks.</t>
-        </list></t>
--->
+      </dl>
 
+      <t>For both DNS filtering mechanisms described above, the DNS server can
+      return extended error codes Blocked, Censored, Filtered, or Forged
+      Answer defined
+      in <xref target="RFC8914">Section 4 of</xref>, which that document
+      states MUST be sent over Encrypted DNS channel.  However, these codes
+      only explain that filtering occurred but lacks detail for the user
+      to resolve the filtering.</t>
+            
+       
+      
+      <t>Clients indicate their support of this specification in their
+      DNS query so the DNS server can tailor its DNS response
+      accordingly.  The information returned in a DNS response allows
+      combinations of headless devices (i.e., those lacking a display
+      or other means to communicate with a human), operating systems,
+      and web browsers to be informed of the filtering.  This
+      information returned can be logged and/or displayed to the user,
+      as appropriate for the user interface capabilities of the client
+      hardware and software.</t>
+      
     </section>
     <section anchor="notation" numbered="true" toc="default">
       <name>Terminology</name>
@@ -154,142 +190,222 @@
       "OPTIONAL" in this document are to be interpreted as described in BCP 14
       <xref target="RFC2119" format="default"/><xref target="RFC8174" format="default"/> when, and
       only when, they appear in all capitals, as shown here.</t>
-      <t>This document makes use of the terms defined in <xref target="RFC8499" format="default"/>.</t>
+
+      <t>This document makes use of the terms defined in <xref target="RFC8499" format="default">DNS Terminology</xref>.</t>
+
       <t>'Encrypted DNS' refers to any encrypted scheme to convey DNS
       messages, for example, DNS-over-HTTPS <xref target="RFC8484" format="default"/>,
       DNS-over-TLS <xref target="RFC7858" format="default"/>, or DNS-over-QUIC <xref target="I-D.ietf-dprive-dnsoquic" format="default"/>.</t>
     </section>
-    <section anchor="format-sec" numbered="true" toc="default">
-      <name>Structured Data</name>
-      <t>To receive structured DNS error page data, the client MUST query the
-      Error Page URI returned in <xref target="I-D.reddy-dnsop-error-page" format="default"/> with Content-Type set to
-      "application/json+structured-dns-error". The JSON has one top-level
-      name, "responsible", containing an array of dictionaries for each party
-      responsible for this particular DNS filter. An array of responsible
-      parties are possible in deployment scenarios where two or more entities
-      are involved in a DNS filtering (the filtering may be for the same or
-      distinct reasons by each involved DNS filter service). The content of
-      the array is structured are as follows:</t>
+
+    <section anchor="format-sec" title="Structured Error EDNS0 Option Format">
+      <t>This document defines a new EDNS0 <xref target="RFC6891"></xref> option to
+      include JSON providing information in the DNS response describing filtering
+      that occurred for this query, defined in <xref target="format"></xref>.</t>
+
+      <figure align="center" anchor="format"
+              title="Structured Error EDNS0 Option Format">
+        <artwork align="center"><![CDATA[                                             1   1   1   1   1   1
+     0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+   |           STRUCTURED-ERROR-LENGTH (fixed, two octets)         |
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+   /              STRUCTURED-ERROR-JSON (variable size)            /                                                                                           
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+]]></artwork>
+      </figure>
+
+
+      <t>The description of the fields is as follows:</t>
+
+
+	 <dl newline="false" spacing="normal">
+          <dt>STRUCTURED-ERROR-LENGTH:</dt>
+	  <dd>Two octets containing the length of
+	  STRUCTURED-ERROR-JSON, in octets.  It MUST NOT be set to
+	  0.</dd>
+          <dt>STRUCTURED-ERROR-JSON:</dt>
+	  <dd>JSON containing DNS filtering information encoded in
+	  JSON, defined in <xref target="json"/>.</dd>
+        </dl>
+    </section> 
+    
+    
+<section anchor="json" numbered="true" toc="default">
+      <name>Operation and JSON Definition</name>
+      <t>When generating a DNS query, the client MUST include the Structured Error
+      EDNS0 option so the DNS server knows the client is compliant with this
+      specification.</t>
+
+      <t>When the DNS server filters its DNS response to an A or AAAA
+      record query, the DNS response MAY contain an empty answer,
+      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
+      server.  In addition, if the query contained the Structured Error
+      EDNS0 option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
+      as described below.</t>
+      
+      <t>STRUCTURED-ERROR-JSON has one top-level name, "p" (party responsible),
+      containing an array of dictionaries for each party responsible
+      for filtering this particular DNS response.  An array of responsible parties
+      are possible in deployment scenarios where two or more entities
+      are involved in a DNS filtering (the filtering may be for the
+      same or distinct reasons by each involved DNS filter
+      service). The content of the "p" array is structured as
+      follows:</t>
       <dl newline="false" spacing="normal">
-        <dt>complaint:</dt>
-        <dd>Is an array of URIs for the user to report
-          mis-classified DNS filtering. This is likely to solely contain an
-          "https" URI, but an array is provided in case telephone numbers or
-          email or other URIs are necessary. This field is mandatory and MUST
-          contain at least one URI.</dd>
-        <dt>justification:</dt>
-        <dd>Includes the textual justification for
+        <dt>c: (complaint)</dt>
+        <dd>a partial HTTPS URI for the user to report
+          mis-classified DNS filtering.  This field is mandatory and MUST
+          contain a URI.  The endpoint adds a query parameter
+	  to this URI, described below.  There are constraints on this URI
+	  described in Security Considerations. This field might or might
+	  not already contain an HTTP query parameter. This field is required.</dd>
+        <dt>j: (justification)</dt>
+        <dd>the textual justification for
           this particular DNS filtering. This field is optional.</dd>
-        <dt>name:</dt>
-        <dd>is the human-friendly name of the organization
+        <dt>o: (organization)</dt>
+        <dd>human-friendly name of the organization
           that filtered this particular DNS query. This field is optional.</dd>
-        <dt>regulation:</dt>
-        <dd>the URI of the regulation authority for
-          this DNS query being filtered. This might point at an employment
+        <dt>r: (regulation)</dt>
+        <dd>a partial HTTPS URI to retrieve the public or private regulation for
+	the filter.  This might point at an employment
           agreement (for an enterprise performing filtering) or a national
-          government regulation (for an ISP performing filtering). This field
-          is optional.</dd>
+          government regulation (for an ISP performing filtering). To this
+	  URI, the endpoint adds a query parameter, described below.  There
+	  are constraints on this URI described in Security Considerations.
+	  This field might or might not already contain an HTTP query parameter.
+	  This field is optional.</dd>
       </dl>
-      <t>The JSON data can be displayed to the user, logged, or otherwise used
+
+      <t>To reduce the size of the JSON, two of the JSON fields, "c"
+      and r", contain partial URIs when sent over the wire.  The
+      client endpoint adds a query parameter to both of those URIs
+      containing the DNS query class (class=), resource record type
+      (type=), and name (name=), which are all contained in the DNS
+      response.  With that addition, the URIs are considered
+      fully-formed.</t>
+
+      <aside><t>Note: Can Class=IN be assumed, or should it be part
+      of the fully-formed URI?</t></aside>
+
+      <t>To avoid the overhead associated with DNS trunction, the generated JSON
+      SHOULD be as short as possible utilizing short domain names, concise text,
+      and minified JSON.</t>
+
+      <t>The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.</t>
+
+      <aside><t> We might consider compressing the JSON.  Using the
+      example below, minified JSON is 171 bytes, binary output from
+      brotli is 108 bytes (36% reduction), gzip is 148 bytes (13% reduction),
+      and base64-encoded brotli is 145 bytes (15% reduction).</t>
+      </aside>
+
     </section>
-    <section numbered="true" toc="default">
-      <name>Examples</name>
-      <t>The examples use the folding defined in <xref target="RFC8792" format="default"/> for long lines.</t>
-      <t>An example with one entity, "example.net", that has filtered a DNS
-      query is shown in <xref target="ex1" format="default"/>, below.</t>
-      <figure anchor="ex1">
-        <name>Example of Filtering with One Entity</name>
-        <artwork name="" type="" align="left" alt=""><![CDATA[{
-  "responsible": [
-    {
-      "complaint": [
-        "mailto:helpdesk@example.net?subject=\"incorrect filtering\
-         of example.org at 1621902483\"",
-        "https://mistakes.example.net?domain=example.org?\
-         time=1621902483",
-        "tel:+18305551212"
-      ],
-      "justification": "malware present for 23 days",
-      "name": "example.net Filtering Service",
-      "regulation": "https://laws.example.net?country=atlantis"
-    }
-  ]
-}]]></artwork>
-      </figure>
-      <t>An example with two entities, "example.com" and "example.net", that
-      have filtered a DNS query is shown in <xref target="ex2" format="default"/>, below.</t>
-      <figure anchor="ex2">
-        <name>Example of Filtering with Two Entities</name>
-        <artwork name="" type="" align="left" alt=""><![CDATA[{
-  "responsible": [
-    {
-      "complaint": [
-        "mailto:helpdesk@example.net?subject=\"incorrect filtering\
-         of example.org at 1621902483\"",
-        "https://mistake.example.net?domain=example.org?\
-         time=1621902483",
-        "tel:+18305551212"
-      ],
-      "justification": "malware present for 23 days",
-      "name": "Example.net Filtering Service",
-      "regulation": "https://laws.example.net?country=atlantis"
-    },
-    {
-      "complaint": [
-        "mailto:abuse@example.com?subject=\"false positive filtering\
-         example.org on 24-May-2021 5:03 GMT\"",
-        "https://example.net/report?d=example.org?t=38233",
-        "tel:+5305551212"
-      ],
-      "justification": "command and control malware",
-      "name": "Example.com IT department",
-      "regulation": "https://hr.example.com?state=CA"
-    }
-  ]
-}}]]></artwork>
-      </figure>
-    </section>
+
     <section numbered="true" toc="default">
       <name>Deployment Considerations</name>
-      <t>Over time a domain name may be considered risky, then safe, then
-      risky again, and later can elapse between the DNS EDNS0 error and the
-      user reporting a false positive and the DNS filtering service receiving
-      the user's complaint. Thus the URI is RECOMMENDED to include sufficient
-      detail to determine the state when the DNS EDNS0 response was generated.
-      How this is encoded into the URI is an implementation decision.</t>
-      <t>As discussed in the Introduction, some deployment models
-      allow the DNS filter provider to be conveyed to the end-user. In
-      such a deployment, state can be avoided in the DNS forwarder by
-      conveying the DNS filter provider's URL in the URL sent to the
-      user.  For example, if the upstream DNS filter provider
-      (example.net) indicates their structured DNS error page for a
-      query to example.org is
-      https://example.net?f=example.org&amp;s=38, that URL can be conveyed
-      to the user as the URL-encoded parameter
-      https%3A%2F%2Fexample.net%3Ff%3Dexample.org%26s%3D38229 appended
-      to the DNS forwarder's DNS error page URL.</t>
-      <t>An array allows multiple DNS filters to be provided by specialized
-      services. For example, one service might filter access to malicious
-      domains and another filters domains due to an internal security policy
-      or court order.</t>
+      <t>Over time a domain name might be filtered, then not filtered,
+      then filtered again.  Addtionally, the user might take minutes
+      or even days before investigating a filtered DNS query.  Thus
+      the URI is RECOMMENDED to include sufficient detail to determine
+      the filtering state when the DNS filtering occurred.  If and how this is
+      encoded into the URI is an implementation decision.</t>
     </section>
+
+
     <section numbered="true" toc="default">
-      <name>Usability Considerations</name>
-      <t>The JSON values returned SHOULD be returned in the user's preferred
-      language as expressed by the Accept-Language HTTP header.</t>
+      <name>Example</name>
+      <t>The example uses the folding defined in <xref target="RFC8792" format="default"/> for long lines.</t>
+      <t>An example with one entity, "example.net", that has filtered a DNS
+      "A" record query for example.org is shown in <xref target="ex1" format="default"/>, below.</t>
+      <figure anchor="ex1">
+        <name>Example of Filtering</name>
+        <artwork name="" type="" align="left" alt=""><![CDATA[{
+      "c": "https://mistakes.example.net?time=1621902483",
+      "j": "malware present for 23 days",
+      "o": "example.net Filtering Service",
+      "r": "https://laws.example.net?country=atlantis"
+}]]></artwork>
+      </figure>
+
+      <t>Upon receipt, the two partial URIs ("c" and "r") are
+      extended to become fully-formed.  The "c" URI becomes
+      https://mistakes.example.net?time=1621902483&amp;class=in&amp;type=a&amp;name=example.org
+      and the "r" URI becomes
+      https://laws.example.net?country=atlantis&amp;class=in&amp;type=a&amp;name=example.org.</t>
+      
     </section>
+    
+
     <section anchor="Security" numbered="true" toc="default">
       <name>Security Considerations</name>
-      <t>Security considerations inherent to the use of DNS Error Page URI are
-      discussed in Section 7 of <xref target="I-D.reddy-dnsop-error-page" format="default"/>. </t>
-      <t>The structure data includes URLs that may be misused to return
-      infected or compromised websites. Means to detect and avoid such URL are
-      recommended. Likewise, contact URIs and telephone numbers may be misused
-      to return third-party contact points and thus lead to spam these
-      contacts.</t>
-    </section>
+
+      <t>Security considerations in Section 6 of <xref
+      target="RFC8914"></xref> and <xref target="RFC8624"></xref> need to be
+      taken into consideration.</t>
+
+      <t>The "c" and "r" URIs returned in the DNS response may cause
+      HTTPS retrieval by the client, or by another party (e.g., IT staff).    
+      To reduce attack surface, the Structed Error EDNS0 option MUST only
+      be processed by the client if the DNS query and response were both
+      sent over an encrypted DNS channel to a DNS server authorized by
+      the client; otherwise it MUST be ignored.</t>
+
+
+      <t>The "c" and "r" URIs returned in the DNS response MUST match the
+domain name of the encrypted DNS server.  This validation ensures both
+the encrypted DNS server and the HTTPS server are operated by the same
+entity.  This matching is performed by allowing the left-most FQDN label
+to differ, but the other labels MUST match.  For example, ns.example.com
+and web.example.com would match, whereas ns.com and web.com would not match.</t>
+<aside><t>The example in the last sentence, above, doesn't work.  Do we need
+to point at Mozilla's domain name list?  Seems so...</t></aside>
+
+<t>If the web server responding to "c" or "r" URIs web server desires, it can HTTP redirect the request
+elsewhere,such as might be common for "r" to point the user at a government-owned
+domain explaining government-mandated filtering.  To improve privacy
+of such redirection, unnecessary query parameters MUST be stripped by the
+HTTP server from the HTTP target URL.</t>
+
+
+
+
+      <t>Because this specification still allows DNS filtering to
+      respond with an empty answer, NXDOMAIN, or forged answer (as the
+      DNS server sees fit), this specification remains incompatible
+      with client-based DNSSEC validation.</t>
+      
+
+<!--
+      <t>The client knows it is connecting to a HTTPS server returning the
+      error page. To reduce threat surface the client can retrieve the Error
+      Page URL using, for example, an isolated environment and take other
+      precautions such as clearly labeling the page as untrusted or prevent
+      user interaction with the page. Such isolation should prevent
+      transmitting cookies, block JavaScript, block auto-fill of credentials
+      or personal information, and be isolated from the user's normal
+      environment.</t>
+
+      <t>Browsers perform some of the above restrictions when accessing
+      captive portals (Section 5 of <xref target="RFC8910"></xref> or <xref
+      target="Safari-Cookie"></xref>), during private browsing, or using
+      containerization <xref target="Facebook-Container"></xref>.</t>
+
+      <t>Note that the means to use a sandbox environment and a user interface
+      presenting the error page are not covered in this document. By its
+      nature, these aspects are implementation specific and best left to the
+      application and user interface designers.</t>
+-->
+
+
+
+
+
+
+
+      </section>
     <section anchor="IANA" numbered="true" toc="default">
       <name>IANA Considerations</name>
       <t>This document requests IANA to register the
@@ -336,6 +452,26 @@
     <!--    <section title="Acknowledgements">
 </section>
 -->
+
+    <section numbered="true" toc="default" removeInRFC="true">
+      <name>Changes</name>
+
+      <t>[RFC Editor: remove this section]</t>
+      
+      <section numbered="false" toc="default">
+	<name>Changes from 00 to 01</name>
+	<ul>
+          <li>Removed support for multiple responsible parties</li>
+	  <li>one-character JSON names (to minimize JSON length)</li>
+          <li>partially-formed URI converted to fully-formed
+	  URI by client (to minimize JSON length)</li>
+	</ul>
+
+
+      </section>
+    </section>
+    
+
   </middle>
   <!--  *****BACK MATTER ***** -->
 
@@ -344,236 +480,19 @@
       <name>References</name>
       <references>
         <name>Normative References</name>
-        <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
-          <front>
-            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
-            <author initials="S." surname="Bradner" fullname="S. Bradner">
-              <organization/>
-            </author>
-            <date year="1997" month="March"/>
-            <abstract>
-              <t>In many standards track documents several words are used to signify the requirements in the specification.  These words are often capitalized. This document defines these words as they should be interpreted in IETF documents.  This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="BCP" value="14"/>
-          <seriesInfo name="RFC" value="2119"/>
-          <seriesInfo name="DOI" value="10.17487/RFC2119"/>
-        </reference>
-        <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
-          <front>
-            <title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
-            <author initials="B." surname="Leiba" fullname="B. Leiba">
-              <organization/>
-            </author>
-            <date year="2017" month="May"/>
-            <abstract>
-              <t>RFC 2119 specifies common key words that may be used in protocol  specifications.  This document aims to reduce the ambiguity by clarifying that only UPPERCASE usage of the key words have the  defined special meanings.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="BCP" value="14"/>
-          <seriesInfo name="RFC" value="8174"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8174"/>
-        </reference>
-        <reference anchor="RFC6838" target="https://www.rfc-editor.org/info/rfc6838" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6838.xml">
-          <front>
-            <title>Media Type Specifications and Registration Procedures</title>
-            <author initials="N." surname="Freed" fullname="N. Freed">
-              <organization/>
-            </author>
-            <author initials="J." surname="Klensin" fullname="J. Klensin">
-              <organization/>
-            </author>
-            <author initials="T." surname="Hansen" fullname="T. Hansen">
-              <organization/>
-            </author>
-            <date year="2013" month="January"/>
-            <abstract>
-              <t>This document defines procedures for the specification and registration of media types for use in HTTP, MIME, and other Internet protocols.  This memo documents an Internet Best Current Practice.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="BCP" value="13"/>
-          <seriesInfo name="RFC" value="6838"/>
-          <seriesInfo name="DOI" value="10.17487/RFC6838"/>
-        </reference>
-        <reference anchor="I-D.reddy-dnsop-error-page" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-dnsop-error-page.xml" target="https://www.ietf.org/archive/id/draft-reddy-dnsop-error-page-08.txt">
-          <front>
-            <title>DNS Access Denied Error Page</title>
-            <author fullname="Tirumaleswar Reddy">
-              <organization>McAfee, Inc.</organization>
-            </author>
-            <author fullname="Neil Cook">
-              <organization>Open-Xchange</organization>
-            </author>
-            <author fullname="Dan Wing">
-              <organization>Citrix Systems, Inc.</organization>
-            </author>
-            <author fullname="Mohamed Boucadair">
-              <organization>Orange</organization>
-            </author>
-            <date month="June" day="4" year="2021"/>
-            <abstract>
-              <t>   When a DNS server filters a query, the response to such query conveys
-   no detailed explanation that elaborates why that query was blocked,
-   leading thus to end-user confusion.  A solution to this problem is
-   needed in order to enhance the user experience.
 
-   This document defines a method to return an URI that explains the
-   reason why a DNS query was filtered by a DNS server.
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6838.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6891.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8624.xml"/>
 
-              </t>
-            </abstract>
-          </front>
-          <seriesInfo name="Internet-Draft" value="draft-reddy-dnsop-error-page-08"/>
-        </reference>
+	
       </references>
       <references>
         <name>Informative References</name>
-        <reference anchor="RFC8499" target="https://www.rfc-editor.org/info/rfc8499" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8499.xml">
-          <front>
-            <title>DNS Terminology</title>
-            <author initials="P." surname="Hoffman" fullname="P. Hoffman">
-              <organization/>
-            </author>
-            <author initials="A." surname="Sullivan" fullname="A. Sullivan">
-              <organization/>
-            </author>
-            <author initials="K." surname="Fujiwara" fullname="K. Fujiwara">
-              <organization/>
-            </author>
-            <date year="2019" month="January"/>
-            <abstract>
-              <t>The Domain Name System (DNS) is defined in literally dozens of different RFCs.  The terminology used by implementers and developers of DNS protocols, and by operators of DNS systems, has sometimes changed in the decades since the DNS was first defined.  This document gives current definitions for many of the terms used in the DNS in a single document.</t>
-              <t>This document obsoletes RFC 7719 and updates RFC 2308.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="BCP" value="219"/>
-          <seriesInfo name="RFC" value="8499"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8499"/>
-        </reference>
-        <reference anchor="RFC8792" target="https://www.rfc-editor.org/info/rfc8792" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml">
-          <front>
-            <title>Handling Long Lines in Content of Internet-Drafts and RFCs</title>
-            <author initials="K." surname="Watsen" fullname="K. Watsen">
-              <organization/>
-            </author>
-            <author initials="E." surname="Auerswald" fullname="E. Auerswald">
-              <organization/>
-            </author>
-            <author initials="A." surname="Farrel" fullname="A. Farrel">
-              <organization/>
-            </author>
-            <author initials="Q." surname="Wu" fullname="Q. Wu">
-              <organization/>
-            </author>
-            <date year="2020" month="June"/>
-            <abstract>
-              <t>This document defines two strategies for handling long lines in width-bounded text content.  One strategy, called the "single backslash" strategy, is based on the historical use of a single backslash ('\') character to indicate where line-folding has occurred, with the continuation occurring with the first character that is not a space character (' ') on the next line.  The second strategy, called the "double backslash" strategy, extends the first strategy by adding a second backslash character to identify where the continuation begins and is thereby able to handle cases not supported by the first strategy.  Both strategies use a self-describing header enabling automated reconstitution of the original content.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="8792"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8792"/>
-        </reference>
-        <reference anchor="RFC8484" target="https://www.rfc-editor.org/info/rfc8484" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8484.xml">
-          <front>
-            <title>DNS Queries over HTTPS (DoH)</title>
-            <author initials="P." surname="Hoffman" fullname="P. Hoffman">
-              <organization/>
-            </author>
-            <author initials="P." surname="McManus" fullname="P. McManus">
-              <organization/>
-            </author>
-            <date year="2018" month="October"/>
-            <abstract>
-              <t>This document defines a protocol for sending DNS queries and getting DNS responses over HTTPS.  Each DNS query-response pair is mapped into an HTTP exchange.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="8484"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8484"/>
-        </reference>
-        <reference anchor="RFC8914" target="https://www.rfc-editor.org/info/rfc8914" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8914.xml">
-          <front>
-            <title>Extended DNS Errors</title>
-            <author initials="W." surname="Kumari" fullname="W. Kumari">
-              <organization/>
-            </author>
-            <author initials="E." surname="Hunt" fullname="E. Hunt">
-              <organization/>
-            </author>
-            <author initials="R." surname="Arends" fullname="R. Arends">
-              <organization/>
-            </author>
-            <author initials="W." surname="Hardaker" fullname="W. Hardaker">
-              <organization/>
-            </author>
-            <author initials="D." surname="Lawrence" fullname="D. Lawrence">
-              <organization/>
-            </author>
-            <date year="2020" month="October"/>
-            <abstract>
-              <t>This document defines an extensible method to return additional information about the cause of DNS errors. Though created primarily to extend SERVFAIL to provide additional information about the cause of DNS and DNSSEC failures, the Extended DNS Errors option defined in this document allows all response types to contain extended error information. Extended DNS Error information does not change the processing of RCODEs.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="8914"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8914"/>
-        </reference>
-        <reference anchor="RFC7858" target="https://www.rfc-editor.org/info/rfc7858" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7858.xml">
-          <front>
-            <title>Specification for DNS over Transport Layer Security (TLS)</title>
-            <author initials="Z." surname="Hu" fullname="Z. Hu">
-              <organization/>
-            </author>
-            <author initials="L." surname="Zhu" fullname="L. Zhu">
-              <organization/>
-            </author>
-            <author initials="J." surname="Heidemann" fullname="J. Heidemann">
-              <organization/>
-            </author>
-            <author initials="A." surname="Mankin" fullname="A. Mankin">
-              <organization/>
-            </author>
-            <author initials="D." surname="Wessels" fullname="D. Wessels">
-              <organization/>
-            </author>
-            <author initials="P." surname="Hoffman" fullname="P. Hoffman">
-              <organization/>
-            </author>
-            <date year="2016" month="May"/>
-            <abstract>
-              <t>This document describes the use of Transport Layer Security (TLS) to provide privacy for DNS.  Encryption provided by TLS eliminates opportunities for eavesdropping and on-path tampering with DNS queries in the network, such as discussed in RFC 7626.  In addition, this document specifies two usage profiles for DNS over TLS and provides advice on performance considerations to minimize overhead from using TCP and TLS with DNS.</t>
-              <t>This document focuses on securing stub-to-recursive traffic, as per the charter of the DPRIVE Working Group.  It does not prevent future applications of the protocol to recursive-to-authoritative traffic.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="7858"/>
-          <seriesInfo name="DOI" value="10.17487/RFC7858"/>
-        </reference>
-        <reference anchor="I-D.ietf-dprive-dnsoquic" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dprive-dnsoquic.xml" target="https://www.ietf.org/archive/id/draft-ietf-dprive-dnsoquic-02.txt">
-          <front>
-            <title>Specification of DNS over Dedicated QUIC Connections</title>
-            <author fullname="Christian Huitema">
-              <organization>Private Octopus Inc.</organization>
-            </author>
-            <author fullname="Allison Mankin">
-              <organization>Salesforce</organization>
-            </author>
-            <author fullname="Sara Dickinson">
-              <organization>Sinodun IT</organization>
-            </author>
-            <date month="February" day="22" year="2021"/>
-            <abstract>
-              <t>   This document describes the use of QUIC to provide transport privacy
-   for DNS.  The encryption provided by QUIC has similar properties to
-   that provided by TLS, while QUIC transport eliminates the head-of-
-   line blocking issues inherent with TCP and provides more efficient
-   error corrections than UDP.  DNS over QUIC (DoQ) has privacy
-   properties similar to DNS over TLS (DoT) specified in RFC7858, and
-   latency characteristics similar to classic DNS over UDP.
 
-              </t>
-            </abstract>
-          </front>
-          <seriesInfo name="Internet-Draft" value="draft-ietf-dprive-dnsoquic-02"/>
-        </reference>
-        <reference anchor="IANA-MediaTypes" target="https://www.iana.org/assignments/media-types">
+	<reference anchor="IANA-MediaTypes" target="https://www.iana.org/assignments/media-types">
           <front>
             <title>Media Types</title>
             <author fullname="IANA">
@@ -582,19 +501,15 @@
             <date/>
           </front>
         </reference>
-        <!--
-      <reference anchor="Chrome-Install-Cert"
-                 target="support.securly.com/hc/en-us/articles/206081828-How-to-manually-install-the-Securly-SSL-certificate-in-Chrome">
-        <front>
-          <title>How to manually install the Securly SSL certificate in
-          Chrome</title>
 
-          <author></author>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7858.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8484.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8499.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8914.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dprive-dnsoquic.xml"/>
 
-          <date day="" month="" year="" />
-        </front>
-      </reference>
--->
+
     </references>
     </references>
   </back>
