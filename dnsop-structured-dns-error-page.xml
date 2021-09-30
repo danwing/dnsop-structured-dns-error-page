@@ -419,7 +419,15 @@ HTTP server from the HTTP target URL.</t>
       <t>Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
-      with client-based DNSSEC validation.</t>
+      with client-based DNSSEC validation.  However, it is possible to
+      maintain compatibility with DNSSEC by returnin the real (unfiltered)
+      answer with its DNSSEC signature intact.  By also returning the
+      EDNS(0) Structured Error, the DNS requestor can be informed of
+      the filtering (from the DNS responder).  Depending on the threat
+      model, network- and/or host-based IP filters or alerts can ensure
+      the DNS requestor does not use the DNS response.</t>
+      
+      
       
 
 <!--
