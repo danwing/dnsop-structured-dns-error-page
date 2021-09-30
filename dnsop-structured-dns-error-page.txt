@@ -13,7 +13,7 @@ Expires: 3 April 2022                                             McAfee
                                                        30 September 2021
 
 
-            Structured Data for DNS Access Denied Error Page
+                    Structured Data for Filtered DNS
              draft-wing-dnsop-structured-dns-error-page-01
 
 Abstract
@@ -55,7 +55,7 @@ Copyright Notice
 
 Wing, et al.              Expires 3 April 2022                  [Page 1]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -111,7 +111,7 @@ Table of Contents
 
 Wing, et al.              Expires 3 April 2022                  [Page 2]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    Users of DNS services which perform filtering may wish to receive
@@ -167,7 +167,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                  [Page 3]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    Clients indicate their support of this specification in their DNS
@@ -223,7 +223,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                  [Page 4]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    STRUCTURED-ERROR-JSON:  JSON containing DNS filtering information
@@ -279,7 +279,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                  [Page 5]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    The JSON data can be parsed to display to the user, logged, or
@@ -335,7 +335,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                  [Page 6]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
      {
@@ -391,7 +391,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                  [Page 7]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    Because this specification still allows DNS filtering to respond with
@@ -447,7 +447,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                  [Page 8]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
       Type name: application
@@ -503,7 +503,7 @@ Changes from 00 to 01
 
 Wing, et al.              Expires 3 April 2022                  [Page 9]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    *  partially-formed URI converted to fully-formed URI by client (to
@@ -559,7 +559,7 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 Wing, et al.              Expires 3 April 2022                 [Page 10]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    [RFC3363]  Bush, R., Durand, A., Fink, B., Gudmundsson, O., and T.
@@ -615,7 +615,7 @@ Authors' Addresses
 
 Wing, et al.              Expires 3 April 2022                 [Page 11]
 
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+Internet-Draft            Data for Filtered DNS           September 2021
 
 
    Tirumaleswar Reddy

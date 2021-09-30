@@ -36,8 +36,7 @@
      ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3" consensus="true">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
   <front>
-    <title abbrev="Structured DNS Access Denied Error Page">Structured Data for DNS
-    Access Denied Error Page</title>
+    <title abbrev="Data for Filtered DNS">Structured Data for Filtered DNS</title>
     <seriesInfo name="Internet-Draft" value="draft-wing-dnsop-structured-dns-error-page-01"/>
     <author fullname="Dan Wing" initials="D." surname="Wing">
       <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
