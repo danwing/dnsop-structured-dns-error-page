@@ -81,10 +81,10 @@ Table of Contents
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
    9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .   9
      Changes from 00 to 01 . . . . . . . . . . . . . . . . . . . . .   9
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .   9
-     10.2.  Informative References . . . . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  10
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -397,7 +397,13 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    Because this specification still allows DNS filtering to respond with
    an empty answer, NXDOMAIN, or forged answer (as the DNS server sees
    fit), this specification remains incompatible with client-based
-   DNSSEC validation.
+   DNSSEC validation.  However, it is possible to maintain compatibility
+   with DNSSEC by returnin the real (unfiltered) answer with its DNSSEC
+   signature intact.  By also returning the EDNS(0) Structured Error,
+   the DNS requestor can be informed of the filtering (from the DNS
+   responder).  Depending on the threat model, network- and/or host-
+   based IP filters or alerts can ensure the DNS requestor does not use
+   the DNS response.
 
 8.  IANA Considerations
 
@@ -405,6 +411,44 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    json+structured-dns-error" media type in the "Media Types" registry
    [IANA-MediaTypes].  This registration follows the procedures
    specified in [RFC6838]:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 3 April 2022                  [Page 8]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
 
       Type name: application
 
@@ -442,14 +486,6 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
       Provisional registration?  No
 
 
-
-
-
-Wing, et al.              Expires 3 April 2022                  [Page 8]
-
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
-
-
 9.  Changes
 
    This section is to be removed before publishing as an RFC.
@@ -461,6 +497,14 @@ Changes from 00 to 01
    *  Removed support for multiple responsible parties
 
    *  one-character JSON names (to minimize JSON length)
+
+
+
+
+Wing, et al.              Expires 3 April 2022                  [Page 9]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
 
    *  partially-formed URI converted to fully-formed URI by client (to
       minimize JSON length)
@@ -498,14 +542,6 @@ Changes from 00 to 01
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Dickinson, S., and A. Mankin, "Specification
               of DNS over Dedicated QUIC Connections", Work in Progress,
-
-
-
-Wing, et al.              Expires 3 April 2022                  [Page 9]
-
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
-
-
               Internet-Draft, draft-ietf-dprive-dnsoquic-04, 3 September
               2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
               dprive-dnsoquic-04>.
@@ -513,6 +549,18 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    [IANA-MediaTypes]
               IANA, "Media Types",
               <https://www.iana.org/assignments/media-types>.
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 3 April 2022                 [Page 10]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
 
    [RFC3363]  Bush, R., Durand, A., Fink, B., Gudmundsson, O., and T.
               Hain, "Representing Internet Protocol version 6 (IPv6)
@@ -557,7 +605,15 @@ Authors' Addresses
 
 
 
-Wing, et al.              Expires 3 April 2022                 [Page 10]
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 3 April 2022                 [Page 11]
 
 Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
@@ -613,4 +669,4 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 
 
-Wing, et al.              Expires 3 April 2022                 [Page 11]
+Wing, et al.              Expires 3 April 2022                 [Page 12]
