@@ -94,40 +94,36 @@
       to provide detail to end users cause harm especially if the
       blocked DNS response is to an HTTPS website.</t>
 
-      <t>This document defines a protocol to explain the DNS
-      filtering.  This information can be parsed by the client and
-      displayed, logged, or to decide to change using this network.</t>
+      <t>This document defines a mechanism to explain the reason
+      for the DNS filtering and offer an HTTPS URIs to get more
+      detail.  This information can be parsed by the client and
+      displayed, logged, or other purposes.</t>
     </abstract>
   </front>
   <middle>
     <section anchor="intro" numbered="true" toc="default">
       <name>Introduction</name>
 
-<t>DNS filters are deployed for a variety of reasons, including
+<t>DNS filters are deployed for a variety of reasons including
 endpoint security, parental filtering, and filtering required by law
 enforcement.  Network-based security solutions such as firewalls and
 Intrusion Prevention Systems (IPS) rely upon network traffic
-inspection to implement perimeter-based security policies.  The
-network security services frequently operate by filtering DNS
-responses to prevent malware download, block known malicious
-domains, block phishing sites, etc.  In a home, DNS filtering is
-used for the same reasons as above and additionall for parental
-control.  Internet Service Providers typically block access to some
-      DNS domains due to a requirement imposed by an external entity
-      (e.g., law enforcement agency), which is performed
-      using DNS-based content filtering.</t>
+inspection to implement perimeter-based security policies and operate
+by filtering DNS responses.  In a home, DNS filtering is used for the
+same reasons as above and additionally for parental control.  Internet
+Service Providers typically block access to some DNS domains due to a
+requirement imposed by an external entity (e.g., law enforcement
+agency) also performed using DNS-based content filtering.</t>
 
 
-
-
-   <t>DNS clients using services which perform filtering may wish to
+   <t>Users of DNS services which perform filtering may wish to
    receive more information about such filtering to resolve problems
    with the filter -- for example to contact the administrator to
-   whitelist a domain that was erroneously filtered.</t>
-
-   <t>This document describes a protocol
-   containing parsable data in <xref target="RFC8914"
-   format="default">Extended DNS Error Codes</xref>.</t>
+   whitelist a domain that was erroneously filtered or to understand
+   the reason a particular domain was filtered.  With that information,
+   the user can choose another network, open a trouble ticket with
+   the DNS administrator to resolve erroneous filtering, log the
+   information, or other uses.</t>
 
       <t>Two DNS filtering mechanisms are widely deployed today but are
       harmful:</t>
@@ -171,6 +167,10 @@ control.  Internet Service Providers typically block access to some
       to resolve the filtering.</t>
             
        
+   <t>This document describes a protocol
+   containing parsable data in a new <xref target="RFC6891"
+   format="default">EDNS(0)</xref> option code.</t>
+
       
       <t>Clients indicate their support of this specification in their
       DNS query so the DNS server can tailor its DNS response
@@ -191,20 +191,31 @@ control.  Internet Service Providers typically block access to some
       <xref target="RFC2119" format="default"/><xref target="RFC8174" format="default"/> when, and
       only when, they appear in all capitals, as shown here.</t>
 
-      <t>This document makes use of the terms defined in <xref target="RFC8499" format="default">DNS Terminology</xref>.</t>
+      <t>This document uses terms defined in <xref target="RFC8499" format="default">DNS Terminology</xref>.</t>
 
-      <t>'Encrypted DNS' refers to any encrypted scheme to convey DNS
-      messages, for example, DNS-over-HTTPS <xref target="RFC8484" format="default"/>,
-      DNS-over-TLS <xref target="RFC7858" format="default"/>, or DNS-over-QUIC <xref target="I-D.ietf-dprive-dnsoquic" format="default"/>.</t>
+      <t>"Requestor" refers to the side that sends a request.
+      "Responder" refers to an authoritative, recursive resolver or
+      other DNS component that responds to questions.  Other
+      terminology is used here as defined in the RFCs cited by this
+      document.</t>
+
+      <t>"Encrypted DNS" refers to any encrypted scheme to convey DNS
+      messages, for example, DNS-over-HTTPS <xref target="RFC8484"
+      format="default"/>, DNS-over-TLS <xref target="RFC7858"
+      format="default"/>, or DNS-over-QUIC <xref
+      target="I-D.ietf-dprive-dnsoquic" format="default"/>.</t>
+
     </section>
 
-    <section anchor="format-sec" title="Structured Error EDNS0 Option Format">
-      <t>This document defines a new EDNS0 <xref target="RFC6891"></xref> option to
-      include JSON providing information in the DNS response describing filtering
-      that occurred for this query, defined in <xref target="format"></xref>.</t>
+    <section anchor="format-sec" title="Structured Error EDNS(0) Option Code">
+      <t>This document defines a new EDNS(0) <xref
+      target="RFC6891"></xref> option code (OPT) to include JSON
+      providing information in the DNS response describing filtering
+      that occurred for this query, defined in <xref
+      target="format"></xref>.</t>
 
       <figure align="center" anchor="format"
-              title="Structured Error EDNS0 Option Format">
+              title="Structured Error EDNS(0) Option Code">
         <artwork align="center"><![CDATA[                                             1   1   1   1   1   1
      0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
    +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
@@ -232,17 +243,7 @@ control.  Internet Service Providers typically block access to some
     
     
 <section anchor="json" numbered="true" toc="default">
-      <name>Operation and JSON Definition</name>
-      <t>When generating a DNS query, the client MUST include the Structured Error
-      EDNS0 option so the DNS server knows the client is compliant with this
-      specification.</t>
-
-      <t>When the DNS server filters its DNS response to an A or AAAA
-      record query, the DNS response MAY contain an empty answer,
-      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
-      server.  In addition, if the query contained the Structured Error
-      EDNS0 option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-      as described below.</t>
+  <name>Structured JSON</name>
       
       <t>STRUCTURED-ERROR-JSON has one top-level name, "p" (party responsible),
       containing an array of dictionaries for each party responsible
@@ -285,7 +286,7 @@ control.  Internet Service Providers typically block access to some
       response.  With that addition, the URIs are considered
       fully-formed.</t>
 
-      <aside><t>Note: Can Class=IN be assumed, or should it be part
+      <aside><t>Discussion: Can Class=IN be assumed, or should it be part
       of the fully-formed URI?</t></aside>
 
       <t>To avoid the overhead associated with DNS trunction, the generated JSON
@@ -296,42 +297,85 @@ control.  Internet Service Providers typically block access to some
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.</t>
 
-      <aside><t> We might consider compressing the JSON.  Using the
+      <aside><t>Discussion: We might consider compressing the JSON.  Using the
       example below, minified JSON is 171 bytes, binary output from
       brotli is 108 bytes (36% reduction), gzip is 148 bytes (13% reduction),
-      and base64-encoded brotli is 145 bytes (15% reduction).</t>
+      and base64-encoded brotli is 145 bytes (15% reduction).  
+      <xref target="RFC3363"/> discusses problems with binary labels.</t>      
       </aside>
 
     </section>
 
-    <section numbered="true" toc="default">
-      <name>Deployment Considerations</name>
+
+    <section anchor="operation" numbered="true" toc="default">
+      <name>Protocol Operation</name>
+      <section>
+	<name>Requestor Operation</name>
+	
+      <t>When generating a DNS query, the client MUST include the Structured Error
+      EDNS(0) option so the DNS server knows the client is compliant with this
+      specification.</t>
+
+      </section>
+
+
+      <section>
+	<name>Responder Operation</name>
+      <t>When the DNS server filters its DNS response to an A or AAAA
+      record query, the DNS response MAY contain an empty answer,
+      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
+      server.  In addition, if the query contained the Structured Error
+      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
+      as described below.</t>
+
+
       <t>Over time a domain name might be filtered, then not filtered,
       then filtered again.  Addtionally, the user might take minutes
       or even days before investigating a filtered DNS query.  Thus
       the URI is RECOMMENDED to include sufficient detail to determine
       the filtering state when the DNS filtering occurred.  If and how this is
       encoded into the URI is an implementation decision.</t>
+
+      
+            <aside><t>Discussion: the text in the justification field ("j")
+      may not be in the user's preferred language.  Sending a <xref
+      target="RFC5646">language tag</xref> in the OPT-DATA (<xref
+      target="RFC6891">Section 6.1.2 of </xref>) would resolve this
+      problem.  This has privacy implications.</t>
+	    </aside>
+
+      </section>
+
+
     </section>
+
+
+
+
+
+
+
 
 
     <section numbered="true" toc="default">
       <name>Example</name>
       <t>The example uses the folding defined in <xref target="RFC8792" format="default"/> for long lines.</t>
-      <t>An example with one entity, "example.net", that has filtered a DNS
+      <t>An example showing example.net that has filtered a DNS
       "A" record query for example.org is shown in <xref target="ex1" format="default"/>, below.</t>
       <figure anchor="ex1">
-        <name>Example of Filtering</name>
-        <artwork name="" type="" align="left" alt=""><![CDATA[{
-      "c": "https://mistakes.example.net?time=1621902483",
-      "j": "malware present for 23 days",
-      "o": "example.net Filtering Service",
-      "r": "https://laws.example.net?country=atlantis"
-}]]></artwork>
+        <name>Example of JSON returned in EDNS(0) Structured Error response</name>
+        <artwork name="" type="" align="left" alt=""><![CDATA[  {
+    "c": "https://mistakes.example.net?time=1621902483",
+    "j": "malware present for 23 days",
+    "o": "example.net Filtering Service",
+    "r": "https://laws.example.net?country=atlantis"
+  }]]></artwork>
       </figure>
 
-      <t>Upon receipt, the two partial URIs ("c" and "r") are
-      extended to become fully-formed.  The "c" URI becomes
+      <t>Upon receipt, the two partial URIs ("c" and "r") are extended
+      to become fully-formed URIs.  The class, type, and name are
+      pulled from the DNS response (which matches the associated
+      query) so that the fully-formed "c" URI becomes
       https://mistakes.example.net?time=1621902483&amp;class=in&amp;type=a&amp;name=example.org
       and the "r" URI becomes
       https://laws.example.net?country=atlantis&amp;class=in&amp;type=a&amp;name=example.org.</t>
@@ -348,7 +392,7 @@ control.  Internet Service Providers typically block access to some
 
       <t>The "c" and "r" URIs returned in the DNS response may cause
       HTTPS retrieval by the client, or by another party (e.g., IT staff).    
-      To reduce attack surface, the Structed Error EDNS0 option MUST only
+      To reduce attack surface, the Structed Error EDNS(0) option MUST only
       be processed by the client if the DNS query and response were both
       sent over an encrypted DNS channel to a DNS server authorized by
       the client; otherwise it MUST be ignored.</t>
@@ -502,7 +546,9 @@ HTTP server from the HTTP target URL.</t>
           </front>
         </reference>
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7858.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3363.xml"/>
+	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5646.xml"/>
+	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7858.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8484.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8499.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml"/>

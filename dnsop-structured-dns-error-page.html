@@ -15,9 +15,10 @@
       understand the reason for the filtering.  Existing mechanisms
       to provide detail to end users cause harm especially if the
       blocked DNS response is to an HTTPS website. 
-       This document defines a protocol to explain the DNS
-      filtering.  This information can be parsed by the client and
-      displayed, logged, or to decide to change using this network. 
+       This document defines a mechanism to explain the reason
+      for the DNS filtering and offer an HTTPS URIs to get more
+      detail.  This information can be parsed by the client and
+      displayed, logged, or other purposes. 
     " name="description">
 <meta content="xml2rfc 3.9.1" name="generator">
 <meta content="draft-wing-dnsop-structured-dns-error-page-01" name="ietf.draft">
@@ -1240,9 +1241,10 @@ li > p:last-of-type {
       understand the reason for the filtering.  Existing mechanisms
       to provide detail to end users cause harm especially if the
       blocked DNS response is to an HTTPS website.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">This document defines a protocol to explain the DNS
-      filtering.  This information can be parsed by the client and
-      displayed, logged, or to decide to change using this network.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document defines a mechanism to explain the reason
+      for the DNS filtering and offer an HTTPS URIs to get more
+      detail.  This information can be parsed by the client and
+      displayed, logged, or other purposes.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1291,51 +1293,59 @@ li > p:last-of-type {
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents-2">
 <a href="#name-table-of-contents-2" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="toc compact ulEmpty ulBare">
-<li class="toc compact ulEmpty ulBare" id="section-toc.1-1.1">
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction-2" class="xref">Introduction</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.2">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-terminology-2" class="xref">Terminology</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="xref">3</a>.  <a href="#name-structured-error-edns0-option" class="xref">Structured Error EDNS0 Option Format</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="xref">3</a>.  <a href="#name-structured-error-edns0-option" class="xref">Structured Error EDNS(0) Option Code</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-operation-and-json-definitio" class="xref">Operation and JSON Definition</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-structured-json-2" class="xref">Structured JSON</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-deployment-considerations-2" class="xref">Deployment Considerations</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-protocol-operation-2" class="xref">Protocol Operation</a></p>
+<ul class="ulBare ulEmpty compact toc">
+<li class="ulBare ulEmpty compact toc" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-requestor-operation-2" class="xref">Requestor Operation</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.6">
+              <li class="ulBare ulEmpty compact toc" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-responder-operation-2" class="xref">Responder Operation</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-example-2" class="xref">Example</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.7">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-security-considerations-2" class="xref">Security Considerations</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.8">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-iana-considerations-2" class="xref">IANA Considerations</a></p>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.9">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-changes-2" class="xref">Changes</a></p>
-<ul class="ulBare ulEmpty toc compact">
-<li class="ulBare ulEmpty toc compact" id="section-toc.1-1.9.2.1">
+<ul class="ulBare ulEmpty compact toc">
+<li class="ulBare ulEmpty compact toc" id="section-toc.1-1.9.2.1">
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref"></a><a href="#name-changes-from-00-to-01-2" class="xref">Changes from 00 to 01</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.10">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-references-2" class="xref">References</a></p>
-<ul class="ulBare ulEmpty toc compact">
-<li class="ulBare ulEmpty toc compact" id="section-toc.1-1.10.2.1">
+<ul class="ulBare ulEmpty compact toc">
+<li class="ulBare ulEmpty compact toc" id="section-toc.1-1.10.2.1">
                 <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="xref">10.1</a>.  <a href="#name-normative-references-2" class="xref">Normative References</a></p>
 </li>
-              <li class="ulBare ulEmpty toc compact" id="section-toc.1-1.10.2.2">
+              <li class="ulBare ulEmpty compact toc" id="section-toc.1-1.10.2.2">
                 <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="xref">10.2</a>.  <a href="#name-informative-references-2" class="xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc compact ulEmpty ulBare" id="section-toc.1-1.11">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="xref"></a><a href="#name-authors-addresses-2" class="xref">Authors' Addresses</a></p>
 </li>
         </ul>
@@ -1347,40 +1357,39 @@ li > p:last-of-type {
       <h2 id="name-introduction-2">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction-2" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">DNS filters are deployed for a variety of reasons, including
+<p id="section-1-1">DNS filters are deployed for a variety of reasons including
 endpoint security, parental filtering, and filtering required by law
 enforcement.  Network-based security solutions such as firewalls and
 Intrusion Prevention Systems (IPS) rely upon network traffic
-inspection to implement perimeter-based security policies.  The
-network security services frequently operate by filtering DNS
-responses to prevent malware download, block known malicious
-domains, block phishing sites, etc.  In a home, DNS filtering is
-used for the same reasons as above and additionall for parental
-control.  Internet Service Providers typically block access to some
-      DNS domains due to a requirement imposed by an external entity
-      (e.g., law enforcement agency), which is performed
-      using DNS-based content filtering.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">DNS clients using services which perform filtering may wish to
+inspection to implement perimeter-based security policies and operate
+by filtering DNS responses.  In a home, DNS filtering is used for the
+same reasons as above and additionally for parental control.  Internet
+Service Providers typically block access to some DNS domains due to a
+requirement imposed by an external entity (e.g., law enforcement
+agency) also performed using DNS-based content filtering.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Users of DNS services which perform filtering may wish to
    receive more information about such filtering to resolve problems
    with the filter -- for example to contact the administrator to
-   whitelist a domain that was erroneously filtered.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This document describes a protocol
-   containing parsable data in <span><a href="#RFC8914" class="xref">Extended DNS Error Codes</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">Two DNS filtering mechanisms are widely deployed today but are
-      harmful:<a href="#section-1-4" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-1-5">
-        <dt id="section-1-5.1">empty answer or NXDOMAIN:</dt>
-        <dd style="margin-left: 1.5em" id="section-1-5.2">The simplest mechanism is simply returning an empty
+   whitelist a domain that was erroneously filtered or to understand
+   the reason a particular domain was filtered.  With that information,
+   the user can choose another network, open a trouble ticket with
+   the DNS administrator to resolve erroneous filtering, log the
+   information, or other uses.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">Two DNS filtering mechanisms are widely deployed today but are
+      harmful:<a href="#section-1-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-1-4">
+        <dt id="section-1-4.1">empty answer or NXDOMAIN:</dt>
+        <dd style="margin-left: 1.5em" id="section-1-4.2">The simplest mechanism is simply returning an empty
      answer or NXDOMAIN.  This provides no information to the
      client and makes the network or its DNS feel broken
      because of the 'host not found' error messages typically
      presented to the user.  This mechanism also interferes
      with client DNSSEC-validating DNS resolvers because the
-     empty answer has an invalid (or missing) signature.<a href="#section-1-5.2" class="pilcrow">¶</a>
+     empty answer has an invalid (or missing) signature.<a href="#section-1-4.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-1-5.3">Forged response:</dt>
-        <dd style="margin-left: 1.5em" id="section-1-5.4">This mechanism returns a forged A (or AAAA) response
+<dt id="section-1-4.3">Forged response:</dt>
+        <dd style="margin-left: 1.5em" id="section-1-4.4">This mechanism returns a forged A (or AAAA) response
       pointing at a host operated by the DNS operator.  The
       expectation is the user's browser will visit the server over
       HTTP and a suitable explanation will be displayed to the user.
@@ -1395,17 +1404,19 @@ control.  Internet Service Providers typically block access to some
       requirement for a web browser is, itself, a problem on some
       devices (e.g., IoT or headless devices).  Finally, this mechanism
       interferes with client DNSSEC-validating DNS resolvers because
-      the forged response has an invalid (or missing) signature.<a href="#section-1-5.4" class="pilcrow">¶</a>
+      the forged response has an invalid (or missing) signature.<a href="#section-1-4.4" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-1-6">For both DNS filtering mechanisms described above, the DNS server can
+<p id="section-1-5">For both DNS filtering mechanisms described above, the DNS server can
       return extended error codes Blocked, Censored, Filtered, or Forged
       Answer defined
       in <span><a href="#RFC8914" class="xref">Section 4 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>, which that document
       states MUST be sent over Encrypted DNS channel.  However, these codes
       only explain that filtering occurred but lacks detail for the user
-      to resolve the filtering.<a href="#section-1-6" class="pilcrow">¶</a></p>
+      to resolve the filtering.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">This document describes a protocol
+   containing parsable data in a new <span><a href="#RFC6891" class="xref">EDNS(0)</a> [<a href="#RFC6891" class="xref">RFC6891</a>]</span> option code.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">Clients indicate their support of this specification in their
       DNS query so the DNS server can tailor its DNS response
       accordingly.  The information returned in a DNS response allows
@@ -1427,19 +1438,23 @@ control.  Internet Service Providers typically block access to some
       "OPTIONAL" in this document are to be interpreted as described in BCP 14
       <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span><span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and
       only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">This document makes use of the terms defined in <span><a href="#RFC8499" class="xref">DNS Terminology</a> [<a href="#RFC8499" class="xref">RFC8499</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">'Encrypted DNS' refers to any encrypted scheme to convey DNS
-      messages, for example, DNS-over-HTTPS <span>[<a href="#RFC8484" class="xref">RFC8484</a>]</span>,
-      DNS-over-TLS <span>[<a href="#RFC7858" class="xref">RFC7858</a>]</span>, or DNS-over-QUIC <span>[<a href="#I-D.ietf-dprive-dnsoquic" class="xref">I-D.ietf-dprive-dnsoquic</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-2">This document uses terms defined in <span><a href="#RFC8499" class="xref">DNS Terminology</a> [<a href="#RFC8499" class="xref">RFC8499</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">"Requestor" refers to the side that sends a request.
+      "Responder" refers to an authoritative, recursive resolver or
+      other DNS component that responds to questions.  Other
+      terminology is used here as defined in the RFCs cited by this
+      document.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">"Encrypted DNS" refers to any encrypted scheme to convey DNS
+      messages, for example, DNS-over-HTTPS <span>[<a href="#RFC8484" class="xref">RFC8484</a>]</span>, DNS-over-TLS <span>[<a href="#RFC7858" class="xref">RFC7858</a>]</span>, or DNS-over-QUIC <span>[<a href="#I-D.ietf-dprive-dnsoquic" class="xref">I-D.ietf-dprive-dnsoquic</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="format-sec">
 <section id="section-3">
       <h2 id="name-structured-error-edns0-option">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-structured-error-edns0-option" class="section-name selfRef">Structured Error EDNS0 Option Format</a>
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-structured-error-edns0-option" class="section-name selfRef">Structured Error EDNS(0) Option Code</a>
       </h2>
-<p id="section-3-1">This document defines a new EDNS0 <span>[<a href="#RFC6891" class="xref">RFC6891</a>]</span> option to
-      include JSON providing information in the DNS response describing filtering
+<p id="section-3-1">This document defines a new EDNS(0) <span>[<a href="#RFC6891" class="xref">RFC6891</a>]</span> option code (OPT) to include JSON
+      providing information in the DNS response describing filtering
       that occurred for this query, defined in <a href="#format" class="xref">Figure 1</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <span id="name-structured-error-edns0-option-"></span><div id="format">
 <figure id="figure-1">
@@ -1454,7 +1469,7 @@ control.  Internet Service Providers typically block access to some
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-structured-error-edns0-option-" class="selfRef">Structured Error EDNS0 Option Format</a>
+<a href="#name-structured-error-edns0-option-" class="selfRef">Structured Error EDNS(0) Option Code</a>
         </figcaption></figure>
 </div>
 <p id="section-3-3">The description of the fields is as follows:<a href="#section-3-3" class="pilcrow">¶</a></p>
@@ -1475,117 +1490,137 @@ control.  Internet Service Providers typically block access to some
 </div>
 <div id="json">
 <section id="section-4">
-      <h2 id="name-operation-and-json-definitio">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-operation-and-json-definitio" class="section-name selfRef">Operation and JSON Definition</a>
+      <h2 id="name-structured-json-2">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-structured-json-2" class="section-name selfRef">Structured JSON</a>
       </h2>
-<p id="section-4-1">When generating a DNS query, the client MUST include the Structured Error
-      EDNS0 option so the DNS server knows the client is compliant with this
-      specification.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">When the DNS server filters its DNS response to an A or AAAA
-      record query, the DNS response MAY contain an empty answer,
-      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
-      server.  In addition, if the query contained the Structured Error
-      EDNS0 option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-      as described below.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">STRUCTURED-ERROR-JSON has one top-level name, "p" (party responsible),
+<p id="section-4-1">STRUCTURED-ERROR-JSON has one top-level name, "p" (party responsible),
       containing an array of dictionaries for each party responsible
       for filtering this particular DNS response.  An array of responsible parties
       are possible in deployment scenarios where two or more entities
       are involved in a DNS filtering (the filtering may be for the
       same or distinct reasons by each involved DNS filter
       service). The content of the "p" array is structured as
-      follows:<a href="#section-4-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-4-4">
-        <dt id="section-4-4.1">c: (complaint)</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.2">a partial HTTPS URI for the user to report
+      follows:<a href="#section-4-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-4-2">
+        <dt id="section-4-2.1">c: (complaint)</dt>
+        <dd style="margin-left: 1.5em" id="section-4-2.2">a partial HTTPS URI for the user to report
           mis-classified DNS filtering.  This field is mandatory and MUST
           contain a URI.  The endpoint adds a query parameter
    to this URI, described below.  There are constraints on this URI
    described in Security Considerations. This field might or might
-   not already contain an HTTP query parameter. This field is required.<a href="#section-4-4.2" class="pilcrow">¶</a>
+   not already contain an HTTP query parameter. This field is required.<a href="#section-4-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-4-4.3">j: (justification)</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.4">the textual justification for
-          this particular DNS filtering. This field is optional.<a href="#section-4-4.4" class="pilcrow">¶</a>
+<dt id="section-4-2.3">j: (justification)</dt>
+        <dd style="margin-left: 1.5em" id="section-4-2.4">the textual justification for
+          this particular DNS filtering. This field is optional.<a href="#section-4-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-4-4.5">o: (organization)</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.6">human-friendly name of the organization
-          that filtered this particular DNS query. This field is optional.<a href="#section-4-4.6" class="pilcrow">¶</a>
+<dt id="section-4-2.5">o: (organization)</dt>
+        <dd style="margin-left: 1.5em" id="section-4-2.6">human-friendly name of the organization
+          that filtered this particular DNS query. This field is optional.<a href="#section-4-2.6" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-4-4.7">r: (regulation)</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.8">a partial HTTPS URI to retrieve the public or private regulation for
+<dt id="section-4-2.7">r: (regulation)</dt>
+        <dd style="margin-left: 1.5em" id="section-4-2.8">a partial HTTPS URI to retrieve the public or private regulation for
  the filter.  This might point at an employment
           agreement (for an enterprise performing filtering) or a national
           government regulation (for an ISP performing filtering). To this
    URI, the endpoint adds a query parameter, described below.  There
    are constraints on this URI described in Security Considerations.
    This field might or might not already contain an HTTP query parameter.
-   This field is optional.<a href="#section-4-4.8" class="pilcrow">¶</a>
+   This field is optional.<a href="#section-4-2.8" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-4-5">To reduce the size of the JSON, two of the JSON fields, "c"
+<p id="section-4-3">To reduce the size of the JSON, two of the JSON fields, "c"
       and r", contain partial URIs when sent over the wire.  The
       client endpoint adds a query parameter to both of those URIs
       containing the DNS query class (class=), resource record type
       (type=), and name (name=), which are all contained in the DNS
       response.  With that addition, the URIs are considered
-      fully-formed.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<aside id="section-4-6">
-        <p id="section-4-6.1">Note: Can Class=IN be assumed, or should it be part
-      of the fully-formed URI?<a href="#section-4-6.1" class="pilcrow">¶</a></p>
+      fully-formed.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<aside id="section-4-4">
+        <p id="section-4-4.1">Discussion: Can Class=IN be assumed, or should it be part
+      of the fully-formed URI?<a href="#section-4-4.1" class="pilcrow">¶</a></p>
 </aside>
-<p id="section-4-7">To avoid the overhead associated with DNS trunction, the generated JSON
+<p id="section-4-5">To avoid the overhead associated with DNS trunction, the generated JSON
       SHOULD be as short as possible utilizing short domain names, concise text,
-      and minified JSON.<a href="#section-4-7" class="pilcrow">¶</a></p>
-<p id="section-4-8">The JSON data can be parsed to display to the user, logged, or otherwise used
+      and minified JSON.<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-6">The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
-      the cause of the DNS filtering.<a href="#section-4-8" class="pilcrow">¶</a></p>
-<aside id="section-4-9">
-        <p id="section-4-9.1"> We might consider compressing the JSON.  Using the
+      the cause of the DNS filtering.<a href="#section-4-6" class="pilcrow">¶</a></p>
+<aside id="section-4-7">
+        <p id="section-4-7.1">Discussion: We might consider compressing the JSON.  Using the
       example below, minified JSON is 171 bytes, binary output from
       brotli is 108 bytes (36% reduction), gzip is 148 bytes (13% reduction),
-      and base64-encoded brotli is 145 bytes (15% reduction).<a href="#section-4-9.1" class="pilcrow">¶</a></p>
+      and base64-encoded brotli is 145 bytes (15% reduction).  
+      <span>[<a href="#RFC3363" class="xref">RFC3363</a>]</span> discusses problems with binary labels.<a href="#section-4-7.1" class="pilcrow">¶</a></p>
 </aside>
 </section>
 </div>
+<div id="operation">
 <section id="section-5">
-      <h2 id="name-deployment-considerations-2">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-deployment-considerations-2" class="section-name selfRef">Deployment Considerations</a>
+      <h2 id="name-protocol-operation-2">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-protocol-operation-2" class="section-name selfRef">Protocol Operation</a>
       </h2>
-<p id="section-5-1">Over time a domain name might be filtered, then not filtered,
+<section id="section-5.1">
+        <h3 id="name-requestor-operation-2">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-requestor-operation-2" class="section-name selfRef">Requestor Operation</a>
+        </h3>
+<p id="section-5.1-1">When generating a DNS query, the client MUST include the Structured Error
+      EDNS(0) option so the DNS server knows the client is compliant with this
+      specification.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+</section>
+<section id="section-5.2">
+        <h3 id="name-responder-operation-2">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-responder-operation-2" class="section-name selfRef">Responder Operation</a>
+        </h3>
+<p id="section-5.2-1">When the DNS server filters its DNS response to an A or AAAA
+      record query, the DNS response MAY contain an empty answer,
+      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
+      server.  In addition, if the query contained the Structured Error
+      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
+      as described below.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">Over time a domain name might be filtered, then not filtered,
       then filtered again.  Addtionally, the user might take minutes
       or even days before investigating a filtered DNS query.  Thus
       the URI is RECOMMENDED to include sufficient detail to determine
       the filtering state when the DNS filtering occurred.  If and how this is
-      encoded into the URI is an implementation decision.<a href="#section-5-1" class="pilcrow">¶</a></p>
+      encoded into the URI is an implementation decision.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<aside id="section-5.2-3">
+          <p id="section-5.2-3.1">Discussion: the text in the justification field ("j")
+      may not be in the user's preferred language.  Sending a <span><a href="#RFC5646" class="xref">language tag</a> [<a href="#RFC5646" class="xref">RFC5646</a>]</span> in the OPT-DATA (<span><a href="#RFC6891" class="xref">Section 6.1.2 of</a> [<a href="#RFC6891" class="xref">RFC6891</a>]</span>) would resolve this
+      problem.  This has privacy implications.<a href="#section-5.2-3.1" class="pilcrow">¶</a></p>
+</aside>
 </section>
+</section>
+</div>
 <section id="section-6">
       <h2 id="name-example-2">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
       </h2>
 <p id="section-6-1">The example uses the folding defined in <span>[<a href="#RFC8792" class="xref">RFC8792</a>]</span> for long lines.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">An example with one entity, "example.net", that has filtered a DNS
+<p id="section-6-2">An example showing example.net that has filtered a DNS
       "A" record query for example.org is shown in <a href="#ex1" class="xref">Figure 2</a>, below.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<span id="name-example-of-filtering-2"></span><div id="ex1">
+<span id="name-example-of-json-returned-in-"></span><div id="ex1">
 <figure id="figure-2">
         <div class="artwork art-text alignLeft" id="section-6-3.1">
-<pre>{
-      "c": "https://mistakes.example.net?time=1621902483",
-      "j": "malware present for 23 days",
-      "o": "example.net Filtering Service",
-      "r": "https://laws.example.net?country=atlantis"
-}</pre>
+<pre>  {
+    "c": "https://mistakes.example.net?time=1621902483",
+    "j": "malware present for 23 days",
+    "o": "example.net Filtering Service",
+    "r": "https://laws.example.net?country=atlantis"
+  }</pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-example-of-filtering-2" class="selfRef">Example of Filtering</a>
+<a href="#name-example-of-json-returned-in-" class="selfRef">Example of JSON returned in EDNS(0) Structured Error response</a>
         </figcaption></figure>
 </div>
-<p id="section-6-4">Upon receipt, the two partial URIs ("c" and "r") are
-      extended to become fully-formed.  The "c" URI becomes
+<p id="section-6-4">Upon receipt, the two partial URIs ("c" and "r") are extended
+      to become fully-formed URIs.  The class, type, and name are
+      pulled from the DNS response (which matches the associated
+      query) so that the fully-formed "c" URI becomes
       https://mistakes.example.net?time=1621902483&amp;class=in&amp;type=a&amp;name=example.org
       and the "r" URI becomes
       https://laws.example.net?country=atlantis&amp;class=in&amp;type=a&amp;name=example.org.<a href="#section-6-4" class="pilcrow">¶</a></p>
@@ -1599,7 +1634,7 @@ control.  Internet Service Providers typically block access to some
       taken into consideration.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">The "c" and "r" URIs returned in the DNS response may cause
       HTTPS retrieval by the client, or by another party (e.g., IT staff).    
-      To reduce attack surface, the Structed Error EDNS0 option MUST only
+      To reduce attack surface, the Structed Error EDNS(0) option MUST only
       be processed by the client if the DNS query and response were both
       sent over an encrypted DNS channel to a DNS server authorized by
       the client; otherwise it MUST be ignored.<a href="#section-7-2" class="pilcrow">¶</a></p>
@@ -1736,6 +1771,14 @@ HTTP server from the HTTP target URL.<a href="#section-7-5" class="pilcrow">¶</
 <dt id="IANA-MediaTypes">[IANA-MediaTypes]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"Media Types"</span>, <span>&lt;<a href="https://www.iana.org/assignments/media-types">https://www.iana.org/assignments/media-types</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3363">[RFC3363]</dt>
+        <dd>
+<span class="refAuthor">Bush, R.</span>, <span class="refAuthor">Durand, A.</span>, <span class="refAuthor">Fink, B.</span>, <span class="refAuthor">Gudmundsson, O.</span>, and <span class="refAuthor">T. Hain</span>, <span class="refTitle">"Representing Internet Protocol version 6 (IPv6) Addresses in the Domain Name System (DNS)"</span>, <span class="seriesInfo">RFC 3363</span>, <span class="seriesInfo">DOI 10.17487/RFC3363</span>, <time datetime="2002-08" class="refDate">August 2002</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3363">https://www.rfc-editor.org/info/rfc3363</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5646">[RFC5646]</dt>
+        <dd>
+<span class="refAuthor">Phillips, A., Ed.</span> and <span class="refAuthor">M. Davis, Ed.</span>, <span class="refTitle">"Tags for Identifying Languages"</span>, <span class="seriesInfo">BCP 47</span>, <span class="seriesInfo">RFC 5646</span>, <span class="seriesInfo">DOI 10.17487/RFC5646</span>, <time datetime="2009-09" class="refDate">September 2009</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5646">https://www.rfc-editor.org/info/rfc5646</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7858">[RFC7858]</dt>
         <dd>

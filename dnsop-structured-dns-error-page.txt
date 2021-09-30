@@ -24,9 +24,10 @@ Abstract
    end users cause harm especially if the blocked DNS response is to an
    HTTPS website.
 
-   This document defines a protocol to explain the DNS filtering.  This
-   information can be parsed by the client and displayed, logged, or to
-   decide to change using this network.
+   This document defines a mechanism to explain the reason for the DNS
+   filtering and offer an HTTPS URIs to get more detail.  This
+   information can be parsed by the client and displayed, logged, or
+   other purposes.
 
 Status of This Memo
 
@@ -52,7 +53,6 @@ Copyright Notice
 
 
 
-
 Wing, et al.              Expires 3 April 2022                  [Page 1]
 
 Internet-Draft   Structured DNS Access Denied Error Page  September 2021
@@ -71,14 +71,16 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Structured Error EDNS0 Option Format  . . . . . . . . . . . .   4
-   4.  Operation and JSON Definition . . . . . . . . . . . . . . . .   4
-   5.  Deployment Considerations . . . . . . . . . . . . . . . . . .   6
+   3.  Structured Error EDNS(0) Option Code  . . . . . . . . . . . .   4
+   4.  Structured JSON . . . . . . . . . . . . . . . . . . . . . . .   5
+   5.  Protocol Operation  . . . . . . . . . . . . . . . . . . . . .   6
+     5.1.  Requestor Operation . . . . . . . . . . . . . . . . . . .   6
+     5.2.  Responder Operation . . . . . . . . . . . . . . . . . . .   6
    6.  Example . . . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     Changes from 00 to 01 . . . . . . . . . . . . . . . . . . . . .   8
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     Changes from 00 to 01 . . . . . . . . . . . . . . . . . . . . .   9
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
      10.1.  Normative References . . . . . . . . . . . . . . . . . .   9
      10.2.  Informative References . . . . . . . . . . . . . . . . .   9
@@ -86,26 +88,24 @@ Table of Contents
 
 1.  Introduction
 
-   DNS filters are deployed for a variety of reasons, including endpoint
+   DNS filters are deployed for a variety of reasons including endpoint
    security, parental filtering, and filtering required by law
    enforcement.  Network-based security solutions such as firewalls and
    Intrusion Prevention Systems (IPS) rely upon network traffic
-   inspection to implement perimeter-based security policies.  The
-   network security services frequently operate by filtering DNS
-   responses to prevent malware download, block known malicious domains,
-   block phishing sites, etc.  In a home, DNS filtering is used for the
-   same reasons as above and additionall for parental control.  Internet
-   Service Providers typically block access to some DNS domains due to a
-   requirement imposed by an external entity (e.g., law enforcement
-   agency), which is performed using DNS-based content filtering.
+   inspection to implement perimeter-based security policies and operate
+   by filtering DNS responses.  In a home, DNS filtering is used for the
+   same reasons as above and additionally for parental control.
+   Internet Service Providers typically block access to some DNS domains
+   due to a requirement imposed by an external entity (e.g., law
+   enforcement agency) also performed using DNS-based content filtering.
 
-   DNS clients using services which perform filtering may wish to
-   receive more information about such filtering to resolve problems
-   with the filter -- for example to contact the administrator to
-   whitelist a domain that was erroneously filtered.
 
-   This document describes a protocol containing parsable data in
-   Extended DNS Error Codes [RFC8914].
+
+
+
+
+
+
 
 
 
@@ -113,6 +113,15 @@ Wing, et al.              Expires 3 April 2022                  [Page 2]
 
 Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
+
+   Users of DNS services which perform filtering may wish to receive
+   more information about such filtering to resolve problems with the
+   filter -- for example to contact the administrator to whitelist a
+   domain that was erroneously filtered or to understand the reason a
+   particular domain was filtered.  With that information, the user can
+   choose another network, open a trouble ticket with the DNS
+   administrator to resolve erroneous filtering, log the information, or
+   other uses.
 
    Two DNS filtering mechanisms are widely deployed today but are
    harmful:
@@ -149,17 +158,8 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    explain that filtering occurred but lacks detail for the user to
    resolve the filtering.
 
-   Clients indicate their support of this specification in their DNS
-   query so the DNS server can tailor its DNS response accordingly.  The
-   information returned in a DNS response allows combinations of
-   headless devices (i.e., those lacking a display or other means to
-   communicate with a human), operating systems, and web browsers to be
-   informed of the filtering.  This information returned can be logged
-   and/or displayed to the user, as appropriate for the user interface
-   capabilities of the client hardware and software.
-
-
-
+   This document describes a protocol containing parsable data in a new
+   EDNS(0) [RFC6891] option code.
 
 
 
@@ -170,6 +170,15 @@ Wing, et al.              Expires 3 April 2022                  [Page 3]
 Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 
+   Clients indicate their support of this specification in their DNS
+   query so the DNS server can tailor its DNS response accordingly.  The
+   information returned in a DNS response allows combinations of
+   headless devices (i.e., those lacking a display or other means to
+   communicate with a human), operating systems, and web browsers to be
+   informed of the filtering.  This information returned can be logged
+   and/or displayed to the user, as appropriate for the user interface
+   capabilities of the client hardware and software.
+
 2.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -178,18 +187,22 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    14 [RFC2119][RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   This document makes use of the terms defined in DNS Terminology
-   [RFC8499].
+   This document uses terms defined in DNS Terminology [RFC8499].
 
-   'Encrypted DNS' refers to any encrypted scheme to convey DNS
+   "Requestor" refers to the side that sends a request.  "Responder"
+   refers to an authoritative, recursive resolver or other DNS component
+   that responds to questions.  Other terminology is used here as
+   defined in the RFCs cited by this document.
+
+   "Encrypted DNS" refers to any encrypted scheme to convey DNS
    messages, for example, DNS-over-HTTPS [RFC8484], DNS-over-TLS
    [RFC7858], or DNS-over-QUIC [I-D.ietf-dprive-dnsoquic].
 
-3.  Structured Error EDNS0 Option Format
+3.  Structured Error EDNS(0) Option Code
 
-   This document defines a new EDNS0 [RFC6891] option to include JSON
-   providing information in the DNS response describing filtering that
-   occurred for this query, defined in Figure 1.
+   This document defines a new EDNS(0) [RFC6891] option code (OPT) to
+   include JSON providing information in the DNS response describing
+   filtering that occurred for this query, defined in Figure 1.
 
                                                 1   1   1   1   1   1
         0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
@@ -199,25 +212,12 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
       /              STRUCTURED-ERROR-JSON (variable size)            /
       +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
 
-               Figure 1: Structured Error EDNS0 Option Format
+               Figure 1: Structured Error EDNS(0) Option Code
 
    The description of the fields is as follows:
 
    STRUCTURED-ERROR-LENGTH:  Two octets containing the length of
       STRUCTURED-ERROR-JSON, in octets.  It MUST NOT be set to 0.
-
-   STRUCTURED-ERROR-JSON:  JSON containing DNS filtering information
-      encoded in JSON, defined in Section 4.
-
-4.  Operation and JSON Definition
-
-   When generating a DNS query, the client MUST include the Structured
-   Error EDNS0 option so the DNS server knows the client is compliant
-   with this specification.
-
-   When the DNS server filters its DNS response to an A or AAAA record
-   query, the DNS response MAY contain an empty answer, NXDOMAIN, or a
-   forged A or AAAA response, as desired by the DNS server.  In
 
 
 
@@ -226,9 +226,10 @@ Wing, et al.              Expires 3 April 2022                  [Page 4]
 Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 
-   addition, if the query contained the Structured Error EDNS0 option,
-   the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-   as described below.
+   STRUCTURED-ERROR-JSON:  JSON containing DNS filtering information
+      encoded in JSON, defined in Section 4.
+
+4.  Structured JSON
 
    STRUCTURED-ERROR-JSON has one top-level name, "p" (party
    responsible), containing an array of dictionaries for each party
@@ -267,13 +268,12 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    are all contained in the DNS response.  With that addition, the URIs
    are considered fully-formed.
 
-      |  Note: Can Class=IN be assumed, or should it be part of the
-      |  fully-formed URI?
+      |  Discussion: Can Class=IN be assumed, or should it be part of
+      |  the fully-formed URI?
 
    To avoid the overhead associated with DNS trunction, the generated
    JSON SHOULD be as short as possible utilizing short domain names,
    concise text, and minified JSON.
-
 
 
 
@@ -286,12 +286,28 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    otherwise used to assist the end-user or IT staff with
    troubleshooting and diagnosing the cause of the DNS filtering.
 
-      |  We might consider compressing the JSON.  Using the example
-      |  below, minified JSON is 171 bytes, binary output from brotli is
-      |  108 bytes (36% reduction), gzip is 148 bytes (13% reduction),
-      |  and base64-encoded brotli is 145 bytes (15% reduction).
+      |  Discussion: We might consider compressing the JSON.  Using the
+      |  example below, minified JSON is 171 bytes, binary output from
+      |  brotli is 108 bytes (36% reduction), gzip is 148 bytes (13%
+      |  reduction), and base64-encoded brotli is 145 bytes (15%
+      |  reduction).  [RFC3363] discusses problems with binary labels.
 
-5.  Deployment Considerations
+5.  Protocol Operation
+
+5.1.  Requestor Operation
+
+   When generating a DNS query, the client MUST include the Structured
+   Error EDNS(0) option so the DNS server knows the client is compliant
+   with this specification.
+
+5.2.  Responder Operation
+
+   When the DNS server filters its DNS response to an A or AAAA record
+   query, the DNS response MAY contain an empty answer, NXDOMAIN, or a
+   forged A or AAAA response, as desired by the DNS server.  In
+   addition, if the query contained the Structured Error EDNS(0) option,
+   the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
+   as described below.
 
    Over time a domain name might be filtered, then not filtered, then
    filtered again.  Addtionally, the user might take minutes or even
@@ -300,36 +316,20 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    state when the DNS filtering occurred.  If and how this is encoded
    into the URI is an implementation decision.
 
+      |  Discussion: the text in the justification field ("j") may not
+      |  be in the user's preferred language.  Sending a language tag
+      |  [RFC5646] in the OPT-DATA (Section 6.1.2 of [RFC6891]) would
+      |  resolve this problem.  This has privacy implications.
+
 6.  Example
 
    The example uses the folding defined in [RFC8792] for long lines.
 
-   An example with one entity, "example.net", that has filtered a DNS
-   "A" record query for example.org is shown in Figure 2, below.
+   An example showing example.net that has filtered a DNS "A" record
+   query for example.org is shown in Figure 2, below.
 
-   {
-         "c": "https://mistakes.example.net?time=1621902483",
-         "j": "malware present for 23 days",
-         "o": "example.net Filtering Service",
-         "r": "https://laws.example.net?country=atlantis"
-   }
 
-                       Figure 2: Example of Filtering
 
-   Upon receipt, the two partial URIs ("c" and "r") are extended to
-   become fully-formed.  The "c" URI becomes https://mistakes.example.ne
-   t?time=1621902483&class=in&type=a&name=example.org and the "r" URI
-   becomes https://laws.example.net?country=atlantis&class=in&type=a&nam
-   e=example.org.
-
-7.  Security Considerations
-
-   Security considerations in Section 6 of [RFC8914] and [RFC8624] need
-   to be taken into consideration.
-
-   The "c" and "r" URIs returned in the DNS response may cause HTTPS
-   retrieval by the client, or by another party (e.g., IT staff).  To
-   reduce attack surface, the Structed Error EDNS0 option MUST only be
 
 
 
@@ -338,6 +338,31 @@ Wing, et al.              Expires 3 April 2022                  [Page 6]
 Internet-Draft   Structured DNS Access Denied Error Page  September 2021
 
 
+     {
+       "c": "https://mistakes.example.net?time=1621902483",
+       "j": "malware present for 23 days",
+       "o": "example.net Filtering Service",
+       "r": "https://laws.example.net?country=atlantis"
+     }
+
+       Figure 2: Example of JSON returned in EDNS(0) Structured Error
+                                  response
+
+   Upon receipt, the two partial URIs ("c" and "r") are extended to
+   become fully-formed URIs.  The class, type, and name are pulled from
+   the DNS response (which matches the associated query) so that the
+   fully-formed "c" URI becomes https://mistakes.example.net?time=162190
+   2483&class=in&type=a&name=example.org and the "r" URI becomes https:/
+   /laws.example.net?country=atlantis&class=in&type=a&name=example.org.
+
+7.  Security Considerations
+
+   Security considerations in Section 6 of [RFC8914] and [RFC8624] need
+   to be taken into consideration.
+
+   The "c" and "r" URIs returned in the DNS response may cause HTTPS
+   retrieval by the client, or by another party (e.g., IT staff).  To
+   reduce attack surface, the Structed Error EDNS(0) option MUST only be
    processed by the client if the DNS query and response were both sent
    over an encrypted DNS channel to a DNS server authorized by the
    client; otherwise it MUST be ignored.
@@ -360,6 +385,15 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    redirection, unnecessary query parameters MUST be stripped by the
    HTTP server from the HTTP target URL.
 
+
+
+
+
+Wing, et al.              Expires 3 April 2022                  [Page 7]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
+
    Because this specification still allows DNS filtering to respond with
    an empty answer, NXDOMAIN, or forged answer (as the DNS server sees
    fit), this specification remains incompatible with client-based
@@ -371,28 +405,6 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    json+structured-dns-error" media type in the "Media Types" registry
    [IANA-MediaTypes].  This registration follows the procedures
    specified in [RFC6838]:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 3 April 2022                  [Page 7]
-
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
-
 
       Type name: application
 
@@ -430,6 +442,14 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
       Provisional registration?  No
 
 
+
+
+
+Wing, et al.              Expires 3 April 2022                  [Page 8]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
+
 9.  Changes
 
    This section is to be removed before publishing as an RFC.
@@ -441,14 +461,6 @@ Changes from 00 to 01
    *  Removed support for multiple responsible parties
 
    *  one-character JSON names (to minimize JSON length)
-
-
-
-
-Wing, et al.              Expires 3 April 2022                  [Page 8]
-
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
-
 
    *  partially-formed URI converted to fully-formed URI by client (to
       minimize JSON length)
@@ -486,6 +498,14 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Dickinson, S., and A. Mankin, "Specification
               of DNS over Dedicated QUIC Connections", Work in Progress,
+
+
+
+Wing, et al.              Expires 3 April 2022                  [Page 9]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
+
               Internet-Draft, draft-ietf-dprive-dnsoquic-04, 3 September
               2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
               dprive-dnsoquic-04>.
@@ -494,17 +514,20 @@ Internet-Draft   Structured DNS Access Denied Error Page  September 2021
               IANA, "Media Types",
               <https://www.iana.org/assignments/media-types>.
 
+   [RFC3363]  Bush, R., Durand, A., Fink, B., Gudmundsson, O., and T.
+              Hain, "Representing Internet Protocol version 6 (IPv6)
+              Addresses in the Domain Name System (DNS)", RFC 3363,
+              DOI 10.17487/RFC3363, August 2002,
+              <https://www.rfc-editor.org/info/rfc3363>.
+
+   [RFC5646]  Phillips, A., Ed. and M. Davis, Ed., "Tags for Identifying
+              Languages", BCP 47, RFC 5646, DOI 10.17487/RFC5646,
+              September 2009, <https://www.rfc-editor.org/info/rfc5646>.
+
    [RFC7858]  Hu, Z., Zhu, L., Heidemann, J., Mankin, A., Wessels, D.,
               and P. Hoffman, "Specification for DNS over Transport
               Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
               2016, <https://www.rfc-editor.org/info/rfc7858>.
-
-
-
-Wing, et al.              Expires 3 April 2022                  [Page 9]
-
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
-
 
    [RFC8484]  Hoffman, P. and P. McManus, "DNS Queries over HTTPS
               (DoH)", RFC 8484, DOI 10.17487/RFC8484, October 2018,
@@ -533,6 +556,12 @@ Authors' Addresses
    Email: dwing-ietf@fuggles.com
 
 
+
+Wing, et al.              Expires 3 April 2022                 [Page 10]
+
+Internet-Draft   Structured DNS Access Denied Error Page  September 2021
+
+
    Tirumaleswar Reddy
    McAfee, Inc.
    Embassy Golf Link Business Park
@@ -550,41 +579,12 @@ Authors' Addresses
    Email: neil.cook@noware.co.uk
 
 
-
-
-
-
-
-
-
-Wing, et al.              Expires 3 April 2022                 [Page 10]
-
-Internet-Draft   Structured DNS Access Denied Error Page  September 2021
-
-
    Mohamed Boucadair
    Orange
    35000 Rennes
    France
 
    Email: mohamed.boucadair@orange.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
