@@ -157,15 +157,149 @@ agency) also performed using DNS-based content filtering.</t>
 
       </dl>
 
-      <t>For both DNS filtering mechanisms described above, the DNS server can
-      return extended error codes Blocked, Censored, Filtered, or Forged
-      Answer defined
-      in <xref target="RFC8914">Section 4 of</xref>, which that document
-      states MUST be sent over Encrypted DNS channel.  However, these codes
-      only explain that filtering occurred but lacks detail for the user
-      to resolve the filtering.</t>
+      <t>For both DNS filtering mechanisms described above, the DNS
+      server can return extended error codes Blocked, Censored,
+      Filtered, or Forged Answer defined in <xref
+      target="RFC8914">Section 4 of</xref>.  However, these codes only
+      explain that filtering occurred but lacks detail for the user to
+      resolve the filtering.</t>
             
-       
+
+<t>DNS responses can be filtered by sending a bogus (also called,
+   "forged") A or AAAA response, NXDOMAIN error or empty answer, or an
+   extended DNS error (EDE) code defined in <xref target="RFC8914"/>.  Each of these
+   methods have advantages and disadvantages that are discussed below:</t>
+
+
+   <ol>
+   <li><t>The DNS response is forged to provide a list of IP addresses that
+       points to an HTTP(S) server alerting the end user about the
+       reason for blocking access to the requested domain (e.g.,
+       malware).  When an HTTP(S) enabled domain name is blocked, the
+       network security device (e.g., CPE, firewall) presents a block
+       page instead of the HTTP response from the content provider
+       hosting that domain.  If an HTTP enabled domain name is blocked,
+       the network security device intercepts the HTTP request and
+       returns a block page over HTTP.  If an HTTPS enabled domain is
+       blocked, the block page is also served over HTTPS.  In order to
+       return a block page over HTTPS, man in the middle (MITM) is
+       enabled on endpoints by generating a local root certificate and
+       an accompanying (local) public/private key pair.  The local root
+       certificate is installed on the endpoint while the network
+       security device(s) stores a copy of the private key.  During the
+       TLS handshake, the network security device modifies the
+       certificate provided by the server and (re)signs it using the
+   private key from the local root certificate.</t>
+
+         <ul spacing="normal">
+            <li>
+              <t>However, configuring the local root certificate on endpoints
+          is not a viable option in several deployments like home
+          networks, schools, Small Office/Home Office (SOHO), and Small/
+          Medium Enterprise (SME).  In these cases, the typical behavior
+          is that the forged DNS response directs the user towards a
+          server hosted to display the block page which breaks the TLS
+          connection.  For web-browsing this then results in an HTTPS
+          certificate error message indicating that a secure connection
+          could not be established, which gives no information to the
+          end-user about the reason for the error.
+          The typical errors are "The security certificate presented by
+          this website was not issued by a trusted certificate
+          authority" (Internet Explorer/Edge"), "The site's security
+          certificate is not trusted" (Chrome), "This Connection is
+          Untrusted" (Firefox), "Safari can't verify the identity of the
+          website..." (Safari on MacOS)".</t></li>
+
+       <li>Enterprise networks do not assume that all the connected
+          devices are managed by the IT team or Mobile Device Management
+          (MDM) devices, especially in the quite common Bring Your Own
+          Device (BYOD) scenario.  In addition, the local root
+          certificate cannot be installed on IoT devices without a
+          device management tool.</li>
+
+       <li>An end user does not know why the connection was reset and,
+          consequently, may repeatedly try to reach the domain but with
+          no success.  Frustrated, the end user may switch to an
+          alternate network that offers no DNS-level protection against
+          malware and phishing, potentially compromising both security
+          and privacy.  Furthermore, certificate errors train users to
+          click through certificate errors, which is a bad security
+          practice.  To eliminate the need for an end user to click
+          through certificate errors, an end user may manually install a
+          local root certificate on a host device.  Doing so, however, is also a bad
+          security practice as it creates a security vulnerability that
+          may be exploited by a MITM attack.  When a manually installed
+          local root certificate expires, the user has to (again)
+          manually install the new local root certificate.</li>
+</ul>
+   </li>
+   
+  <li>The DNS response is forged to provide a NXDOMAIN response to
+       cause the DNS lookup to terminate in failure.  In this case, an
+       end user does not know why the domain cannot be reached and may
+       repeatedly try to reach the domain but with no success.
+       Frustrated, the end user may use insecure connections to reach
+       the domain, potentially compromising both security and privacy.</li>
+
+  <li>The extended error codes Blocked, Censored, and Filtered defined in
+       <xref target="RFC8914">Section 4 of</xref> can be returned by a DNS server to
+       provide additional information about the cause of an DNS error.
+       If the extended error code "Forged Answer" defined in <xref target="RFC8914">Section 4.5
+       of</xref> is returned by the DNS server, the client can
+       identify the DNS response is forged together with the reason for
+       HTTPS certificate error.</li>
+
+     <li>These extended error codes do not suffer from the limitations
+       discussed in bullets (1) and (2), but the user still does not
+       know the exact reason nor he/she is aware of the exact entity
+       blocking the access to the domain.  For example, a DNS server may
+       block access to a domain based on the content category such as
+       "Adult Content" to enforce parental control, "Violence &amp;
+       Terrorism" due to an external requirement imposed by an external
+       entity (e.g., Law Enforcement Agency), etc.  These content
+       categories cannot be standardized because the classification of
+       domains into content categories is vendor specific, typically
+       ranges from 40 to 100 types of categories depending on the vendor
+       and the categories keep evolving.  Furthermore, the threat data
+       used to categorize domains may sometimes misclassify domains
+       (e.g., domains wrongly classified as Domain Generation Algorithm
+       (DGA) by deep learning techniques, domain wrongly classified as
+       phishing due to crowd sourcing, new domains not categorized by
+       the threat data).  A user needs to know the contact details of
+       the IT/InfoSec team to raise a complaint.</li>
+
+       <li>The EXTRA-TEXT field of the EDE option defined in <xref target="RFC8914">
+       Section 2 of</xref> can include additional textual information about the
+   cause of the error, but the information could be provided in a
+   language that is not understood by the user.  When a resolver or
+   forwarder forwards the received EDE option, the EXTRA-TEXT field
+   only conveys the source of the error (Section 3 of [RFC8914]) and
+   does not provide additional textual information about the cause of
+   the error.  Most importantly, EDE option does not offer
+   authenticated information; it can thus be spoofed by an attacker.
+   In addition, the additional textual information may not be able to
+   convey all of the required information about the cause of the DNS
+   error because lengthy EXTRA-TEXT content would be truncated to
+   prevent fragmentation (<xref target="RFC8914">Section 3 of </xref>).</li>
+
+ </ol>
+
+   <t>No matter which type of response is generated (forged IP address(es),
+   NXDOMAIN or empty answer, or an extended error code), the user who
+   triggered the DNS query has little chance to understand which entity
+   filtered the query, how to report a mistake in the filter, or why the
+   entity filtered it at all.  This document describes a mechanism to
+   provide an such detail.</t>
+   
+
+   <t>One of the other benefits of this approach is to eliminate the need
+   to "spoof" block pages for HTTPS resources.  This is achieved as the
+   block page no longer needs to create a signed certificate when
+   blocking a destination.  This approach avoids the need to install a
+   local root certificate authority on those IT-managed devices.</t>
+   
+
+      
    <t>This document describes a protocol
    containing parsable data in a new <xref target="RFC6891"
    format="default">EDNS(0)</xref> option code.</t>
@@ -206,7 +340,7 @@ agency) also performed using DNS-based content filtering.</t>
 
     </section>
 
-    <section anchor="format-sec" title="Structured Error EDNS(0) Option Code">
+    <section anchor="option-code" title="Structured Error EDNS(0) Option Code">
       <t>This document defines a new EDNS(0) <xref
       target="RFC6891"></xref> option code (OPT) to include JSON
       providing information in the DNS response describing filtering
@@ -258,7 +392,7 @@ agency) also performed using DNS-based content filtering.</t>
           mis-classified DNS filtering.  This field is mandatory and MUST
           contain a URI.  The endpoint adds a query parameter
 	  to this URI, described below.  There are constraints on this URI
-	  described in Security Considerations. This field might or might
+	  described in <xref target="requestor"></xref>. This field might or might
 	  not already contain an HTTP query parameter. This field is required.</dd>
         <dt>j: (justification)</dt>
         <dd>the textual justification for
@@ -280,41 +414,90 @@ agency) also performed using DNS-based content filtering.</t>
       <t>To reduce the size of the JSON, two of the JSON fields, "c"
       and r", contain partial URIs when sent over the wire.  The
       client endpoint adds a query parameter to both of those URIs
-      containing the DNS query class (class=), resource record type
+      containing the DNS resource record type
       (type=), and name (name=), which are all contained in the DNS
       response.  With that addition, the URIs are considered
       fully-formed.</t>
 
-      <aside><t>Discussion: Can Class=IN be assumed, or should it be part
-      of the fully-formed URI?</t></aside>
-
-      <t>To avoid the overhead associated with DNS trunction, the generated JSON
-      SHOULD be as short as possible utilizing short domain names, concise text,
-      and minified JSON.</t>
+      <t>To reduce packet overhead the generated JSON SHOULD be as
+      short as possible: short domain names, concise text for the j:
+      key, and minified JSON.</t>
 
       <t>The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.</t>
-
-      <aside><t>Discussion: We might consider compressing the JSON.  Using the
-      example below, minified JSON is 171 bytes, binary output from
-      brotli is 108 bytes (36% reduction), gzip is 148 bytes (13% reduction),
-      and base64-encoded brotli is 145 bytes (15% reduction).  
-      <xref target="RFC3363"/> discusses problems with binary labels.</t>      
-      </aside>
 
     </section>
 
 
     <section anchor="operation" numbered="true" toc="default">
       <name>Protocol Operation</name>
-      <section>
+      <section anchor="requestor">
 	<name>Requestor Operation</name>
 	
       <t>When generating a DNS query, the client MUST include the Structured Error
       EDNS(0) option so the DNS server knows the client is compliant with this
       specification.</t>
 
+      <t>On receipt of the DNS response, the responder performs the following
+      actions specific to Structured Error EDNS(0) option:</t>
+
+      <ul>
+	<li>If the DNS response contains more than one Structured Error EDNS(0)
+	option, the requestor discards all Structured Error ENDS(0) options.</li>
+
+	<li>The DNS response MUST also contain an extended error code
+	of "Censored", "Blocked", "Filtered" or "Forged", otherwise
+	the Structured Error EDNS(0) option is discarded.</li>
+
+	<li>The Structured Error values for "c" and "r" MUST be "https" URIs,
+	otherwise the Structured Error EDNS(0) option is discarded.</li>
+
+	<li>Verifies the response was received over an encrypted DNS channel.</li>
+	  
+	  <li>If a DNS client has enabled opportunistic privacy profile
+      (<xref target="RFC8310">Section 5 of</xref>) for DoT, the DNS client will either
+      fallback to an encrypted connection without authenticating the DNS
+      server provided by the local network or fallback to clear text
+      DNS, and cannot exchange encrypted DNS messages.  Both of these
+      fallback mechanisms adversely impacts security and privacy.  If
+      the DNS client has enabled opportunistic privacy profile for DoT,
+      the DNS client MUST ignore Structred DNS Error EDNS(0) option
+      responses, but SHOULD process other parts of the response.</li>
+
+      <li>If a DNS client has enabled strict privacy profile (<xref target="RFC8310">Section 5 of</xref>)
+      for DoT, the DNS client requires an encrypted
+      connection and successful authentication of the DNS server; this
+      mitigates both passive eavesdropping and client redirection (at
+      the expense of providing no DNS service if an encrypted,
+      authenticated connection is not available).  If the DNS client has
+      enabled strict privacy profile for DoT, the client MAY process the
+      Structured DNS Error EDNS(0) option of the DNS response.  Note that the
+      strict and opportunistic privacy profiles as defined in <xref target="RFC8310"/>
+      only apply to DoT; there has been no such distinction
+      made for DoH.</li>
+
+      <li>If the DNS client determines that the encrypted DNS server does
+      not offer DNS filtering service, it MUST reject the Structured Error
+      EDNS(0) option.  For example, the DNS client can learn whether the
+      encrypted DNS resolver performs DNS-based content filtering or not
+      by retrieving resolver information using the method defined in
+      <xref target="I-D.reddy-add-resolver-info"/>.</li>
+
+      <li>DNS forwarders (or DNS proxies) are supposed to propagate unknown
+      EDNS(0) options (<xref target="RFC5625">Sections 4.1 and 4.4.1 of</xref>), which means
+      the Structured Error EDNS(0) option may get propagated by such a DNS
+      server.  To detect this scenario, the DNS client MUST verify the
+      domain name in the Structured Error "c" and "r" properties matche the domain name of the
+      encrypted DNS resolver.  If this match fails, the DNS client MUST
+      ignore Structured Error EDNS(0) option in the response, but SHOULD
+      process other parts of the response.</li>
+
+        </ul>
+	
+
+	
+      
       </section>
 
 
@@ -336,16 +519,11 @@ agency) also performed using DNS-based content filtering.</t>
       encoded into the URI is an implementation decision.</t>
 
       
-            <aside><t>Discussion: the text in the justification field ("j")
-      may not be in the user's preferred language.  Sending a <xref
-      target="RFC5646">language tag</xref> in the OPT-DATA (<xref
-      target="RFC6891">Section 6.1.2 of </xref>) would resolve this
-      problem.  This has privacy implications.</t>
-	    </aside>
-
       </section>
 
+ 
 
+      
     </section>
 
 
@@ -375,9 +553,9 @@ agency) also performed using DNS-based content filtering.</t>
       to become fully-formed URIs.  The class, type, and name are
       pulled from the DNS response (which matches the associated
       query) so that the fully-formed "c" URI becomes
-      https://mistakes.example.net?time=1621902483&amp;class=in&amp;type=a&amp;name=example.org
+      https://mistakes.example.net?time=1621902483&amp;type=a&amp;name=example.org
       and the "r" URI becomes
-      https://laws.example.net?country=atlantis&amp;class=in&amp;type=a&amp;name=example.org.</t>
+      https://laws.example.net?country=atlantis&amp;type=a&amp;name=example.org.</t>
       
     </section>
     
@@ -389,22 +567,15 @@ agency) also performed using DNS-based content filtering.</t>
       target="RFC8914"></xref> and <xref target="RFC8624"></xref> need to be
       taken into consideration.</t>
 
-      <t>The "c" and "r" URIs returned in the DNS response may cause
-      HTTPS retrieval by the client, or by another party (e.g., IT staff).    
-      To reduce attack surface, the Structed Error EDNS(0) option MUST only
-      be processed by the client if the DNS query and response were both
-      sent over an encrypted DNS channel to a DNS server authorized by
-      the client; otherwise it MUST be ignored.</t>
-
-
-      <t>The "c" and "r" URIs returned in the DNS response MUST match the
-domain name of the encrypted DNS server.  This validation ensures both
-the encrypted DNS server and the HTTPS server are operated by the same
-entity.  This matching is performed by allowing the left-most FQDN label
-to differ, but the other labels MUST match.  For example, ns.example.com
-and web.example.com would match, whereas ns.com and web.com would not match.</t>
-<aside><t>The example in the last sentence, above, doesn't work.  Do we need
-to point at Mozilla's domain name list?  Seems so...</t></aside>
+      <t>The values of the "c" and "r" keys contain URIs which may cause
+      HTTPS retrieval by the client or by another party (e.g., IT staff).    
+      To reduce attack surface, the requestor ensures those referenced
+      URIs match the domain name of the DNS server, as described in
+      section XXX.</t>
+      
+      <t>To minimize impact of man-in-the-middle attacks on the
+      DNS channel, the requestor performs mitigtations described in
+      <xref target="requestor"/>.</t>
 
 <t>If the web server responding to "c" or "r" URIs web server desires, it can HTTP redirect the request
 elsewhere,such as might be common for "r" to point the user at a government-owned
@@ -472,15 +643,15 @@ HTTP server from the HTTP target URL.</t>
 
    Optional parameters: N/A
 
-   Encoding considerations: as defined in Section 3 of [RFCXXXX].
+   Encoding considerations: as defined in Section NN of [RFCXXXX].
 
-   Security considerations: See Section 7 of [RFCXXXX].
+   Security considerations: See Section NNN of [RFCXXXX].
 
    Interoperability considerations: N/A
 
    Published specification: [RFCXXXX]
 
-   Applications that use this media type: Section 3 of [RFCXXXX].
+   Applications that use this media type: Section NNNN of [RFCXXXX].
 
    Fragment identifier considerations: N/A
 
@@ -536,7 +707,8 @@ HTTP server from the HTTP target URL.</t>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6838.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6891.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8624.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8310.xml"/>
+	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8624.xml"/>
 
 	
       </references>
@@ -553,14 +725,14 @@ HTTP server from the HTTP target URL.</t>
           </front>
         </reference>
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3363.xml"/>
-	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5646.xml"/>
+	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5625.xml"/>
 	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7858.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8484.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8499.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8914.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dprive-dnsoquic.xml"/>
+	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"/>
 
 
     </references>
