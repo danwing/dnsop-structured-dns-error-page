@@ -358,41 +358,46 @@
     </section>
     <section anchor="json" numbered="true" toc="default">
       <name>Structured JSON</name>
-      <t>STRUCTURED-ERROR-JSON has contains the following JSON keys:</t>
+      <t>STRUCTURED-ERROR-JSON contains the following JSON keys:</t>
       <dl newline="false" spacing="normal">
         <dt>c: (complaint)</dt>
-        <dd>a partial HTTPS URI for the user to report
-          mis-classified DNS filtering.  This field is mandatory and MUST
-          contain a URI.  The endpoint adds a query parameter
-	  to this URI, described below.  There are constraints on this URI
-	  described in <xref target="process-response"/>. This field might or might
-	  not already contain an HTTP query parameter. This field is required.</dd>
+        <dd>a partial URI for the user to further diagnose and possibly report
+	mis-classified DNS filtering.  The value is converted to an
+	expanded absolute URI.</dd>
+
+	<dt>d: (domain)</dt>
+	<dd>Contains the domain-name of the encrypted DNS server. This is used
+	to create the expanded URIs for both the "c" and "r" fields, and also
+	detect undesired forwarding of EDNS(0) options.</dd>
+
         <dt>j: (justification)</dt>
         <dd>the textual justification for
-          this particular DNS filtering. This field is mandatory.</dd>
+        this particular DNS filtering.  This field is mandatory.</dd>
+	
         <dt>o: (organization)</dt>
         <dd>human-friendly name of the organization
-          that filtered this particular DNS query. This field is optional.</dd>
+        that filtered this particular DNS query. This field is optional.</dd>
+	
         <dt>r: (regulation)</dt>
-        <dd>a partial HTTPS URI to retrieve the public or private regulation for
-	the filter.  This might point at an employment
-          agreement (for an enterprise performing filtering) or a national
-          government regulation (for an ISP performing filtering). To this
-	  URI, the endpoint adds a query parameter, described below.  There
-	  are constraints on this URI described in Security Considerations.
-	  This field might or might not already contain an HTTP query parameter.
-	  This field is optional.</dd>
+        <dd>a partial URI to retrieve the public or private
+        rule, law, or regulation describing the reason for this DNS filter.  This might point at an employment
+        agreement (for an enterprise performing filtering) or a
+        national government regulation (for an ISP performing
+        filtering).
+	The hostname of this field                                                                                                                                                     
+        is constrained to match the domain name of the nameserver.                                                                                                                                                                     This field is required and MUST, at minimum, contain the domain                                                                                                                                                        
+        name of the DNS server.  Expansion of this field is described in
+	<xref target="process-response"/>.</dd>
       </dl>
-      <t>To reduce the size of the JSON, two of the JSON fields, "c"
-      and r", contain partial URIs when sent over the wire.  The
-      client endpoint adds a query parameter to both of those URIs
-      containing the DNS resource record type
-      (type=), and name (name=), which are all contained in the DNS
-      response.  With that addition, the URIs are considered
-      fully-formed.</t>
+
+
+
+      
+
+
       <t>To reduce packet overhead the generated JSON SHOULD be as
       short as possible: short domain names, concise text for the "j"
-      key, and minified JSON (that is, without spaces or line breaks
+      and "o" keys, and minified JSON (that is, without spaces or line breaks
       between JSON elements)).</t>
       <t>The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
@@ -424,16 +429,28 @@
       <section anchor="process-response">
         <name>Client Processing Response</name>
         <t>On receipt of the DNS response, the following
-      actions are performed specific to Structured Error EDNS(0) option:</t>
+      actions are performed specific to Structured Error EDNS(0) option, in no particular order:</t>
         <ul>
+          <li>Verifies the response was received over an encrypted DNS channel.</li>
           <li>If the DNS response contains more than one Structured Error EDNS(0)
 	option, the requestor discards all Structured Error ENDS(0) options.</li>
           <li>The DNS response MUST also contain an extended error code
 	of "Censored", "Blocked", "Filtered" or "Forged", otherwise
 	the Structured Error EDNS(0) option is discarded.</li>
-          <li>The Structured Error values for "c" and "r" MUST be "https" URIs,
-	otherwise the Structured Error EDNS(0) option is discarded.</li>
-          <li>Verifies the response was received over an encrypted DNS channel.</li>
+		<li>
+	  The Requestor expands the values in "c" and "r" by prefixing the
+	  two values with "https://" and the value of the "d" value.
+	  Then the Requestor further expands each of the "c" and "r" URIs by
+      appending two URL query parameters: "type" indicating
+      the name of the DNS resource record type queried and "name"
+      indicating the name of the DNS resource record queried.</li>
+    </ul>
+    
+      <aside><t>Note the parial URI value in "c" or "r" will already
+      contain zero or more query parameters so implementations should
+      substitute "?" and "&amp;" accordingly.</t></aside>
+      <ul>
+	  
           <li>If a DNS client has enabled opportunistic privacy profile
       (<xref target="RFC8310">Section 5 of</xref>) for DoT, the DNS client will either
       fallback to an encrypted connection without authenticating the DNS
@@ -464,7 +481,7 @@
       EDNS(0) options (<xref target="RFC5625">Sections 4.1 and 4.4.1 of</xref>), which means
       the Structured Error EDNS(0) option may get propagated by such a DNS
       server.  To detect this scenario, the DNS client MUST verify the
-      domain name in the Structured Error "c" and "r" properties matches the domain name of the
+      domain name in the Structured Error "d" value matches the domain name of the
       encrypted DNS resolver.  If this match fails, the DNS client MUST
       ignore Structured Error EDNS(0) option in the response, but SHOULD
       process other parts of the response.</li>
@@ -472,28 +489,37 @@
       </section>
     </section>
     <section numbered="true" toc="default">
-      <name>Example</name>
-      <t>The example uses the folding defined in <xref target="RFC8792" format="default"/> for long lines,
-      and also shows whitespace and blank lines to aid reading the example; a more accurate example
-      would have minified JSON without whitespace and without blank lines.</t>
+      <name>Examples</name>
       <t>An example showing the nameserver at ns.example.net that filtered a DNS
-      "A" record query for example.org is shown in <xref target="ex1" format="default"/>, below.</t>
-      <figure anchor="ex1">
-        <name>Example of JSON returned in EDNS(0) Structured Error response</name>
+      "A" record query for example.org is shown in <xref target="example-json" format="default"/>, below.</t>
+      <figure anchor="example-json">
+        <name>JSON returned in EDNS(0) Structured Error response</name>
         <artwork name="" type="" align="left" alt=""><![CDATA[  {
-    "c": "https://ns.example.net?time=1621902483",
+    "c": "?time=1621902483",
+    "d": "ns.example.com",
     "j": "malware present for 23 days",
     "o": "example.net Filtering Service",
-    "r": "https://ns.example.net?country=atlantis"
+    "r": "?country=atlantis"
   }]]></artwork>
       </figure>
+
+      <t>In <xref target="example-minified"/> the same content is
+      shown with minified JSON (no whitespace, no blank lines) with
+      '\' line wrapping per <xref target="RFC8792" format="default"/>.</t>
+
+      <figure anchor="example-minified">
+        <name>Minified response</name>
+        <artwork name="" type="" align="left" alt=""><![CDATA[{"c":"?time=1621902483","d":"ns.example.com","j":"malware present \
+for 23 days","o":"example.net Filtering Service","r":\
+"?country=atlantis"}]]></artwork>
+      </figure>      
       <t>Upon receipt, the two partial URIs ("c" and "r") are extended
       to become fully-formed URIs.  The class, type, and name are
       pulled from the DNS response (which matches the associated
       query) so that the fully-formed "c" URI becomes
-      https://mistakes.example.net?time=1621902483&amp;type=a&amp;name=example.org
+      https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org
       and the "r" URI becomes
-      https://laws.example.net?country=atlantis&amp;type=a&amp;name=example.org.</t>
+      https://ns.example.net?country=atlantis&amp;type=a&amp;name=example.org.</t>
     </section>
     <section anchor="Security" numbered="true" toc="default">
       <name>Security Considerations</name>
