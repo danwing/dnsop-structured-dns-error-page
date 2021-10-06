@@ -1199,7 +1199,7 @@ li > p:last-of-type {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 7 April 2022</td>
+<td class="center">Expires 8 April 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1212,12 +1212,12 @@ li > p:last-of-type {
 <dd class="internet-draft">draft-wing-dnsop-structured-dns-error-page-01</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-10-04" class="published">4 October 2021</time>
+<time datetime="2021-10-05" class="published">5 October 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-04-07">7 April 2022</time></dd>
+<dd class="expires"><time datetime="2022-04-08">8 April 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1226,7 +1226,7 @@ li > p:last-of-type {
 </div>
 <div class="author">
       <div class="author-name">T. Reddy</div>
-<div class="org">McAfee</div>
+<div class="org">Akamai</div>
 </div>
 <div class="author">
       <div class="author-name">N. Cook</div>
@@ -1271,7 +1271,7 @@ li > p:last-of-type {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 April 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 April 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1316,10 +1316,13 @@ li > p:last-of-type {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-protocol-operation-2" class="xref">Protocol Operation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-requestor-operation-2" class="xref">Requestor Operation</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-client-generating-request-2" class="xref">Client Generating Request</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-responder-operation-2" class="xref">Responder Operation</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-server-generating-response-2" class="xref">Server Generating Response</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="xref">5.3</a>.  <a href="#name-client-processing-response-2" class="xref">Client Processing Response</a></p>
 </li>
             </ul>
 </li>
@@ -1399,7 +1402,7 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       pointing at a host operated by the DNS operator.  The
       expectation is the user's browser will visit the server over
       HTTP and a suitable explanation will be displayed to the user.
-      As HTTPS is now commonplace, this expectaion breaks down because
+      As HTTPS is now commonplace, this expectation breaks down because
       clients are presented with a warning about visiting an
       un-trusted site (because of an un-trusted certificate), or those
       users are encouraged to install the certificate as an additional
@@ -1520,9 +1523,7 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
        the threat data).  A user needs to know the contact details of
        the IT/InfoSec team to raise a complaint.<a href="#section-1-7.4" class="pilcrow">¶</a>
 </li>
-        <li id="section-1-7.5">The EXTRA-TEXT field of the EDE option defined in <span><a href="#RFC8914" class="xref">Section 2 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span> can include additional textual information about the
-   cause of the error, but the information could be provided in a
-   language that is not understood by the user.  When a resolver or
+        <li id="section-1-7.5">When a resolver or
    forwarder forwards the received EDE option, the EXTRA-TEXT field
    only conveys the source of the error (Section 3 of [RFC8914]) and
    does not provide additional textual information about the cause of
@@ -1539,7 +1540,7 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
    triggered the DNS query has little chance to understand which entity
    filtered the query, how to report a mistake in the filter, or why the
    entity filtered it at all.  This document describes a mechanism to
-   provide an such detail.<a href="#section-1-8" class="pilcrow">¶</a></p>
+   provide such detail.<a href="#section-1-8" class="pilcrow">¶</a></p>
 <p id="section-1-9">One of the other benefits of this approach is to eliminate the need
    to "spoof" block pages for HTTPS resources.  This is achieved as the
    block page no longer needs to create a signed certificate when
@@ -1623,27 +1624,20 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       <h2 id="name-structured-json-2">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-structured-json-2" class="section-name selfRef">Structured JSON</a>
       </h2>
-<p id="section-4-1">STRUCTURED-ERROR-JSON has one top-level name, "p" (party responsible),
-      containing an array of dictionaries for each party responsible
-      for filtering this particular DNS response.  An array of responsible parties
-      are possible in deployment scenarios where two or more entities
-      are involved in a DNS filtering (the filtering may be for the
-      same or distinct reasons by each involved DNS filter
-      service). The content of the "p" array is structured as
-      follows:<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">STRUCTURED-ERROR-JSON has contains the following JSON keys:<a href="#section-4-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-4-2">
         <dt id="section-4-2.1">c: (complaint)</dt>
         <dd style="margin-left: 1.5em" id="section-4-2.2">a partial HTTPS URI for the user to report
           mis-classified DNS filtering.  This field is mandatory and MUST
           contain a URI.  The endpoint adds a query parameter
    to this URI, described below.  There are constraints on this URI
-   described in <a href="#requestor" class="xref">Section 5.1</a>. This field might or might
+   described in <a href="#process-response" class="xref">Section 5.3</a>. This field might or might
    not already contain an HTTP query parameter. This field is required.<a href="#section-4-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-4-2.3">j: (justification)</dt>
         <dd style="margin-left: 1.5em" id="section-4-2.4">the textual justification for
-          this particular DNS filtering. This field is optional.<a href="#section-4-2.4" class="pilcrow">¶</a>
+          this particular DNS filtering. This field is mandatory.<a href="#section-4-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-4-2.5">o: (organization)</dt>
@@ -1671,8 +1665,9 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       response.  With that addition, the URIs are considered
       fully-formed.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">To reduce packet overhead the generated JSON SHOULD be as
-      short as possible: short domain names, concise text for the j:
-      key, and minified JSON.<a href="#section-4-4" class="pilcrow">¶</a></p>
+      short as possible: short domain names, concise text for the "j"
+      key, and minified JSON (that is, without spaces or line breaks
+      between JSON elements)).<a href="#section-4-4" class="pilcrow">¶</a></p>
 <p id="section-4-5">The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.<a href="#section-4-5" class="pilcrow">¶</a></p>
@@ -1683,40 +1678,64 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       <h2 id="name-protocol-operation-2">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-protocol-operation-2" class="section-name selfRef">Protocol Operation</a>
       </h2>
-<div id="requestor">
+<div id="generate-request">
 <section id="section-5.1">
-        <h3 id="name-requestor-operation-2">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-requestor-operation-2" class="section-name selfRef">Requestor Operation</a>
+        <h3 id="name-client-generating-request-2">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-client-generating-request-2" class="section-name selfRef">Client Generating Request</a>
         </h3>
 <p id="section-5.1-1">When generating a DNS query, the client MUST include the Structured Error
       EDNS(0) option so the DNS server knows the client is compliant with this
       specification.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">On receipt of the DNS response, the responder performs the following
-      actions specific to Structured Error EDNS(0) option:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-5.2">
+        <h3 id="name-server-generating-response-2">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-server-generating-response-2" class="section-name selfRef">Server Generating Response</a>
+        </h3>
+<p id="section-5.2-1">When the DNS server filters its DNS response to an A or AAAA
+      record query, the DNS response MAY contain an empty answer,
+      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
+      server.  In addition, if the query contained the Structured Error
+      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
+      as described below.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">Over time a domain name might be filtered, then not filtered,
+      then filtered again.  Additionally, the user might take minutes
+      or even days before investigating a filtered DNS query.  Thus
+      the URI is RECOMMENDED to include sufficient detail to determine
+      the filtering state when the DNS filtering occurred.  If and how this is
+      encoded into the URI is an implementation decision.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+</section>
+<div id="process-response">
+<section id="section-5.3">
+        <h3 id="name-client-processing-response-2">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-client-processing-response-2" class="section-name selfRef">Client Processing Response</a>
+        </h3>
+<p id="section-5.3-1">On receipt of the DNS response, the following
+      actions are performed specific to Structured Error EDNS(0) option:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.1-3.1">If the DNS response contains more than one Structured Error EDNS(0)
- option, the requestor discards all Structured Error ENDS(0) options.<a href="#section-5.1-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-5.3-2.1">If the DNS response contains more than one Structured Error EDNS(0)
+ option, the requestor discards all Structured Error ENDS(0) options.<a href="#section-5.3-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.2">The DNS response MUST also contain an extended error code
+          <li class="normal" id="section-5.3-2.2">The DNS response MUST also contain an extended error code
  of "Censored", "Blocked", "Filtered" or "Forged", otherwise
- the Structured Error EDNS(0) option is discarded.<a href="#section-5.1-3.2" class="pilcrow">¶</a>
+ the Structured Error EDNS(0) option is discarded.<a href="#section-5.3-2.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.3">The Structured Error values for "c" and "r" MUST be "https" URIs,
- otherwise the Structured Error EDNS(0) option is discarded.<a href="#section-5.1-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-5.3-2.3">The Structured Error values for "c" and "r" MUST be "https" URIs,
+ otherwise the Structured Error EDNS(0) option is discarded.<a href="#section-5.3-2.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.4">Verifies the response was received over an encrypted DNS channel.<a href="#section-5.1-3.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-5.3-2.4">Verifies the response was received over an encrypted DNS channel.<a href="#section-5.3-2.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.5">If a DNS client has enabled opportunistic privacy profile
+          <li class="normal" id="section-5.3-2.5">If a DNS client has enabled opportunistic privacy profile
       (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>) for DoT, the DNS client will either
       fallback to an encrypted connection without authenticating the DNS
       server provided by the local network or fallback to clear text
       DNS, and cannot exchange encrypted DNS messages.  Both of these
       fallback mechanisms adversely impacts security and privacy.  If
       the DNS client has enabled opportunistic privacy profile for DoT,
-      the DNS client MUST ignore Structred DNS Error EDNS(0) option
-      responses, but SHOULD process other parts of the response.<a href="#section-5.1-3.5" class="pilcrow">¶</a>
+      the DNS client MUST ignore the Structured DNS Error EDNS(0) option
+      responses, but SHOULD process other parts of the response.<a href="#section-5.3-2.5" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.6">If a DNS client has enabled strict privacy profile (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>)
+          <li class="normal" id="section-5.3-2.6">If a DNS client has enabled strict privacy profile (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>)
       for DoT, the DNS client requires an encrypted
       connection and successful authentication of the DNS server; this
       mitigates both passive eavesdropping and client redirection (at
@@ -1726,61 +1745,46 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       Structured DNS Error EDNS(0) option of the DNS response.  Note that the
       strict and opportunistic privacy profiles as defined in <span>[<a href="#RFC8310" class="xref">RFC8310</a>]</span>
       only apply to DoT; there has been no such distinction
-      made for DoH.<a href="#section-5.1-3.6" class="pilcrow">¶</a>
+      made for DoH.<a href="#section-5.3-2.6" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.7">If the DNS client determines that the encrypted DNS server does
+          <li class="normal" id="section-5.3-2.7">If the DNS client determines that the encrypted DNS server does
       not offer DNS filtering service, it MUST reject the Structured Error
       EDNS(0) option.  For example, the DNS client can learn whether the
       encrypted DNS resolver performs DNS-based content filtering or not
       by retrieving resolver information using the method defined in
-      <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>.<a href="#section-5.1-3.7" class="pilcrow">¶</a>
+      <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>.<a href="#section-5.3-2.7" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.1-3.8">DNS forwarders (or DNS proxies) are supposed to propagate unknown
+          <li class="normal" id="section-5.3-2.8">DNS forwarders (or DNS proxies) are supposed to propagate unknown
       EDNS(0) options (<span><a href="#RFC5625" class="xref">Sections 4.1 and 4.4.1 of</a> [<a href="#RFC5625" class="xref">RFC5625</a>]</span>), which means
       the Structured Error EDNS(0) option may get propagated by such a DNS
       server.  To detect this scenario, the DNS client MUST verify the
-      domain name in the Structured Error "c" and "r" properties matche the domain name of the
+      domain name in the Structured Error "c" and "r" properties matches the domain name of the
       encrypted DNS resolver.  If this match fails, the DNS client MUST
       ignore Structured Error EDNS(0) option in the response, but SHOULD
-      process other parts of the response.<a href="#section-5.1-3.8" class="pilcrow">¶</a>
+      process other parts of the response.<a href="#section-5.3-2.8" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
 </div>
-<section id="section-5.2">
-        <h3 id="name-responder-operation-2">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-responder-operation-2" class="section-name selfRef">Responder Operation</a>
-        </h3>
-<p id="section-5.2-1">When the DNS server filters its DNS response to an A or AAAA
-      record query, the DNS response MAY contain an empty answer,
-      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
-      server.  In addition, if the query contained the Structured Error
-      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-      as described below.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">Over time a domain name might be filtered, then not filtered,
-      then filtered again.  Addtionally, the user might take minutes
-      or even days before investigating a filtered DNS query.  Thus
-      the URI is RECOMMENDED to include sufficient detail to determine
-      the filtering state when the DNS filtering occurred.  If and how this is
-      encoded into the URI is an implementation decision.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
-</section>
 </section>
 </div>
 <section id="section-6">
       <h2 id="name-example-2">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
       </h2>
-<p id="section-6-1">The example uses the folding defined in <span>[<a href="#RFC8792" class="xref">RFC8792</a>]</span> for long lines.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">An example showing example.net that has filtered a DNS
+<p id="section-6-1">The example uses the folding defined in <span>[<a href="#RFC8792" class="xref">RFC8792</a>]</span> for long lines,
+      and also shows whitespace and blank lines to aid reading the example; a more accurate example
+      would have minified JSON without whitespace and without blank lines.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">An example showing the nameserver at ns.example.net that filtered a DNS
       "A" record query for example.org is shown in <a href="#ex1" class="xref">Figure 2</a>, below.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <span id="name-example-of-json-returned-in-"></span><div id="ex1">
 <figure id="figure-2">
         <div class="alignLeft art-text artwork" id="section-6-3.1">
 <pre>  {
-    "c": "https://mistakes.example.net?time=1621902483",
+    "c": "https://ns.example.net?time=1621902483",
     "j": "malware present for 23 days",
     "o": "example.net Filtering Service",
-    "r": "https://laws.example.net?country=atlantis"
+    "r": "https://ns.example.net?country=atlantis"
   }</pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -1806,25 +1810,36 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       HTTPS retrieval by the client or by another party (e.g., IT staff).    
       To reduce attack surface, the requestor ensures those referenced
       URIs match the domain name of the DNS server, as described in
-      section XXX.<a href="#section-7-2" class="pilcrow">¶</a></p>
+      section <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">To minimize impact of man-in-the-middle attacks on the
-      DNS channel, the requestor performs mitigtations described in
-      <a href="#requestor" class="xref">Section 5.1</a>.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">If the web server responding to "c" or "r" URIs web server desires, it can HTTP redirect the request
-elsewhere,such as might be common for "r" to point the user at a government-owned
-domain explaining government-mandated filtering.  To improve privacy
-of such redirection, unnecessary query parameters MUST be stripped by the
-HTTP server from the HTTP target URL.<a href="#section-7-4" class="pilcrow">¶</a></p>
-<p id="section-7-5">Because this specification still allows DNS filtering to
+      DNS channel, the client validates the response as described
+      in <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">If the web server responding to "c" or "r" URIs web server
+      desires, it can HTTP redirect the request elsewhere, such as
+      might be common for "r" to point the user at a government-owned
+      domain explaining government-mandated filtering.  To improve
+      privacy of such redirection, unnecessary query parameters MUST
+      be stripped by the HTTP server from the HTTP target URL.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">In situations where the browser implements encrypted DNS and
+      receives the Structured Error EDNS(0) extension, and the browser
+      visits either of the URIs in the response (c or j), the browser
+      SHOULD reduce the attack surface of the client by using an
+      isolated environment precautions such as clearly labeling the
+      page as untrusted or prevent user interaction with the
+      page. Such isolation should prevent transmitting cookies, block
+      JavaScript, block auto-fill of credentials or personal
+      information, and be isolated from the user's normal
+      environment.<a href="#section-7-5" class="pilcrow">¶</a></p>
+<p id="section-7-6">Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
       with client-based DNSSEC validation.  However, it is possible to
-      maintain compatibility with DNSSEC by returnin the real (unfiltered)
+      maintain compatibility with DNSSEC by returning the real (unfiltered)
       answer with its DNSSEC signature intact.  By also returning the
       EDNS(0) Structured Error, the DNS requestor can be informed of
       the filtering (from the DNS responder).  Depending on the threat
       model, network- and/or host-based IP filters or alerts can ensure
-      the DNS requestor does not use the DNS response.<a href="#section-7-5" class="pilcrow">¶</a></p>
+      the DNS requestor does not use the DNS response.<a href="#section-7-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="IANA">
@@ -1991,11 +2006,9 @@ HTTP server from the HTTP target URL.<a href="#section-7-4" class="pilcrow">¶</
 </address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Tirumaleswar Reddy</span></div>
-<div dir="auto" class="left"><span class="org">McAfee, Inc.</span></div>
-<div dir="auto" class="left"><span class="street-address">Embassy Golf Link Business Park</span></div>
+<div dir="auto" class="left"><span class="org">Akamai</span></div>
 <div dir="auto" class="left">
-<span class="locality">Bangalore</span> <span class="postal-code">560071</span>
-</div>
+<span class="locality">Bangalore</span> </div>
 <div dir="auto" class="left"><span class="region">Karnataka</span></div>
 <div dir="auto" class="left"><span class="country-name">India</span></div>
 <div class="email">

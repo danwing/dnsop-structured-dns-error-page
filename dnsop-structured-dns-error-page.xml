@@ -49,7 +49,19 @@
       </address>
     </author>
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
-      <organization abbrev="McAfee">McAfee, Inc.</organization>
+<organization abbrev="Akamai">Akamai</organization>
+      <address>
+        <postal>
+          <street/>
+	  <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code/>
+          <country>India</country>
+        </postal>
+        <email>kondtir@gmail.com</email>
+	</address> 
+      <!--
+<organization abbrev="McAfee">McAfee, Inc.</organization>
       <address>
         <postal>
           <street>Embassy Golf Link Business Park</street>
@@ -59,7 +71,8 @@
           <country>India</country>
         </postal>
         <email>kondtir@gmail.com</email>
-      </address>
+	</address> -->
+      
     </author>
     <author fullname="Neil Cook" initials="N." surname="Cook">
       <organization>Open-Xchange</organization>
@@ -142,7 +155,7 @@ agency) also performed using DNS-based content filtering.</t>
       pointing at a host operated by the DNS operator.  The
       expectation is the user's browser will visit the server over
       HTTP and a suitable explanation will be displayed to the user.
-      As HTTPS is now commonplace, this expectaion breaks down because
+      As HTTPS is now commonplace, this expectation breaks down because
       clients are presented with a warning about visiting an
       un-trusted site (because of an un-trusted certificate), or those
       users are encouraged to install the certificate as an additional
@@ -268,10 +281,7 @@ agency) also performed using DNS-based content filtering.</t>
        the threat data).  A user needs to know the contact details of
        the IT/InfoSec team to raise a complaint.</li>
 
-       <li>The EXTRA-TEXT field of the EDE option defined in <xref target="RFC8914">
-       Section 2 of</xref> can include additional textual information about the
-   cause of the error, but the information could be provided in a
-   language that is not understood by the user.  When a resolver or
+   <li>When a resolver or
    forwarder forwards the received EDE option, the EXTRA-TEXT field
    only conveys the source of the error (Section 3 of [RFC8914]) and
    does not provide additional textual information about the cause of
@@ -289,7 +299,7 @@ agency) also performed using DNS-based content filtering.</t>
    triggered the DNS query has little chance to understand which entity
    filtered the query, how to report a mistake in the filter, or why the
    entity filtered it at all.  This document describes a mechanism to
-   provide an such detail.</t>
+   provide such detail.</t>
    
 
    <t>One of the other benefits of this approach is to eliminate the need
@@ -378,25 +388,18 @@ agency) also performed using DNS-based content filtering.</t>
 <section anchor="json" numbered="true" toc="default">
   <name>Structured JSON</name>
       
-      <t>STRUCTURED-ERROR-JSON has one top-level name, "p" (party responsible),
-      containing an array of dictionaries for each party responsible
-      for filtering this particular DNS response.  An array of responsible parties
-      are possible in deployment scenarios where two or more entities
-      are involved in a DNS filtering (the filtering may be for the
-      same or distinct reasons by each involved DNS filter
-      service). The content of the "p" array is structured as
-      follows:</t>
-      <dl newline="false" spacing="normal">
+  <t>STRUCTURED-ERROR-JSON has contains the following JSON keys:</t>
+        <dl newline="false" spacing="normal">
         <dt>c: (complaint)</dt>
         <dd>a partial HTTPS URI for the user to report
           mis-classified DNS filtering.  This field is mandatory and MUST
           contain a URI.  The endpoint adds a query parameter
 	  to this URI, described below.  There are constraints on this URI
-	  described in <xref target="requestor"></xref>. This field might or might
+	  described in <xref target="process-response"></xref>. This field might or might
 	  not already contain an HTTP query parameter. This field is required.</dd>
         <dt>j: (justification)</dt>
         <dd>the textual justification for
-          this particular DNS filtering. This field is optional.</dd>
+          this particular DNS filtering. This field is mandatory.</dd>
         <dt>o: (organization)</dt>
         <dd>human-friendly name of the organization
           that filtered this particular DNS query. This field is optional.</dd>
@@ -420,8 +423,9 @@ agency) also performed using DNS-based content filtering.</t>
       fully-formed.</t>
 
       <t>To reduce packet overhead the generated JSON SHOULD be as
-      short as possible: short domain names, concise text for the j:
-      key, and minified JSON.</t>
+      short as possible: short domain names, concise text for the "j"
+      key, and minified JSON (that is, without spaces or line breaks
+      between JSON elements)).</t>
 
       <t>The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
@@ -432,15 +436,41 @@ agency) also performed using DNS-based content filtering.</t>
 
     <section anchor="operation" numbered="true" toc="default">
       <name>Protocol Operation</name>
-      <section anchor="requestor">
-	<name>Requestor Operation</name>
+      <section anchor="generate-request">
+	<name>Client Generating Request</name>
 	
       <t>When generating a DNS query, the client MUST include the Structured Error
       EDNS(0) option so the DNS server knows the client is compliant with this
       specification.</t>
+      </section>
 
-      <t>On receipt of the DNS response, the responder performs the following
-      actions specific to Structured Error EDNS(0) option:</t>
+      <section>
+	<name>Server Generating Response</name>
+      <t>When the DNS server filters its DNS response to an A or AAAA
+      record query, the DNS response MAY contain an empty answer,
+      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
+      server.  In addition, if the query contained the Structured Error
+      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
+      as described below.</t>
+
+
+      <t>Over time a domain name might be filtered, then not filtered,
+      then filtered again.  Additionally, the user might take minutes
+      or even days before investigating a filtered DNS query.  Thus
+      the URI is RECOMMENDED to include sufficient detail to determine
+      the filtering state when the DNS filtering occurred.  If and how this is
+      encoded into the URI is an implementation decision.</t>
+
+      
+      </section>
+
+
+
+            <section anchor="process-response">
+	<name>Client Processing Response</name>
+
+      <t>On receipt of the DNS response, the following
+      actions are performed specific to Structured Error EDNS(0) option:</t>
 
       <ul>
 	<li>If the DNS response contains more than one Structured Error EDNS(0)
@@ -462,7 +492,7 @@ agency) also performed using DNS-based content filtering.</t>
       DNS, and cannot exchange encrypted DNS messages.  Both of these
       fallback mechanisms adversely impacts security and privacy.  If
       the DNS client has enabled opportunistic privacy profile for DoT,
-      the DNS client MUST ignore Structred DNS Error EDNS(0) option
+      the DNS client MUST ignore the Structured DNS Error EDNS(0) option
       responses, but SHOULD process other parts of the response.</li>
 
       <li>If a DNS client has enabled strict privacy profile (<xref target="RFC8310">Section 5 of</xref>)
@@ -488,7 +518,7 @@ agency) also performed using DNS-based content filtering.</t>
       EDNS(0) options (<xref target="RFC5625">Sections 4.1 and 4.4.1 of</xref>), which means
       the Structured Error EDNS(0) option may get propagated by such a DNS
       server.  To detect this scenario, the DNS client MUST verify the
-      domain name in the Structured Error "c" and "r" properties matche the domain name of the
+      domain name in the Structured Error "c" and "r" properties matches the domain name of the
       encrypted DNS resolver.  If this match fails, the DNS client MUST
       ignore Structured Error EDNS(0) option in the response, but SHOULD
       process other parts of the response.</li>
@@ -501,25 +531,6 @@ agency) also performed using DNS-based content filtering.</t>
       </section>
 
 
-      <section>
-	<name>Responder Operation</name>
-      <t>When the DNS server filters its DNS response to an A or AAAA
-      record query, the DNS response MAY contain an empty answer,
-      NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
-      server.  In addition, if the query contained the Structured Error
-      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-      as described below.</t>
-
-
-      <t>Over time a domain name might be filtered, then not filtered,
-      then filtered again.  Addtionally, the user might take minutes
-      or even days before investigating a filtered DNS query.  Thus
-      the URI is RECOMMENDED to include sufficient detail to determine
-      the filtering state when the DNS filtering occurred.  If and how this is
-      encoded into the URI is an implementation decision.</t>
-
-      
-      </section>
 
  
 
@@ -536,16 +547,18 @@ agency) also performed using DNS-based content filtering.</t>
 
     <section numbered="true" toc="default">
       <name>Example</name>
-      <t>The example uses the folding defined in <xref target="RFC8792" format="default"/> for long lines.</t>
-      <t>An example showing example.net that has filtered a DNS
+      <t>The example uses the folding defined in <xref target="RFC8792" format="default"/> for long lines,
+      and also shows whitespace and blank lines to aid reading the example; a more accurate example
+      would have minified JSON without whitespace and without blank lines.</t>
+      <t>An example showing the nameserver at ns.example.net that filtered a DNS
       "A" record query for example.org is shown in <xref target="ex1" format="default"/>, below.</t>
       <figure anchor="ex1">
         <name>Example of JSON returned in EDNS(0) Structured Error response</name>
         <artwork name="" type="" align="left" alt=""><![CDATA[  {
-    "c": "https://mistakes.example.net?time=1621902483",
+    "c": "https://ns.example.net?time=1621902483",
     "j": "malware present for 23 days",
     "o": "example.net Filtering Service",
-    "r": "https://laws.example.net?country=atlantis"
+    "r": "https://ns.example.net?country=atlantis"
   }]]></artwork>
       </figure>
 
@@ -571,26 +584,35 @@ agency) also performed using DNS-based content filtering.</t>
       HTTPS retrieval by the client or by another party (e.g., IT staff).    
       To reduce attack surface, the requestor ensures those referenced
       URIs match the domain name of the DNS server, as described in
-      section XXX.</t>
+      section <xref target="process-response"/>.</t>
       
       <t>To minimize impact of man-in-the-middle attacks on the
-      DNS channel, the requestor performs mitigtations described in
-      <xref target="requestor"/>.</t>
+      DNS channel, the client validates the response as described
+      in <xref target="process-response"/>.</t>
 
-<t>If the web server responding to "c" or "r" URIs web server desires, it can HTTP redirect the request
-elsewhere,such as might be common for "r" to point the user at a government-owned
-domain explaining government-mandated filtering.  To improve privacy
-of such redirection, unnecessary query parameters MUST be stripped by the
-HTTP server from the HTTP target URL.</t>
+      <t>If the web server responding to "c" or "r" URIs web server
+      desires, it can HTTP redirect the request elsewhere, such as
+      might be common for "r" to point the user at a government-owned
+      domain explaining government-mandated filtering.  To improve
+      privacy of such redirection, unnecessary query parameters MUST
+      be stripped by the HTTP server from the HTTP target URL.</t>
 
-
-
-
+      <t>In situations where the browser implements encrypted DNS and
+      receives the Structured Error EDNS(0) extension, and the browser
+      visits either of the URIs in the response (c or j), the browser
+      SHOULD reduce the attack surface of the client by using an
+      isolated environment precautions such as clearly labeling the
+      page as untrusted or prevent user interaction with the
+      page. Such isolation should prevent transmitting cookies, block
+      JavaScript, block auto-fill of credentials or personal
+      information, and be isolated from the user's normal
+      environment.</t>
+      
       <t>Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
       with client-based DNSSEC validation.  However, it is possible to
-      maintain compatibility with DNSSEC by returnin the real (unfiltered)
+      maintain compatibility with DNSSEC by returning the real (unfiltered)
       answer with its DNSSEC signature intact.  By also returning the
       EDNS(0) Structured Error, the DNS requestor can be informed of
       the filtering (from the DNS responder).  Depending on the threat
