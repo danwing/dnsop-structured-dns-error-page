@@ -1337,11 +1337,6 @@ li > p:last-of-type {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-changes-2" class="xref">Changes</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref"></a><a href="#name-changes-from-00-to-01-2" class="xref">Changes from 00 to 01</a></p>
-</li>
-            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-references-2" class="xref">References</a></p>
@@ -1891,15 +1886,17 @@ for 23 days","o":"example.net Filtering Service","r":\
 <p id="section-9-1">This section is to be removed before publishing as an RFC.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <section id="section-9.1">
         <h3 id="name-changes-from-00-to-01-2">
-<a href="#name-changes-from-00-to-01-2" class="section-name selfRef">Changes from 00 to 01</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-changes-from-00-to-01-2" class="section-name selfRef">Changes from 00 to 01</a>
         </h3>
 <ul class="normal">
 <li class="normal" id="section-9.1-1.1">removed support for multiple responsible parties<a href="#section-9.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-9.1-1.2">one-character JSON names and partially-formed URI converted to fully-formed URI, both to minimize JSON length<a href="#section-9.1-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-9.1-1.2">one-character JSON names to minimize JSON length<a href="#section-9.1-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-9.1-1.3">moved EDNS(0) forgery-mitigation text, some Security Considerations text, and some other text from
-   <span>[<a href="#I-D.reddy-dnsop-error-page" class="xref">I-D.reddy-dnsop-error-page</a>]</span> so this document is more self-contained<a href="#section-9.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-9.1-1.3">partial URI and "d" key sent in JSON to minimize attack surface and minimize JSON length<a href="#section-9.1-1.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-9.1-1.4">moved EDNS(0) forgery-mitigation text, some Security Considerations text, and some other text from
+   <span>[<a href="#I-D.reddy-dnsop-error-page" class="xref">I-D.reddy-dnsop-error-page</a>]</span> to this document<a href="#section-9.1-1.4" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
