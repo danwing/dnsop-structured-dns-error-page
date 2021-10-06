@@ -658,14 +658,14 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    This section is to be removed before publishing as an RFC.
 
-   [RFC Editor: remove this section prior to publication as an RFC]
-
 Changes from 00 to 01
 
    *  removed support for multiple responsible parties
 
    *  one-character JSON names and partially-formed URI converted to
       fully-formed URI, both to minimize JSON length
+
+
 
 
 
