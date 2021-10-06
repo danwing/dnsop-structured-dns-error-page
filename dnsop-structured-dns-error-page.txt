@@ -76,7 +76,7 @@ Table of Contents
    5.  Protocol Operation  . . . . . . . . . . . . . . . . . . . . .   8
      5.1.  Client Generating Request . . . . . . . . . . . . . . . .   8
      5.2.  Server Generating Response  . . . . . . . . . . . . . . .   8
-     5.3.  Client Processing Response  . . . . . . . . . . . . . . .   9
+     5.3.  Client Processing Response  . . . . . . . . . . . . . . .   8
    6.  Example . . . . . . . . . . . . . . . . . . . . . . . . . . .  10
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
@@ -344,6 +344,8 @@ Internet-Draft            Data for Filtered DNS             October 2021
    include JSON providing information in the DNS response describing
    filtering that occurred for this query, defined in Figure 1.
 
+   The value of this EDNS(0) option code (OPT) is TBA-BY-IANA.
+
                                                 1   1   1   1   1   1
         0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
       +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
@@ -380,12 +382,10 @@ Internet-Draft            Data for Filtered DNS             October 2021
       filtered this particular DNS query.  This field is optional.
 
    r: (regulation)  a partial HTTPS URI to retrieve the public or
-
-
-
-
-
-
+      private regulation for the filter.  This might point at an
+      employment agreement (for an enterprise performing filtering) or a
+      national government regulation (for an ISP performing filtering).
+      To this URI, the endpoint adds a query parameter, described below.
 
 
 
@@ -394,10 +394,6 @@ Wing, et al.              Expires 8 April 2022                  [Page 7]
 Internet-Draft            Data for Filtered DNS             October 2021
 
 
-      private regulation for the filter.  This might point at an
-      employment agreement (for an enterprise performing filtering) or a
-      national government regulation (for an ISP performing filtering).
-      To this URI, the endpoint adds a query parameter, described below.
       There are constraints on this URI described in Security
       Considerations.  This field might or might not already contain an
       HTTP query parameter.  This field is optional.
@@ -442,6 +438,10 @@ Internet-Draft            Data for Filtered DNS             October 2021
    state when the DNS filtering occurred.  If and how this is encoded
    into the URI is an implementation decision.
 
+5.3.  Client Processing Response
+
+   On receipt of the DNS response, the following actions are performed
+   specific to Structured Error EDNS(0) option:
 
 
 
@@ -449,11 +449,6 @@ Wing, et al.              Expires 8 April 2022                  [Page 8]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
-
-5.3.  Client Processing Response
-
-   On receipt of the DNS response, the following actions are performed
-   specific to Structured Error EDNS(0) option:
 
    *  If the DNS response contains more than one Structured Error
       EDNS(0) option, the requestor discards all Structured Error
@@ -497,7 +492,12 @@ Internet-Draft            Data for Filtered DNS             October 2021
       filtering or not by retrieving resolver information using the
       method defined in [I-D.reddy-add-resolver-info].
 
-
+   *  DNS forwarders (or DNS proxies) are supposed to propagate unknown
+      EDNS(0) options (Sections 4.1 and 4.4.1 of [RFC5625]), which means
+      the Structured Error EDNS(0) option may get propagated by such a
+      DNS server.  To detect this scenario, the DNS client MUST verify
+      the domain name in the Structured Error "c" and "r" properties
+      matches the domain name of the encrypted DNS resolver.  If this
 
 
 
@@ -506,12 +506,6 @@ Wing, et al.              Expires 8 April 2022                  [Page 9]
 Internet-Draft            Data for Filtered DNS             October 2021
 
 
-   *  DNS forwarders (or DNS proxies) are supposed to propagate unknown
-      EDNS(0) options (Sections 4.1 and 4.4.1 of [RFC5625]), which means
-      the Structured Error EDNS(0) option may get propagated by such a
-      DNS server.  To detect this scenario, the DNS client MUST verify
-      the domain name in the Structured Error "c" and "r" properties
-      matches the domain name of the encrypted DNS resolver.  If this
       match fails, the DNS client MUST ignore Structured Error EDNS(0)
       option in the response, but SHOULD process other parts of the
       response.
@@ -555,15 +549,18 @@ Internet-Draft            Data for Filtered DNS             October 2021
    match the domain name of the DNS server, as described in section
    Section 5.3.
 
+   To minimize impact of man-in-the-middle attacks on the DNS channel,
+   the client validates the response as described in Section 5.3.
+
+
+
+
 
 
 Wing, et al.              Expires 8 April 2022                 [Page 10]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
-
-   To minimize impact of man-in-the-middle attacks on the DNS channel,
-   the client validates the response as described in Section 5.3.
 
    If the web server responding to "c" or "r" URIs web server desires,
    it can HTTP redirect the request elsewhere, such as might be common
@@ -594,6 +591,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
    the DNS response.
 
 8.  IANA Considerations
+
+   This document requests IANA assign a DNS EDNS0 Option Code (OPT)
+   value in the Expert Review range named "Structured DNS Error".
 
    This document requests IANA to register the "application/
    json+structured-dns-error" media type in the "Media Types" registry
@@ -658,14 +658,14 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    This section is to be removed before publishing as an RFC.
 
-   [RFC Editor: remove this section]
+   [RFC Editor: remove this section prior to publication as an RFC]
 
 Changes from 00 to 01
 
-   *  Removed support for multiple responsible parties
+   *  removed support for multiple responsible parties
 
-   *  one-character JSON names (to minimize JSON length)
-
+   *  one-character JSON names and partially-formed URI converted to
+      fully-formed URI, both to minimize JSON length
 
 
 
@@ -674,8 +674,10 @@ Wing, et al.              Expires 8 April 2022                 [Page 12]
 Internet-Draft            Data for Filtered DNS             October 2021
 
 
-   *  partially-formed URI converted to fully-formed URI by client (to
-      minimize JSON length)
+   *  moved EDNS(0) forgery-mitigation text, some Security
+      Considerations text, and some other text from
+      [I-D.reddy-dnsop-error-page] so this document is more self-
+      contained
 
 10.  References
 
@@ -719,9 +721,7 @@ Internet-Draft            Data for Filtered DNS             October 2021
               2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
               dprive-dnsoquic-04>.
 
-   [I-D.reddy-add-resolver-info]
-              Reddy, T. and M. Boucadair, "DNS Resolver Information",
-              Work in Progress, Internet-Draft, draft-reddy-add-
+
 
 
 
@@ -730,9 +730,19 @@ Wing, et al.              Expires 8 April 2022                 [Page 13]
 Internet-Draft            Data for Filtered DNS             October 2021
 
 
+   [I-D.reddy-add-resolver-info]
+              Reddy, T. and M. Boucadair, "DNS Resolver Information",
+              Work in Progress, Internet-Draft, draft-reddy-add-
               resolver-info-03, 13 April 2021,
               <https://datatracker.ietf.org/doc/html/draft-reddy-add-
               resolver-info-03>.
+
+   [I-D.reddy-dnsop-error-page]
+              Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
+              Access Denied Error Page", Work in Progress, Internet-
+              Draft, draft-reddy-dnsop-error-page-08, 4 June 2021,
+              <https://datatracker.ietf.org/doc/html/draft-reddy-dnsop-
+              error-page-08>.
 
    [IANA-MediaTypes]
               IANA, "Media Types",
@@ -767,16 +777,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 Authors' Addresses
 
-   Dan Wing
-   Citrix Systems, Inc.
-   United States of America
-
-   Email: dwing-ietf@fuggles.com
-
-
-
-
-
 
 
 
@@ -784,6 +784,13 @@ Authors' Addresses
 Wing, et al.              Expires 8 April 2022                 [Page 14]
 
 Internet-Draft            Data for Filtered DNS             October 2021
+
+
+   Dan Wing
+   Citrix Systems, Inc.
+   United States of America
+
+   Email: dwing-ietf@fuggles.com
 
 
    Tirumaleswar Reddy
@@ -808,13 +815,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
    France
 
    Email: mohamed.boucadair@orange.com
-
-
-
-
-
-
-
 
 
 

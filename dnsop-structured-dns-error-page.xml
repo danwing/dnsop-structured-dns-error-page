@@ -134,8 +134,9 @@
 
       <!--
 
-** removing this text as it is duplicated with the text pulled from draft-reddy-..., which starts just 
-** below this.
+** removing this text as it is duplicated with the text pulled from draft-reddy-dnsop-error-page, which 
+** has its copied text starting just below this
+
 
 
       <t>Two DNS filtering mechanisms are widely deployed today but are
@@ -333,6 +334,7 @@
       <t>This document defines a new EDNS(0) <xref target="RFC6891"/> option code (OPT) to include JSON
       providing information in the DNS response describing filtering
       that occurred for this query, defined in <xref target="format"/>.</t>
+      <t>The value of this EDNS(0) option code (OPT) is TBA-BY-IANA.</t>
       <figure align="center" anchor="format" title="Structured Error EDNS(0) Option Code">
         <artwork align="center"><![CDATA[                                             1   1   1   1   1   1
      0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
@@ -554,6 +556,9 @@
     </section>
     <section anchor="IANA" numbered="true" toc="default">
       <name>IANA Considerations</name>
+      <t>This document requests IANA assign a DNS EDNS0 Option Code (OPT)
+      value in the Expert Review range named "Structured DNS Error".</t>
+
       <t>This document requests IANA to register the
       "application/json+structured-dns-error" media type in the "Media Types"
       registry <xref target="IANA-MediaTypes" format="default"/>. This registration
@@ -600,15 +605,15 @@
 -->
     <section numbered="true" toc="default" removeInRFC="true">
       <name>Changes</name>
-      <t>[RFC Editor: remove this section]</t>
+      <t>[RFC Editor: remove this section prior to publication as an RFC]</t>
       <section numbered="false" toc="default">
         <name>Changes from 00 to 01</name>
         <ul>
-          <li>Removed support for multiple responsible parties</li>
-          <li>one-character JSON names (to minimize JSON length)</li>
-          <li>partially-formed URI converted to fully-formed
-	  URI by client (to minimize JSON length)</li>
-        </ul>
+          <li>removed support for multiple responsible parties</li>
+          <li>one-character JSON names and partially-formed URI converted to fully-formed URI, both to minimize JSON length</li>
+	  <li>moved EDNS(0) forgery-mitigation text, some Security Considerations text, and some other text from
+	  <xref target="I-D.reddy-dnsop-error-page"/> so this document is more self-contained</li>
+	</ul>
       </section>
     </section>
   </middle>
@@ -644,6 +649,7 @@
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8914.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dprive-dnsoquic.xml"/>
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-reddy-dnsop-error-page.xml"/>
       </references>
     </references>
   </back>

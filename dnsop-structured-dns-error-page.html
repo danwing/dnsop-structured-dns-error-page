@@ -1557,9 +1557,10 @@ li > p:last-of-type {
 <p id="section-3-1">This document defines a new EDNS(0) <span>[<a href="#RFC6891" class="xref">RFC6891</a>]</span> option code (OPT) to include JSON
       providing information in the DNS response describing filtering
       that occurred for this query, defined in <a href="#format" class="xref">Figure 1</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The value of this EDNS(0) option code (OPT) is TBA-BY-IANA.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <span id="name-structured-error-edns0-option-"></span><div id="format">
 <figure id="figure-1">
-        <div class="alignCenter art-text artwork" id="section-3-2.1">
+        <div class="alignCenter art-text artwork" id="section-3-3.1">
 <pre>                                             1   1   1   1   1   1
      0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
    +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
@@ -1573,17 +1574,17 @@ li > p:last-of-type {
 <a href="#name-structured-error-edns0-option-" class="selfRef">Structured Error EDNS(0) Option Code</a>
         </figcaption></figure>
 </div>
-<p id="section-3-3">The description of the fields is as follows:<a href="#section-3-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-3-4">
-        <dt id="section-3-4.1">STRUCTURED-ERROR-LENGTH:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-4.2">Two octets containing the length of
+<p id="section-3-4">The description of the fields is as follows:<a href="#section-3-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3-5">
+        <dt id="section-3-5.1">STRUCTURED-ERROR-LENGTH:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.2">Two octets containing the length of
    STRUCTURED-ERROR-JSON, in octets.  It MUST NOT be set to
-   0.<a href="#section-3-4.2" class="pilcrow">¶</a>
+   0.<a href="#section-3-5.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-4.3">STRUCTURED-ERROR-JSON:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-4.4">JSON containing DNS filtering information encoded in
-   JSON, defined in <a href="#json" class="xref">Section 4</a>.<a href="#section-3-4.4" class="pilcrow">¶</a>
+<dt id="section-3-5.3">STRUCTURED-ERROR-JSON:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-5.4">JSON containing DNS filtering information encoded in
+   JSON, defined in <a href="#json" class="xref">Section 4</a>.<a href="#section-3-5.4" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1817,11 +1818,13 @@ li > p:last-of-type {
       <h2 id="name-iana-considerations-2">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations-2" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-8-1">This document requests IANA to register the
+<p id="section-8-1">This document requests IANA assign a DNS EDNS0 Option Code (OPT)
+      value in the Expert Review range named "Structured DNS Error".<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">This document requests IANA to register the
       "application/json+structured-dns-error" media type in the "Media Types"
       registry <span>[<a href="#IANA-MediaTypes" class="xref">IANA-MediaTypes</a>]</span>. This registration
-      follows the procedures specified in <span>[<a href="#RFC6838" class="xref">RFC6838</a>]</span>:<a href="#section-8-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8-2">
+      follows the procedures specified in <span>[<a href="#RFC6838" class="xref">RFC6838</a>]</span>:<a href="#section-8-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8-3">
 <pre>   Type name: application
 
    Subtype name: json+structured-dns-error
@@ -1855,9 +1858,9 @@ li > p:last-of-type {
 
    Change controller: IESG
 
-   Provisional registration?  No</pre><a href="#section-8-2" class="pilcrow">¶</a>
+   Provisional registration?  No</pre><a href="#section-8-3" class="pilcrow">¶</a>
 </div>
-<p id="section-8-3"></p>
+<p id="section-8-4"></p>
 </section>
 </div>
 <section id="section-9">
@@ -1865,18 +1868,18 @@ li > p:last-of-type {
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-changes-2" class="section-name selfRef">Changes</a>
       </h2>
 <p id="section-9-1">This section is to be removed before publishing as an RFC.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">[RFC Editor: remove this section]<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-2">[RFC Editor: remove this section prior to publication as an RFC]<a href="#section-9-2" class="pilcrow">¶</a></p>
 <section id="section-9.1">
         <h3 id="name-changes-from-00-to-01-2">
 <a href="#name-changes-from-00-to-01-2" class="section-name selfRef">Changes from 00 to 01</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="section-9.1-1.1">Removed support for multiple responsible parties<a href="#section-9.1-1.1" class="pilcrow">¶</a>
+<li class="normal" id="section-9.1-1.1">removed support for multiple responsible parties<a href="#section-9.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-9.1-1.2">one-character JSON names (to minimize JSON length)<a href="#section-9.1-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-9.1-1.2">one-character JSON names and partially-formed URI converted to fully-formed URI, both to minimize JSON length<a href="#section-9.1-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-9.1-1.3">partially-formed URI converted to fully-formed
-   URI by client (to minimize JSON length)<a href="#section-9.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-9.1-1.3">moved EDNS(0) forgery-mitigation text, some Security Considerations text, and some other text from
+   <span>[<a href="#I-D.reddy-dnsop-error-page" class="xref">I-D.reddy-dnsop-error-page</a>]</span> so this document is more self-contained<a href="#section-9.1-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1928,6 +1931,10 @@ li > p:last-of-type {
 <dt id="I-D.reddy-add-resolver-info">[I-D.reddy-add-resolver-info]</dt>
         <dd>
 <span class="refAuthor">Reddy, T.</span> and <span class="refAuthor">M. Boucadair</span>, <span class="refTitle">"DNS Resolver Information"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-reddy-add-resolver-info-03</span>, <time datetime="2021-04-13" class="refDate">13 April 2021</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-reddy-add-resolver-info-03">https://datatracker.ietf.org/doc/html/draft-reddy-add-resolver-info-03</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.reddy-dnsop-error-page">[I-D.reddy-dnsop-error-page]</dt>
+        <dd>
+<span class="refAuthor">Reddy, T.</span>, <span class="refAuthor">Cook, N.</span>, <span class="refAuthor">Wing, D.</span>, and <span class="refAuthor">M. Boucadair</span>, <span class="refTitle">"DNS Access Denied Error Page"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-reddy-dnsop-error-page-08</span>, <time datetime="2021-06-04" class="refDate">4 June 2021</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-reddy-dnsop-error-page-08">https://datatracker.ietf.org/doc/html/draft-reddy-dnsop-error-page-08</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IANA-MediaTypes">[IANA-MediaTypes]</dt>
         <dd>
