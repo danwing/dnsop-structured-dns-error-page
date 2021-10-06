@@ -16,9 +16,9 @@
       to provide detail to end users cause harm especially if the
       blocked DNS response is to an HTTPS website. 
        This document defines a mechanism to explain the reason
-      for the DNS filtering and offer an HTTPS URIs to get more
+      for the DNS filtering and provides a HTTPS URIs to get more
       detail.  This information can be parsed by the client and
-      displayed, logged, or other purposes. 
+      displayed, logged, or used for other purposes. 
     " name="description">
 <meta content="xml2rfc 3.10.0" name="generator">
 <meta content="draft-wing-dnsop-structured-dns-error-page-01" name="ietf.draft">
@@ -1248,9 +1248,9 @@ li > p:last-of-type {
       to provide detail to end users cause harm especially if the
       blocked DNS response is to an HTTPS website.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">This document defines a mechanism to explain the reason
-      for the DNS filtering and offer an HTTPS URIs to get more
+      for the DNS filtering and provides a HTTPS URIs to get more
       detail.  This information can be parsed by the client and
-      displayed, logged, or other purposes.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+      displayed, logged, or used for other purposes.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1367,15 +1367,16 @@ li > p:last-of-type {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction-2" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">DNS filters are deployed for a variety of reasons including
-endpoint security, parental filtering, and filtering required by law
-enforcement.  Network-based security solutions such as firewalls and
-Intrusion Prevention Systems (IPS) rely upon network traffic
-inspection to implement perimeter-based security policies and operate
-by filtering DNS responses.  In a home, DNS filtering is used for the
-same reasons as above and additionally for parental control.  Internet
-Service Providers typically block access to some DNS domains due to a
-requirement imposed by an external entity (e.g., law enforcement
-agency) also performed using DNS-based content filtering.<a href="#section-1-1" class="pilcrow">¶</a></p>
+      endpoint security, parental filtering, and filtering required by
+      law enforcement.  Network-based security solutions such as
+      firewalls and Intrusion Prevention Systems (IPS) rely upon
+      network traffic inspection to implement perimeter-based security
+      policies and operate by filtering DNS responses.  In a home, DNS
+      filtering is used for the same reasons as above and additionally
+      for parental control.  Internet Service Providers typically
+      block access to some DNS domains due to a requirement imposed by
+      an external entity (e.g., law enforcement agency) also performed
+      using DNS-based content filtering.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Users of DNS services which perform filtering may wish to
    receive more information about such filtering to resolve problems
    with the filter -- for example to contact the administrator to
@@ -1383,52 +1384,14 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
    the reason a particular domain was filtered.  With that information,
    the user can choose another network, open a trouble ticket with
    the DNS administrator to resolve erroneous filtering, log the
-   information, or other uses.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Two DNS filtering mechanisms are widely deployed today but are
-      harmful:<a href="#section-1-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-1-4">
-        <dt id="section-1-4.1">empty answer or NXDOMAIN:</dt>
-        <dd style="margin-left: 1.5em" id="section-1-4.2">The simplest mechanism is simply returning an empty
-     answer or NXDOMAIN.  This provides no information to the
-     client and makes the network or its DNS feel broken
-     because of the 'host not found' error messages typically
-     presented to the user.  This mechanism also interferes
-     with client DNSSEC-validating DNS resolvers because the
-     empty answer has an invalid (or missing) signature.<a href="#section-1-4.2" class="pilcrow">¶</a>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-1-4.3">Forged response:</dt>
-        <dd style="margin-left: 1.5em" id="section-1-4.4">This mechanism returns a forged A (or AAAA) response
-      pointing at a host operated by the DNS operator.  The
-      expectation is the user's browser will visit the server over
-      HTTP and a suitable explanation will be displayed to the user.
-      As HTTPS is now commonplace, this expectation breaks down because
-      clients are presented with a warning about visiting an
-      un-trusted site (because of an un-trusted certificate), or those
-      users are encouraged to install the certificate as an additional
-      trusted root, eroding their security for all TLS connections.
-      Furthermore, for the user to see the DNS filtering explanation
-      the user needs a web browser which visits the server and often
-      require JavaScript, creating a wider attack surface.  The
-      requirement for a web browser is, itself, a problem on some
-      devices (e.g., IoT or headless devices).  Finally, this mechanism
-      interferes with client DNSSEC-validating DNS resolvers because
-      the forged response has an invalid (or missing) signature.<a href="#section-1-4.4" class="pilcrow">¶</a>
-</dd>
-      <dd class="break"></dd>
-</dl>
-<p id="section-1-5">For both DNS filtering mechanisms described above, the DNS
-      server can return extended error codes Blocked, Censored,
-      Filtered, or Forged Answer defined in <span><a href="#RFC8914" class="xref">Section 4 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>.  However, these codes only
-      explain that filtering occurred but lacks detail for the user to
-      resolve the filtering.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">DNS responses can be filtered by sending a bogus (also called,
+      information, or other uses.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">DNS responses can be filtered by sending a bogus (also called,
    "forged") A or AAAA response, NXDOMAIN error or empty answer, or an
    extended DNS error (EDE) code defined in <span>[<a href="#RFC8914" class="xref">RFC8914</a>]</span>.  Each of these
-   methods have advantages and disadvantages that are discussed below:<a href="#section-1-6" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-1-7">
-   <li id="section-1-7.1">
-          <p id="section-1-7.1.1">The DNS response is forged to provide a list of IP addresses that
+   methods have advantages and disadvantages that are discussed below:<a href="#section-1-3" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-1-4">
+        <li id="section-1-4.1">
+          <p id="section-1-4.1.1">The DNS response is forged to provide a list of IP addresses that
        points to an HTTP(S) server alerting the end user about the
        reason for blocking access to the requested domain (e.g.,
        malware).  When an HTTP(S) enabled domain name is blocked, the
@@ -1445,10 +1408,10 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
        security device(s) stores a copy of the private key.  During the
        TLS handshake, the network security device modifies the
        certificate provided by the server and (re)signs it using the
-   private key from the local root certificate.<a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
+   private key from the local root certificate.<a href="#section-1-4.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-7.1.2.1">
-              <p id="section-1-7.1.2.1.1">However, configuring the local root certificate on endpoints
+<li class="normal" id="section-1-4.1.2.1">
+              <p id="section-1-4.1.2.1.1">However, configuring the local root certificate on endpoints
           is not a viable option in several deployments like home
           networks, schools, Small Office/Home Office (SOHO), and Small/
           Medium Enterprise (SME).  In these cases, the typical behavior
@@ -1463,16 +1426,16 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
           authority" (Internet Explorer/Edge"), "The site's security
           certificate is not trusted" (Chrome), "This Connection is
           Untrusted" (Firefox), "Safari can't verify the identity of the
-          website..." (Safari on MacOS)".<a href="#section-1-7.1.2.1.1" class="pilcrow">¶</a></p>
+          website..." (Safari on MacOS)".<a href="#section-1-4.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1-7.1.2.2">Enterprise networks do not assume that all the connected
+            <li class="normal" id="section-1-4.1.2.2">Enterprise networks do not assume that all the connected
           devices are managed by the IT team or Mobile Device Management
           (MDM) devices, especially in the quite common Bring Your Own
           Device (BYOD) scenario.  In addition, the local root
           certificate cannot be installed on IoT devices without a
-          device management tool.<a href="#section-1-7.1.2.2" class="pilcrow">¶</a>
+          device management tool.<a href="#section-1-4.1.2.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1-7.1.2.3">An end user does not know why the connection was reset and,
+            <li class="normal" id="section-1-4.1.2.3">An end user does not know why the connection was reset and,
           consequently, may repeatedly try to reach the domain but with
           no success.  Frustrated, the end user may switch to an
           alternate network that offers no DNS-level protection against
@@ -1485,26 +1448,26 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
           security practice as it creates a security vulnerability that
           may be exploited by a MITM attack.  When a manually installed
           local root certificate expires, the user has to (again)
-          manually install the new local root certificate.<a href="#section-1-7.1.2.3" class="pilcrow">¶</a>
+          manually install the new local root certificate.<a href="#section-1-4.1.2.3" class="pilcrow">¶</a>
 </li>
           </ul>
 </li>
-        <li id="section-1-7.2">The DNS response is forged to provide a NXDOMAIN response to
+        <li id="section-1-4.2">The DNS response is forged to provide a NXDOMAIN response to
        cause the DNS lookup to terminate in failure.  In this case, an
        end user does not know why the domain cannot be reached and may
        repeatedly try to reach the domain but with no success.
        Frustrated, the end user may use insecure connections to reach
-       the domain, potentially compromising both security and privacy.<a href="#section-1-7.2" class="pilcrow">¶</a>
+       the domain, potentially compromising both security and privacy.<a href="#section-1-4.2" class="pilcrow">¶</a>
 </li>
-        <li id="section-1-7.3">The extended error codes Blocked, Censored, and Filtered defined in
+        <li id="section-1-4.3">The extended error codes Blocked, Censored, and Filtered defined in
        <span><a href="#RFC8914" class="xref">Section 4 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span> can be returned by a DNS server to
        provide additional information about the cause of an DNS error.
        If the extended error code "Forged Answer" defined in <span><a href="#RFC8914" class="xref">Section 4.5
        of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span> is returned by the DNS server, the client can
        identify the DNS response is forged together with the reason for
-       HTTPS certificate error.<a href="#section-1-7.3" class="pilcrow">¶</a>
+       HTTPS certificate error.<a href="#section-1-4.3" class="pilcrow">¶</a>
 </li>
-        <li id="section-1-7.4">These extended error codes do not suffer from the limitations
+        <li id="section-1-4.4">These extended error codes do not suffer from the limitations
        discussed in bullets (1) and (2), but the user still does not
        know the exact reason nor he/she is aware of the exact entity
        blocking the access to the domain.  For example, a DNS server may
@@ -1521,9 +1484,9 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
        (DGA) by deep learning techniques, domain wrongly classified as
        phishing due to crowd sourcing, new domains not categorized by
        the threat data).  A user needs to know the contact details of
-       the IT/InfoSec team to raise a complaint.<a href="#section-1-7.4" class="pilcrow">¶</a>
+       the IT/InfoSec team to raise a complaint.<a href="#section-1-4.4" class="pilcrow">¶</a>
 </li>
-        <li id="section-1-7.5">When a resolver or
+        <li id="section-1-4.5">When a resolver or
    forwarder forwards the received EDE option, the EXTRA-TEXT field
    only conveys the source of the error (Section 3 of [RFC8914]) and
    does not provide additional textual information about the cause of
@@ -1532,23 +1495,30 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
    In addition, the additional textual information may not be able to
    convey all of the required information about the cause of the DNS
    error because lengthy EXTRA-TEXT content would be truncated to
-   prevent fragmentation (<span><a href="#RFC8914" class="xref">Section 3 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>).<a href="#section-1-7.5" class="pilcrow">¶</a>
+   prevent fragmentation (<span><a href="#RFC8914" class="xref">Section 3 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>).<a href="#section-1-4.5" class="pilcrow">¶</a>
 </li>
       </ol>
-<p id="section-1-8">No matter which type of response is generated (forged IP address(es),
-   NXDOMAIN or empty answer, or an extended error code), the user who
+<p id="section-1-5">For both DNS filtering mechanisms described above, the DNS
+      server can return extended error codes Blocked, Censored,
+      Filtered, or Forged Answer defined in <span><a href="#RFC8914" class="xref">Section 4 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>.
+      However, these codes only
+      explain that filtering occurred but lacks detail for the user to
+      diagnose erroneous filtering.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">No matter which type of response is generated (forged IP address(es),
+   NXDOMAIN or empty answer, even with an extended error code), the user who
    triggered the DNS query has little chance to understand which entity
    filtered the query, how to report a mistake in the filter, or why the
    entity filtered it at all.  This document describes a mechanism to
-   provide such detail.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9">One of the other benefits of this approach is to eliminate the need
+   provide such detail.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">One of the other benefits of this approach is to eliminate the need
    to "spoof" block pages for HTTPS resources.  This is achieved as the
    block page no longer needs to create a signed certificate when
    blocking a destination.  This approach avoids the need to install a
-   local root certificate authority on those IT-managed devices.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10">This document describes a protocol
-   containing parsable data in a new <span><a href="#RFC6891" class="xref">EDNS(0)</a> [<a href="#RFC6891" class="xref">RFC6891</a>]</span> option code.<a href="#section-1-10" class="pilcrow">¶</a></p>
-<p id="section-1-11">Clients indicate their support of this specification in their
+   local root certificate authority on those IT-managed devices.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">This document describes a protocol containing parsable data
+      in a new <span><a href="#RFC6891" class="xref">EDNS(0)</a> [<a href="#RFC6891" class="xref">RFC6891</a>]</span>
+      option code.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9">Clients indicate their support of this specification in their
       DNS query so the DNS server can tailor its DNS response
       accordingly.  The information returned in a DNS response allows
       combinations of headless devices (i.e., those lacking a display
@@ -1556,7 +1526,7 @@ agency) also performed using DNS-based content filtering.<a href="#section-1-1" 
       and web browsers to be informed of the filtering.  This
       information returned can be logged and/or displayed to the user,
       as appropriate for the user interface capabilities of the client
-      hardware and software.<a href="#section-1-11" class="pilcrow">¶</a></p>
+      hardware and software.<a href="#section-1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
