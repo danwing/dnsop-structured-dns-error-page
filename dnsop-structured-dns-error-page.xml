@@ -270,12 +270,7 @@
    forwarder forwards the received EDE option, the EXTRA-TEXT field
    only conveys the source of the error (Section 3 of [RFC8914]) and
    does not provide additional textual information about the cause of
-   the error.  Most importantly, EDE option does not offer
-   authenticated information; it can thus be spoofed by an attacker.
-   In addition, the additional textual information may not be able to
-   convey all of the required information about the cause of the DNS
-   error because lengthy EXTRA-TEXT content would be truncated to
-   prevent fragmentation (<xref target="RFC8914">Section 3 of </xref>).</li>
+   the error.</li>
       </ol>
 
 
@@ -283,7 +278,7 @@
       server can return extended error codes Blocked, Censored,
       Filtered, or Forged Answer defined in <xref target="RFC8914">Section 4 of</xref>.
       However, these codes only
-      explain that filtering occurred but lacks detail for the user to
+      explain that filtering occurred but lack detail for the user to
       diagnose erroneous filtering.</t>
 
 
@@ -295,9 +290,10 @@
    provide such detail.</t>
 
    <t>One of the other benefits of this approach is to eliminate the need
-   to "spoof" block pages for HTTPS resources.  This is achieved as the
-   block page no longer needs to create a signed certificate when
-   blocking a destination.  This approach avoids the need to install a
+   to "spoof" block pages for HTTPS resources.  This is achieved since
+   clients implementing this approach would be able to display a
+   meaningful error message, and would not need to connect to such a block page.
+   This approach thus avoids the need to install a
    local root certificate authority on those IT-managed devices.</t>
    
       <t>This document describes a protocol containing parsable data
@@ -422,9 +418,9 @@
         <t>Over time a domain name might be filtered, then not filtered,
       then filtered again.  Additionally, the user might take minutes
       or even days before investigating a filtered DNS query.  Thus
-      the URI is RECOMMENDED to include sufficient detail to determine
+      the complaint URI is RECOMMENDED to include sufficient detail to determine
       the filtering state when the DNS filtering occurred.  If and how this is
-      encoded into the URI is an implementation decision.</t>
+      encoded into the complaint URI is an implementation decision.</t>
       </section>
       <section anchor="process-response">
         <name>Client Processing Response</name>
