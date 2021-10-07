@@ -584,9 +584,7 @@ Internet-Draft            Data for Filtered DNS             October 2021
    with DNSSEC by returning the real (unfiltered) answer with its DNSSEC
    signature intact.  By also returning the EDNS(0) Structured Error,
    the DNS requestor can be informed of the filtering (from the DNS
-   responder).  Depending on the threat model, network- and/or host-
-   based IP filters or alerts can ensure the DNS requestor does not use
-   the DNS response.
+   responder).
 
 8.  IANA Considerations
 
@@ -597,6 +595,8 @@ Internet-Draft            Data for Filtered DNS             October 2021
    json+structured-dns-error" media type in the "Media Types" registry
    [IANA-MediaTypes].  This registration follows the procedures
    specified in [RFC6838]:
+
+
 
 
 
