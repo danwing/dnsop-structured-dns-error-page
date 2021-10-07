@@ -359,17 +359,19 @@
     </section>
     <section anchor="json" numbered="true" toc="default">
       <name>Structured JSON</name>
-      <t>STRUCTURED-ERROR-JSON contains the following JSON keys:</t>
+      <t>STRUCTURED-ERROR-JSON contains the following JSON names:</t>
       <dl newline="false" spacing="normal">
         <dt>c: (complaint)</dt>
         <dd>a partial URI for the user to further diagnose and possibly report
 	mis-classified DNS filtering.  The value is converted to an
-	expanded absolute URI.</dd>
+	expanded absolute URI.  This field is optional, but note its absence
+	still allows a URI to be formed.</dd>
 
 	<dt>d: (domain)</dt>
 	<dd>Contains the domain-name of the encrypted DNS server. This is used
 	to create the expanded URIs for both the "c" and "r" fields, and also
-	detect undesired forwarding of EDNS(0) options.</dd>
+	detect undesired forwarding of EDNS(0) options.  This field is
+	mandatory.</dd>
 
         <dt>j: (justification)</dt>
         <dd>the textual justification for
@@ -380,15 +382,12 @@
         that filtered this particular DNS query. This field is optional.</dd>
 	
         <dt>r: (regulation)</dt>
-        <dd>a partial URI to retrieve the public or private
-        rule, law, or regulation describing the reason for this DNS filter.  This might point at an employment
-        agreement (for an enterprise performing filtering) or a
-        national government regulation (for an ISP performing
-        filtering).
-	The hostname of this field                                                                                                                                                     
-        is constrained to match the domain name of the nameserver.                                                                                                                                                                     This field is required and MUST, at minimum, contain the domain                                                                                                                                                        
-        name of the DNS server.  Expansion of this field is described in
-	<xref target="process-response"/>.</dd>
+        <dd>a partial URI to retrieve the public or private rule, law,
+        or regulation describing the reason for this DNS filter.  This
+        might point at an employment agreement (for an enterprise
+        performing filtering) or a national government regulation (for
+        an ISP performing filtering).  This field is optional, but note
+	its absence still allows a URI to be formed.</dd>
       </dl>
 
 
@@ -397,8 +396,8 @@
 
 
       <t>To reduce packet overhead the generated JSON SHOULD be as
-      short as possible: short domain names, concise text for the "j"
-      and "o" keys, and minified JSON (that is, without spaces or line breaks
+      short as possible: short domain names, concise text in the values for the "j"
+      and "o" names, and minified JSON (that is, without spaces or line breaks
       between JSON elements)).</t>
       <t>The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
@@ -437,15 +436,22 @@
 	option, the requestor MUST discard all Structured Error ENDS(0) options.</li>
           <li>The DNS response MUST also contain an extended error code
 	of "Censored", "Blocked", "Filtered" or "Forged", otherwise
-	the Structured Error EDNS(0) option is discarded.</li>
-		<li>
-	  The Requestor expands the values in "c" and "r" by prefixing the
-	  two values with "https://" and the value of the "d" value.
-	  Then the Requestor further expands each of the "c" and "r" URIs by
-      appending two URL query parameters: "type" indicating
-      the name of the DNS resource record type queried and "name"
-      indicating the name of the DNS resource record queried.</li>
-    </ul>
+	  the Structured Error EDNS(0) option is discarded.</li>
+
+	  <li>If either of the mandatory JSON names "d" and "j" are
+	  missing or have empty values in the Structured Error EDNS(0)
+	  option, the option is discarded.</li>
+
+	  <li>
+	  The Requestor expands the values in "c" and "r" by prefixing
+	  the two values with "https://" and the value of the "d"
+	  name.  Then the Requestor further expands each of the "c"
+	  and "r" URIs by appending two URL query parameters: "type"
+	  indicating the name of the DNS resource record type queried
+	  and "name" indicating the name of the DNS resource record
+	  queried.</li>
+
+	</ul>
     
       <aside><t>Note the parial URI value in "c" or "r" will already
       contain zero or more query parameters so implementations should
@@ -484,8 +490,7 @@
       server.  To detect this scenario, the DNS client MUST verify the
       domain name in the Structured Error "d" value matches the domain name of the
       encrypted DNS resolver.  If this match fails, the DNS client MUST
-      ignore the Structured Error EDNS(0) option in the response, but SHOULD
-      process other parts of the response.</li>
+      ignore the Structured Error EDNS(0) option in the response.</li>
         </ul>
       </section>
     </section>
@@ -510,10 +515,7 @@
 
       <figure anchor="example-minified">
         <name>Minified response</name>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
-=============== NOTE: '\' line wrapping per RFC 8792 ================
-
-{"c":"?time=1621902483","d":"ns.example.com","j":"malware present \
+        <artwork name="" type="" align="left" alt=""><![CDATA[{"c":"?time=1621902483","d":"ns.example.com","j":"malware present \
 for 23 days","o":"example.net Filtering Service","r":\
 "?country=atlantis"}]]></artwork>
       </figure>      
@@ -529,11 +531,7 @@ for 23 days","o":"example.net Filtering Service","r":\
       <name>Security Considerations</name>
       <t>Security considerations in Section 6 of <xref target="RFC8914"/> and <xref target="RFC8624"/> need to be
       taken into consideration.</t>
-      <t>The values of the "c" and "r" keys contain URIs which may cause
-      HTTPS retrieval by the client or by another party (e.g., IT staff).    
-      To reduce attack surface, the requestor ensures those referenced
-      URIs match the domain name of the DNS server, as described in
-      section <xref target="process-response"/>.</t>
+
       <t>To minimize impact of man-in-the-middle attacks on the
       DNS channel, the client validates the response as described
       in <xref target="process-response"/>.</t>
@@ -543,16 +541,20 @@ for 23 days","o":"example.net Filtering Service","r":\
       domain explaining government-mandated filtering.  To improve
       privacy of such redirection, unnecessary query parameters MUST
       be stripped by the HTTP server from the HTTP target URL.</t>
-      <t>In situations where the browser implements encrypted DNS and
-      receives the Structured Error EDNS(0) option, and the browser
-      visits either of the URIs in the response (c or j), the browser
-      SHOULD reduce the attack surface of the client by using an
-      isolated environment precautions such as clearly labeling the
-      page as untrusted or prevent user interaction with the
-      page. Such isolation should prevent transmitting cookies, block
-      JavaScript, block auto-fill of credentials or personal
-      information, and be isolated from the user's normal
-      environment.</t>
+
+      <t>If the browser visits either of the URIs in the response ("c"
+      or "r"), the browser SHOULD reduce the attack surface of the
+      client by using an isolated environment precautions such as
+      clearly labeling the page as untrusted or prevent user
+      interaction with the page. Such isolation should prevent
+      transmitting cookies, block JavaScript, block auto-fill of
+      credentials or personal information, and be isolated from the
+      user's normal environment.</t>
+
+      <t>When displaying the
+      free-form text of "o" and "j", the browser SHOULD NOT make any
+      of those elements into actionable (clickable) links.</t>
+      
       <t>Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
@@ -640,7 +642,7 @@ for 23 days","o":"example.net Filtering Service","r":\
         <ul>
           <li>removed support for multiple responsible parties</li>
           <li>one-character JSON names to minimize JSON length</li>
-	  <li>partial URI and "d" key sent in JSON to minimize attack surface and minimize JSON length</li>
+	  <li>partial URI sent in "c" and "r" names, combined with "d" name sent in JSON to minimize attack surface and minimize JSON length</li>
 	  <li>moved EDNS(0) forgery-mitigation text, some Security Considerations text, and some other text from
 	  <xref target="I-D.reddy-dnsop-error-page"/> to this document</li>
 	</ul>

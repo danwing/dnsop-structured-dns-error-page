@@ -5,12 +5,12 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: 9 April 2022                                             Akamai
+Expires: 10 April 2022                                            Akamai
                                                                  N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                          6 October 2021
+                                                          7 October 2021
 
 
                     Structured Data for Filtered DNS
@@ -25,7 +25,7 @@ Abstract
    HTTPS website.
 
    This document defines a mechanism to explain the reason for the DNS
-   filtering and provides a HTTPS URIs to get more detail.  This
+   filtering and provides HTTPS URIs to get more detail.  This
    information can be parsed by the client and displayed, logged, or
    used for other purposes.
 
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 April 2022.
+   This Internet-Draft will expire on 10 April 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wing, et al.              Expires 9 April 2022                  [Page 1]
+Wing, et al.              Expires 10 April 2022                 [Page 1]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -71,7 +71,7 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   3.  Structured Error EDNS(0) Option Code  . . . . . . . . . . . .   7
+   3.  Structured Error EDNS(0) Option Code  . . . . . . . . . . . .   6
    4.  Structured JSON . . . . . . . . . . . . . . . . . . . . . . .   7
    5.  Protocol Operation  . . . . . . . . . . . . . . . . . . . . .   8
      5.1.  Client Generating Request . . . . . . . . . . . . . . . .   8
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.              Expires 9 April 2022                  [Page 2]
+Wing, et al.              Expires 10 April 2022                 [Page 2]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -165,7 +165,7 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 9 April 2022                  [Page 3]
+Wing, et al.              Expires 10 April 2022                 [Page 3]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -221,7 +221,7 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 9 April 2022                  [Page 4]
+Wing, et al.              Expires 10 April 2022                 [Page 4]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -256,31 +256,13 @@ Internet-Draft            Data for Filtered DNS             October 2021
    5.  When a resolver or forwarder forwards the received EDE option,
        the EXTRA-TEXT field only conveys the source of the error
        (Section 3 of [RFC8914]) and does not provide additional textual
-       information about the cause of the error.  Most importantly, EDE
-       option does not offer authenticated information; it can thus be
-       spoofed by an attacker.  In addition, the additional textual
-       information may not be able to convey all of the required
-       information about the cause of the DNS error because lengthy
-       EXTRA-TEXT content would be truncated to prevent fragmentation
-       (Section 3 of [RFC8914]).
+       information about the cause of the error.
 
    For both DNS filtering mechanisms described above, the DNS server can
    return extended error codes Blocked, Censored, Filtered, or Forged
    Answer defined in Section 4 of [RFC8914].  However, these codes only
-   explain that filtering occurred but lacks detail for the user to
+   explain that filtering occurred but lack detail for the user to
    diagnose erroneous filtering.
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 9 April 2022                  [Page 5]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
 
    No matter which type of response is generated (forged IP address(es),
    NXDOMAIN or empty answer, even with an extended error code), the user
@@ -290,10 +272,19 @@ Internet-Draft            Data for Filtered DNS             October 2021
    mechanism to provide such detail.
 
    One of the other benefits of this approach is to eliminate the need
-   to "spoof" block pages for HTTPS resources.  This is achieved as the
-   block page no longer needs to create a signed certificate when
-   blocking a destination.  This approach avoids the need to install a
-   local root certificate authority on those IT-managed devices.
+   to "spoof" block pages for HTTPS resources.  This is achieved since
+   clients implementing this approach would be able to display a
+
+
+
+Wing, et al.              Expires 10 April 2022                 [Page 5]
+
+Internet-Draft            Data for Filtered DNS             October 2021
+
+
+   meaningful error message, and would not need to connect to such a
+   block page.  This approach thus avoids the need to install a local
+   root certificate authority on those IT-managed devices.
 
    This document describes a protocol containing parsable data in a new
    EDNS(0) [RFC6891] option code.
@@ -306,6 +297,10 @@ Internet-Draft            Data for Filtered DNS             October 2021
    informed of the filtering.  This information returned can be logged
    and/or displayed to the user, as appropriate for the user interface
    capabilities of the client hardware and software.
+
+   This document does not recomment DNS filtering, but provides a
+   mechanism for better transparency to explain to the users why some
+   DNS queries are filtered.
 
 2.  Terminology
 
@@ -326,18 +321,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
    messages, for example, DNS-over-HTTPS [RFC8484], DNS-over-TLS
    [RFC7858], or DNS-over-QUIC [I-D.ietf-dprive-dnsoquic].
 
-
-
-
-
-
-
-
-Wing, et al.              Expires 9 April 2022                  [Page 6]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
-
 3.  Structured Error EDNS(0) Option Code
 
    This document defines a new EDNS(0) [RFC6891] option code (OPT) to
@@ -345,6 +328,15 @@ Internet-Draft            Data for Filtered DNS             October 2021
    filtering that occurred for this query, defined in Figure 1.
 
    The value of this EDNS(0) option code (OPT) is TBA-BY-IANA.
+
+
+
+
+
+Wing, et al.              Expires 10 April 2022                 [Page 6]
+
+Internet-Draft            Data for Filtered DNS             October 2021
+
 
                                                 1   1   1   1   1   1
         0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
@@ -366,15 +358,17 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 4.  Structured JSON
 
-   STRUCTURED-ERROR-JSON contains the following JSON keys:
+   STRUCTURED-ERROR-JSON contains the following JSON names:
 
    c: (complaint)  a partial URI for the user to further diagnose and
       possibly report mis-classified DNS filtering.  The value is
-      converted to an expanded absolute URI.
+      converted to an expanded absolute URI.  This field is optional,
+      but note its absence still allows a URI to be formed.
 
    d: (domain)  Contains the domain-name of the encrypted DNS server.
       This is used to create the expanded URIs for both the "c" and "r"
       fields, and also detect undesired forwarding of EDNS(0) options.
+      This field is mandatory.
 
    j: (justification)  the textual justification for this particular DNS
       filtering.  This field is mandatory.
@@ -386,24 +380,24 @@ Internet-Draft            Data for Filtered DNS             October 2021
       rule, law, or regulation describing the reason for this DNS
       filter.  This might point at an employment agreement (for an
       enterprise performing filtering) or a national government
+      regulation (for an ISP performing filtering).  This field is
+      optional, but note its absence still allows a URI to be formed.
 
 
 
-Wing, et al.              Expires 9 April 2022                  [Page 7]
+
+
+
+
+Wing, et al.              Expires 10 April 2022                 [Page 7]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
 
-      regulation (for an ISP performing filtering).  The hostname of
-      this field is constrained to match the domain name of the
-      nameserver.  This field is required and MUST, at minimum, contain
-      the domain name of the DNS server.  Expansion of this field is
-      described in Section 5.3.
-
    To reduce packet overhead the generated JSON SHOULD be as short as
-   possible: short domain names, concise text for the "j" and "o" keys,
-   and minified JSON (that is, without spaces or line breaks between
-   JSON elements)).
+   possible: short domain names, concise text in the values for the "j"
+   and "o" names, and minified JSON (that is, without spaces or line
+   breaks between JSON elements)).
 
    The JSON data can be parsed to display to the user, logged, or
    otherwise used to assist the end-user or IT staff with
@@ -428,38 +422,40 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    Over time a domain name might be filtered, then not filtered, then
    filtered again.  Additionally, the user might take minutes or even
-   days before investigating a filtered DNS query.  Thus the URI is
-   RECOMMENDED to include sufficient detail to determine the filtering
-   state when the DNS filtering occurred.  If and how this is encoded
-   into the URI is an implementation decision.
+   days before investigating a filtered DNS query.  Thus the complaint
+   URI is RECOMMENDED to include sufficient detail to determine the
+   filtering state when the DNS filtering occurred.  If and how this is
+   encoded into the complaint URI is an implementation decision.
 
 5.3.  Client Processing Response
 
    On receipt of the DNS response, the following actions are performed
    specific to Structured Error EDNS(0) option, in no particular order:
 
-   *  Verifies the response was received over an encrypted DNS channel.
-
-
-
-
-
-
-Wing, et al.              Expires 9 April 2022                  [Page 8]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
+   *  The requestor MUST verify that the response was received over an
+      encrypted DNS channel.
 
    *  If the DNS response contains more than one Structured Error
-      EDNS(0) option, the requestor discards all Structured Error
+      EDNS(0) option, the requestor MUST discard all Structured Error
       ENDS(0) options.
 
    *  The DNS response MUST also contain an extended error code of
       "Censored", "Blocked", "Filtered" or "Forged", otherwise the
       Structured Error EDNS(0) option is discarded.
 
+
+
+Wing, et al.              Expires 10 April 2022                 [Page 8]
+
+Internet-Draft            Data for Filtered DNS             October 2021
+
+
+   *  If either of the mandatory JSON names "d" and "j" are missing or
+      have empty values in the Structured Error EDNS(0) option, the
+      option is discarded.
+
    *  The Requestor expands the values in "c" and "r" by prefixing the
-      two values with "https://" and the value of the "d" value.  Then
+      two values with "https://" and the value of the "d" name.  Then
       the Requestor further expands each of the "c" and "r" URIs by
       appending two URL query parameters: "type" indicating the name of
       the DNS resource record type queried and "name" indicating the
@@ -498,27 +494,27 @@ Internet-Draft            Data for Filtered DNS             October 2021
       filtering or not by retrieving resolver information using the
       method defined in [I-D.reddy-add-resolver-info].
 
-
-
-
-Wing, et al.              Expires 9 April 2022                  [Page 9]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
-
    *  DNS forwarders (or DNS proxies) are supposed to propagate unknown
       EDNS(0) options (Sections 4.1 and 4.4.1 of [RFC5625]), which means
       the Structured Error EDNS(0) option may get propagated by such a
       DNS server.  To detect this scenario, the DNS client MUST verify
+
+
+
+Wing, et al.              Expires 10 April 2022                 [Page 9]
+
+Internet-Draft            Data for Filtered DNS             October 2021
+
+
       the domain name in the Structured Error "d" value matches the
       domain name of the encrypted DNS resolver.  If this match fails,
-      the DNS client MUST ignore Structured Error EDNS(0) option in the
-      response, but SHOULD process other parts of the response.
+      the DNS client MUST ignore the Structured Error EDNS(0) option in
+      the response.
 
 6.  Examples
 
-   An example showing the nameserver at ns.example.net that filtered a
-   DNS "A" record query for example.org is shown in Figure 2, below.
+   An example showing the nameserver at 'ns.example.net' that filtered a
+   DNS "A" record query for 'example.org' is shown in Figure 2.
 
      {
        "c": "?time=1621902483",
@@ -543,30 +539,14 @@ Internet-Draft            Data for Filtered DNS             October 2021
    become fully-formed URIs.  The class, type, and name are pulled from
    the DNS response (which matches the associated query) so that the
    fully-formed "c" URI becomes
-   https://ns.example.net?time=1621902483&type=a&name=example.org and
+   "https://ns.example.net?time=1621902483&type=a&name=example.org" and
    the "r" URI becomes
-   https://ns.example.net?country=atlantis&type=a&name=example.org.
+   "https://ns.example.net?country=atlantis&type=a&name=example.org".
 
 7.  Security Considerations
 
    Security considerations in Section 6 of [RFC8914] and [RFC8624] need
    to be taken into consideration.
-
-
-
-
-
-
-Wing, et al.              Expires 9 April 2022                 [Page 10]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
-
-   The values of the "c" and "r" keys contain URIs which may cause HTTPS
-   retrieval by the client or by another party (e.g., IT staff).  To
-   reduce attack surface, the requestor ensures those referenced URIs
-   match the domain name of the DNS server, as described in section
-   Section 5.3.
 
    To minimize impact of man-in-the-middle attacks on the DNS channel,
    the client validates the response as described in Section 5.3.
@@ -574,19 +554,28 @@ Internet-Draft            Data for Filtered DNS             October 2021
    If the web server responding to "c" or "r" URIs web server desires,
    it can HTTP redirect the request elsewhere, such as might be common
    for "r" to point the user at a government-owned domain explaining
+
+
+
+Wing, et al.              Expires 10 April 2022                [Page 10]
+
+Internet-Draft            Data for Filtered DNS             October 2021
+
+
    government-mandated filtering.  To improve privacy of such
    redirection, unnecessary query parameters MUST be stripped by the
    HTTP server from the HTTP target URL.
 
-   In situations where the browser implements encrypted DNS and receives
-   the Structured Error EDNS(0) extension, and the browser visits either
-   of the URIs in the response (c or j), the browser SHOULD reduce the
-   attack surface of the client by using an isolated environment
-   precautions such as clearly labeling the page as untrusted or prevent
-   user interaction with the page.  Such isolation should prevent
-   transmitting cookies, block JavaScript, block auto-fill of
-   credentials or personal information, and be isolated from the user's
-   normal environment.
+   If the browser visits either of the URIs in the response ("c" or
+   "r"), the browser SHOULD reduce the attack surface of the client by
+   using an isolated environment precautions such as clearly labeling
+   the page as untrusted or prevent user interaction with the page.
+   Such isolation should prevent transmitting cookies, block JavaScript,
+   block auto-fill of credentials or personal information, and be
+   isolated from the user's normal environment.
+
+   When displaying the free-form text of "o" and "j", the browser SHOULD
+   NOT make any of those elements into actionable (clickable) links.
 
    Because this specification still allows DNS filtering to respond with
    an empty answer, NXDOMAIN, or forged answer (as the DNS server sees
@@ -613,7 +602,18 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 9 April 2022                 [Page 11]
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 10 April 2022                [Page 11]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -664,12 +664,12 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    *  one-character JSON names to minimize JSON length
 
-   *  partial URI and "d" key sent in JSON to minimize attack surface
-      and minimize JSON length
+   *  partial URI sent in "c" and "r" names, combined with "d" name sent
+      in JSON to minimize attack surface and minimize JSON length
 
 
 
-Wing, et al.              Expires 9 April 2022                 [Page 12]
+Wing, et al.              Expires 10 April 2022                [Page 12]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -725,7 +725,7 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 9 April 2022                 [Page 13]
+Wing, et al.              Expires 10 April 2022                [Page 13]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -781,7 +781,7 @@ Authors' Addresses
 
 
 
-Wing, et al.              Expires 9 April 2022                 [Page 14]
+Wing, et al.              Expires 10 April 2022                [Page 14]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
@@ -837,4 +837,4 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 9 April 2022                 [Page 15]
+Wing, et al.              Expires 10 April 2022                [Page 15]

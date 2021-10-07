@@ -10,14 +10,14 @@
 <meta content="Neil Cook" name="author">
 <meta content="Mohamed Boucadair" name="author">
 <meta content="
-       DNS filtering is widely deployed for network security, but
-      filtered DNS responses lack information for the end user to
-      understand the reason for the filtering.  Existing mechanisms
-      to provide detail to end users cause harm especially if the
-      blocked DNS response is to an HTTPS website. 
+       DNS filtering is widely deployed for network security, but filtered
+   DNS responses lack information for the end user to understand the
+   reason for the filtering. Existing mechanisms to provide detail to
+   end users cause harm especially if the blocked DNS response is to an
+   HTTPS website. 
        This document defines a mechanism to explain the reason
-      for the DNS filtering and provides a HTTPS URIs to get more
-      detail.  This information can be parsed by the client and
+      for the DNS filtering and provides HTTPS URIs to get more
+      detail. This information can be parsed by the client and
       displayed, logged, or used for other purposes. 
     " name="description">
 <meta content="xml2rfc 3.10.0" name="generator">
@@ -1199,7 +1199,7 @@ li > p:last-of-type {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 9 April 2022</td>
+<td class="center">Expires 10 April 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1212,12 +1212,12 @@ li > p:last-of-type {
 <dd class="internet-draft">draft-wing-dnsop-structured-dns-error-page-01</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-10-06" class="published">6 October 2021</time>
+<time datetime="2021-10-07" class="published">7 October 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-04-09">9 April 2022</time></dd>
+<dd class="expires"><time datetime="2022-04-10">10 April 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1242,14 +1242,14 @@ li > p:last-of-type {
 <h1 id="title">Structured Data for Filtered DNS</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">DNS filtering is widely deployed for network security, but
-      filtered DNS responses lack information for the end user to
-      understand the reason for the filtering.  Existing mechanisms
-      to provide detail to end users cause harm especially if the
-      blocked DNS response is to an HTTPS website.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">DNS filtering is widely deployed for network security, but filtered
+   DNS responses lack information for the end user to understand the
+   reason for the filtering. Existing mechanisms to provide detail to
+   end users cause harm especially if the blocked DNS response is to an
+   HTTPS website.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">This document defines a mechanism to explain the reason
-      for the DNS filtering and provides a HTTPS URIs to get more
-      detail.  This information can be parsed by the client and
+      for the DNS filtering and provides HTTPS URIs to get more
+      detail. This information can be parsed by the client and
       displayed, logged, or used for other purposes.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
@@ -1271,7 +1271,7 @@ li > p:last-of-type {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 April 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 April 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1485,19 +1485,14 @@ li > p:last-of-type {
    forwarder forwards the received EDE option, the EXTRA-TEXT field
    only conveys the source of the error (Section 3 of [RFC8914]) and
    does not provide additional textual information about the cause of
-   the error.  Most importantly, EDE option does not offer
-   authenticated information; it can thus be spoofed by an attacker.
-   In addition, the additional textual information may not be able to
-   convey all of the required information about the cause of the DNS
-   error because lengthy EXTRA-TEXT content would be truncated to
-   prevent fragmentation (<span><a href="#RFC8914" class="xref">Section 3 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>).<a href="#section-1-4.5" class="pilcrow">¶</a>
+   the error.<a href="#section-1-4.5" class="pilcrow">¶</a>
 </li>
       </ol>
 <p id="section-1-5">For both DNS filtering mechanisms described above, the DNS
       server can return extended error codes Blocked, Censored,
       Filtered, or Forged Answer defined in <span><a href="#RFC8914" class="xref">Section 4 of</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>.
       However, these codes only
-      explain that filtering occurred but lacks detail for the user to
+      explain that filtering occurred but lack detail for the user to
       diagnose erroneous filtering.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">No matter which type of response is generated (forged IP address(es),
    NXDOMAIN or empty answer, even with an extended error code), the user who
@@ -1506,9 +1501,10 @@ li > p:last-of-type {
    entity filtered it at all.  This document describes a mechanism to
    provide such detail.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">One of the other benefits of this approach is to eliminate the need
-   to "spoof" block pages for HTTPS resources.  This is achieved as the
-   block page no longer needs to create a signed certificate when
-   blocking a destination.  This approach avoids the need to install a
+   to "spoof" block pages for HTTPS resources.  This is achieved since
+   clients implementing this approach would be able to display a
+   meaningful error message, and would not need to connect to such a block page.
+   This approach thus avoids the need to install a
    local root certificate authority on those IT-managed devices.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <p id="section-1-8">This document describes a protocol containing parsable data
       in a new <span><a href="#RFC6891" class="xref">EDNS(0)</a> [<a href="#RFC6891" class="xref">RFC6891</a>]</span>
@@ -1522,6 +1518,9 @@ li > p:last-of-type {
       information returned can be logged and/or displayed to the user,
       as appropriate for the user interface capabilities of the client
       hardware and software.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">This document does not recomment DNS filtering, but provides a
+   mechanism for better transparency to explain to the users why some 
+   DNS queries are filtered.<a href="#section-1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1590,18 +1589,20 @@ li > p:last-of-type {
       <h2 id="name-structured-json-2">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-structured-json-2" class="section-name selfRef">Structured JSON</a>
       </h2>
-<p id="section-4-1">STRUCTURED-ERROR-JSON contains the following JSON keys:<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">STRUCTURED-ERROR-JSON contains the following JSON names:<a href="#section-4-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-4-2">
         <dt id="section-4-2.1">c: (complaint)</dt>
         <dd style="margin-left: 1.5em" id="section-4-2.2">a partial URI for the user to further diagnose and possibly report
  mis-classified DNS filtering.  The value is converted to an
- expanded absolute URI.<a href="#section-4-2.2" class="pilcrow">¶</a>
+ expanded absolute URI.  This field is optional, but note its absence
+ still allows a URI to be formed.<a href="#section-4-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-4-2.3">d: (domain)</dt>
         <dd style="margin-left: 1.5em" id="section-4-2.4">Contains the domain-name of the encrypted DNS server. This is used
  to create the expanded URIs for both the "c" and "r" fields, and also
- detect undesired forwarding of EDNS(0) options.<a href="#section-4-2.4" class="pilcrow">¶</a>
+ detect undesired forwarding of EDNS(0) options.  This field is
+ mandatory.<a href="#section-4-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-4-2.5">j: (justification)</dt>
@@ -1615,21 +1616,18 @@ li > p:last-of-type {
 </dd>
         <dd class="break"></dd>
 <dt id="section-4-2.9">r: (regulation)</dt>
-        <dd style="margin-left: 1.5em" id="section-4-2.10">a partial URI to retrieve the public or private
-        rule, law, or regulation describing the reason for this DNS filter.  This might point at an employment
-        agreement (for an enterprise performing filtering) or a
-        national government regulation (for an ISP performing
-        filtering).
- The hostname of this field                                                                                                                                                     
-        is constrained to match the domain name of the nameserver.                                                                                                                                                                     This field is required and MUST, at minimum, contain the domain                                                                                                                                                        
-        name of the DNS server.  Expansion of this field is described in
- <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-4-2.10" class="pilcrow">¶</a>
+        <dd style="margin-left: 1.5em" id="section-4-2.10">a partial URI to retrieve the public or private rule, law,
+        or regulation describing the reason for this DNS filter.  This
+        might point at an employment agreement (for an enterprise
+        performing filtering) or a national government regulation (for
+        an ISP performing filtering).  This field is optional, but note
+ its absence still allows a URI to be formed.<a href="#section-4-2.10" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
 <p id="section-4-3">To reduce packet overhead the generated JSON SHOULD be as
-      short as possible: short domain names, concise text for the "j"
-      and "o" keys, and minified JSON (that is, without spaces or line breaks
+      short as possible: short domain names, concise text in the values for the "j"
+      and "o" names, and minified JSON (that is, without spaces or line breaks
       between JSON elements)).<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
@@ -1664,9 +1662,9 @@ li > p:last-of-type {
 <p id="section-5.2-2">Over time a domain name might be filtered, then not filtered,
       then filtered again.  Additionally, the user might take minutes
       or even days before investigating a filtered DNS query.  Thus
-      the URI is RECOMMENDED to include sufficient detail to determine
+      the complaint URI is RECOMMENDED to include sufficient detail to determine
       the filtering state when the DNS filtering occurred.  If and how this is
-      encoded into the URI is an implementation decision.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+      encoded into the complaint URI is an implementation decision.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 </section>
 <div id="process-response">
 <section id="section-5.3">
@@ -1676,22 +1674,27 @@ li > p:last-of-type {
 <p id="section-5.3-1">On receipt of the DNS response, the following
       actions are performed specific to Structured Error EDNS(0) option, in no particular order:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.3-2.1">Verifies the response was received over an encrypted DNS channel.<a href="#section-5.3-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-5.3-2.1">The requestor MUST verify that the response was received over an encrypted DNS channel.<a href="#section-5.3-2.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-5.3-2.2">If the DNS response contains more than one Structured Error EDNS(0)
- option, the requestor discards all Structured Error ENDS(0) options.<a href="#section-5.3-2.2" class="pilcrow">¶</a>
+ option, the requestor MUST discard all Structured Error ENDS(0) options.<a href="#section-5.3-2.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-5.3-2.3">The DNS response MUST also contain an extended error code
  of "Censored", "Blocked", "Filtered" or "Forged", otherwise
- the Structured Error EDNS(0) option is discarded.<a href="#section-5.3-2.3" class="pilcrow">¶</a>
+   the Structured Error EDNS(0) option is discarded.<a href="#section-5.3-2.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-5.3-2.4">
-   The Requestor expands the values in "c" and "r" by prefixing the
-   two values with "https://" and the value of the "d" value.
-   Then the Requestor further expands each of the "c" and "r" URIs by
-      appending two URL query parameters: "type" indicating
-      the name of the DNS resource record type queried and "name"
-      indicating the name of the DNS resource record queried.<a href="#section-5.3-2.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-5.3-2.4">If either of the mandatory JSON names "d" and "j" are
+   missing or have empty values in the Structured Error EDNS(0)
+   option, the option is discarded.<a href="#section-5.3-2.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.3-2.5">
+   The Requestor expands the values in "c" and "r" by prefixing
+   the two values with "https://" and the value of the "d"
+   name.  Then the Requestor further expands each of the "c"
+   and "r" URIs by appending two URL query parameters: "type"
+   indicating the name of the DNS resource record type queried
+   and "name" indicating the name of the DNS resource record
+   queried.<a href="#section-5.3-2.5" class="pilcrow">¶</a>
 </li>
         </ul>
 <aside id="section-5.3-3">
@@ -1735,8 +1738,7 @@ li > p:last-of-type {
       server.  To detect this scenario, the DNS client MUST verify the
       domain name in the Structured Error "d" value matches the domain name of the
       encrypted DNS resolver.  If this match fails, the DNS client MUST
-      ignore Structured Error EDNS(0) option in the response, but SHOULD
-      process other parts of the response.<a href="#section-5.3-4.4" class="pilcrow">¶</a>
+      ignore the Structured Error EDNS(0) option in the response.<a href="#section-5.3-4.4" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1747,8 +1749,8 @@ li > p:last-of-type {
       <h2 id="name-examples-2">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
       </h2>
-<p id="section-6-1">An example showing the nameserver at ns.example.net that filtered a DNS
-      "A" record query for example.org is shown in <a href="#example-json" class="xref">Figure 2</a>, below.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">An example showing the nameserver at 'ns.example.net' that filtered a DNS
+      "A" record query for 'example.org' is shown in <a href="#example-json" class="xref">Figure 2</a>.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <span id="name-json-returned-in-edns0-struc"></span><div id="example-json">
 <figure id="figure-2">
         <div class="alignLeft art-text artwork" id="section-6-2.1">
@@ -1779,12 +1781,12 @@ for 23 days","o":"example.net Filtering Service","r":\
         </figcaption></figure>
 </div>
 <p id="section-6-5">Upon receipt, the two partial URIs ("c" and "r") are extended
-      to become fully-formed URIs.  The class, type, and name are
+      to become fully-formed URIs. The class, type, and name are
       pulled from the DNS response (which matches the associated
       query) so that the fully-formed "c" URI becomes
-      https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org
+      "https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org"
       and the "r" URI becomes
-      https://ns.example.net?country=atlantis&amp;type=a&amp;name=example.org.<a href="#section-6-5" class="pilcrow">¶</a></p>
+      "https://ns.example.net?country=atlantis&amp;type=a&amp;name=example.org".<a href="#section-6-5" class="pilcrow">¶</a></p>
 </section>
 <div id="Security">
 <section id="section-7">
@@ -1793,30 +1795,26 @@ for 23 days","o":"example.net Filtering Service","r":\
       </h2>
 <p id="section-7-1">Security considerations in Section 6 of <span>[<a href="#RFC8914" class="xref">RFC8914</a>]</span> and <span>[<a href="#RFC8624" class="xref">RFC8624</a>]</span> need to be
       taken into consideration.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">The values of the "c" and "r" keys contain URIs which may cause
-      HTTPS retrieval by the client or by another party (e.g., IT staff).    
-      To reduce attack surface, the requestor ensures those referenced
-      URIs match the domain name of the DNS server, as described in
-      section <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">To minimize impact of man-in-the-middle attacks on the
+<p id="section-7-2">To minimize impact of man-in-the-middle attacks on the
       DNS channel, the client validates the response as described
-      in <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">If the web server responding to "c" or "r" URIs web server
+      in <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">If the web server responding to "c" or "r" URIs web server
       desires, it can HTTP redirect the request elsewhere, such as
       might be common for "r" to point the user at a government-owned
       domain explaining government-mandated filtering.  To improve
       privacy of such redirection, unnecessary query parameters MUST
-      be stripped by the HTTP server from the HTTP target URL.<a href="#section-7-4" class="pilcrow">¶</a></p>
-<p id="section-7-5">In situations where the browser implements encrypted DNS and
-      receives the Structured Error EDNS(0) extension, and the browser
-      visits either of the URIs in the response (c or j), the browser
-      SHOULD reduce the attack surface of the client by using an
-      isolated environment precautions such as clearly labeling the
-      page as untrusted or prevent user interaction with the
-      page. Such isolation should prevent transmitting cookies, block
-      JavaScript, block auto-fill of credentials or personal
-      information, and be isolated from the user's normal
-      environment.<a href="#section-7-5" class="pilcrow">¶</a></p>
+      be stripped by the HTTP server from the HTTP target URL.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">If the browser visits either of the URIs in the response ("c"
+      or "r"), the browser SHOULD reduce the attack surface of the
+      client by using an isolated environment precautions such as
+      clearly labeling the page as untrusted or prevent user
+      interaction with the page. Such isolation should prevent
+      transmitting cookies, block JavaScript, block auto-fill of
+      credentials or personal information, and be isolated from the
+      user's normal environment.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">When displaying the
+      free-form text of "o" and "j", the browser SHOULD NOT make any
+      of those elements into actionable (clickable) links.<a href="#section-7-5" class="pilcrow">¶</a></p>
 <p id="section-7-6">Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
@@ -1893,7 +1891,7 @@ for 23 days","o":"example.net Filtering Service","r":\
 </li>
           <li class="normal" id="section-9.1-1.2">one-character JSON names to minimize JSON length<a href="#section-9.1-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-9.1-1.3">partial URI and "d" key sent in JSON to minimize attack surface and minimize JSON length<a href="#section-9.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-9.1-1.3">partial URI sent in "c" and "r" names, combined with "d" name sent in JSON to minimize attack surface and minimize JSON length<a href="#section-9.1-1.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-9.1-1.4">moved EDNS(0) forgery-mitigation text, some Security Considerations text, and some other text from
    <span>[<a href="#I-D.reddy-dnsop-error-page" class="xref">I-D.reddy-dnsop-error-page</a>]</span> to this document<a href="#section-9.1-1.4" class="pilcrow">¶</a>
