@@ -309,6 +309,11 @@
       information returned can be logged and/or displayed to the user,
       as appropriate for the user interface capabilities of the client
       hardware and software.</t>
+
+   <t>This document does not recomment DNS filtering, but provides a
+   mechanism for better transparency to explain to the users why some 
+   DNS queries are filtered.</t>
+	    
     </section>
     <section anchor="notation" numbered="true" toc="default">
       <name>Terminology</name>
