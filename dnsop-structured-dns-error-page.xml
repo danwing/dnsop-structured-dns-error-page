@@ -431,9 +431,9 @@
         <t>On receipt of the DNS response, the following
       actions are performed specific to Structured Error EDNS(0) option, in no particular order:</t>
         <ul>
-          <li>Verifies the response was received over an encrypted DNS channel.</li>
+          <li>The requestor MUST verify that the response was received over an encrypted DNS channel.</li>
           <li>If the DNS response contains more than one Structured Error EDNS(0)
-	option, the requestor discards all Structured Error ENDS(0) options.</li>
+	option, the requestor MUST discard all Structured Error ENDS(0) options.</li>
           <li>The DNS response MUST also contain an extended error code
 	of "Censored", "Blocked", "Filtered" or "Forged", otherwise
 	the Structured Error EDNS(0) option is discarded.</li>
@@ -483,15 +483,15 @@
       server.  To detect this scenario, the DNS client MUST verify the
       domain name in the Structured Error "d" value matches the domain name of the
       encrypted DNS resolver.  If this match fails, the DNS client MUST
-      ignore Structured Error EDNS(0) option in the response, but SHOULD
+      ignore the Structured Error EDNS(0) option in the response, but SHOULD
       process other parts of the response.</li>
         </ul>
       </section>
     </section>
     <section numbered="true" toc="default">
       <name>Examples</name>
-      <t>An example showing the nameserver at ns.example.net that filtered a DNS
-      "A" record query for example.org is shown in <xref target="example-json" format="default"/>, below.</t>
+      <t>An example showing the nameserver at 'ns.example.net' that filtered a DNS
+      "A" record query for 'example.org' is shown in <xref target="example-json" format="default"/>.</t>
       <figure anchor="example-json">
         <name>JSON returned in EDNS(0) Structured Error response</name>
         <artwork name="" type="" align="left" alt=""><![CDATA[  {
@@ -517,12 +517,12 @@ for 23 days","o":"example.net Filtering Service","r":\
 "?country=atlantis"}]]></artwork>
       </figure>      
       <t>Upon receipt, the two partial URIs ("c" and "r") are extended
-      to become fully-formed URIs.  The class, type, and name are
+      to become fully-formed URIs. The class, type, and name are
       pulled from the DNS response (which matches the associated
       query) so that the fully-formed "c" URI becomes
-      https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org
+      "https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org"
       and the "r" URI becomes
-      https://ns.example.net?country=atlantis&amp;type=a&amp;name=example.org.</t>
+      "https://ns.example.net?country=atlantis&amp;type=a&amp;name=example.org".</t>
     </section>
     <section anchor="Security" numbered="true" toc="default">
       <name>Security Considerations</name>
@@ -543,7 +543,7 @@ for 23 days","o":"example.net Filtering Service","r":\
       privacy of such redirection, unnecessary query parameters MUST
       be stripped by the HTTP server from the HTTP target URL.</t>
       <t>In situations where the browser implements encrypted DNS and
-      receives the Structured Error EDNS(0) extension, and the browser
+      receives the Structured Error EDNS(0) option, and the browser
       visits either of the URIs in the response (c or j), the browser
       SHOULD reduce the attack surface of the client by using an
       isolated environment precautions such as clearly labeling the
