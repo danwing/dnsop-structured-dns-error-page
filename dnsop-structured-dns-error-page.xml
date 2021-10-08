@@ -405,7 +405,7 @@ Most importantly, EDE option does not offer
       <section anchor="generate-request">
         <name>Client Generating Request</name>
         <t>When generating a DNS query, the client MUST include the Structured Error
-      EDNS(0) option so the DNS server knows the client is compliant with this
+      EDNS(0) option when encrypted DNS is used so the DNS server knows that the client is compliant with this
       specification.</t>
       </section>
       <section>
@@ -428,7 +428,7 @@ Most importantly, EDE option does not offer
         <t>On receipt of the DNS response, the following
       actions are performed specific to Structured Error EDNS(0) option, in no particular order:</t>
         <ul>
-          <li>The requestor MUST verify that the response was received over an encrypted DNS channel.</li>
+          <li>The requestor MUST check that the response was received over an encrypted DNS channel.  If not, the requestor MUST discard any returned Structured Error EDNS(0) option.</li>
           <li>If the DNS response contains more than one Structured Error EDNS(0)
 	option, the requestor MUST discard all Structured Error ENDS(0) options.</li>
           <li>The DNS response MUST also contain an extended error code
@@ -553,9 +553,18 @@ for 23 days","o":"example.net Filtering Service","r":\
       free-form text of "o" and "j", the browser SHOULD NOT make any
       of those elements into actionable (clickable) links.</t>
 
-<!-- Dan does not yet like this paragraph
-      <t>Although the "d" value is validated, an attacker able to inject the Structured Error EDNS(0) option so that a DNS proxy or DNS forwarder, unaware of the option, will forward it and pass the validation checks described in <xref target="process-response"/>.  This means the other JSON fields can be controlled by the attacker.  The "j" and "o" fields are, perhaps, the most interesting for an attacker to modify for nefarious purposes, because the "d" field has to match the encrypted DNS server's name and the expanded URIs from the "c" and "r" will point at the DNS resolver not under the attacker's control.</t>
--->
+      <t>Although the "d" value is validated, an attacker able to
+      inject the Structured Error EDNS(0) option so that a DNS proxy
+      or DNS forwarder, unaware of the option, will forward it and
+      pass the validation checks described in <xref
+      target="process-response"/>.  This means the other JSON fields
+      can be controlled by the attacker.  The "j" and "o" fields are,
+      perhaps, the most interesting for an attacker to modify for
+      nefarious purposes, because the "d" field has to match the
+      encrypted DNS server's name and the expanded URIs from the "c"
+      and "r" will point at the DNS resolver not under the attacker's
+      control.</t>
+
 
       <t>Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
@@ -564,12 +573,7 @@ for 23 days","o":"example.net Filtering Service","r":\
       maintain compatibility with DNSSEC by returning the real (unfiltered)
       answer with its DNSSEC signature intact.  By also returning the
       EDNS(0) Structured Error, the DNS requestor can be informed of
-      the filtering (from the DNS responder).
-      <!--  Tiru recommended removing this sentence
-      Depending on the threat
-      model, network- and/or host-based IP filters or alerts can ensure
-      the DNS requestor does not use the DNS response. -->
-      </t>
+      the filtering (from the DNS responder).</t>
       
       <!--
       <t>The client knows it is connecting to a HTTPS server returning the
