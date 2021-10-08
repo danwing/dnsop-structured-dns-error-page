@@ -405,7 +405,7 @@ Most importantly, EDE option does not offer
       <section anchor="generate-request">
         <name>Client Generating Request</name>
         <t>When generating a DNS query, the client MUST include the Structured Error
-      EDNS(0) option so the DNS server knows the client is compliant with this
+      EDNS(0) option when encrypted DNS is used so the DNS server knows that the client is compliant with this
       specification.</t>
       </section>
       <section>
@@ -428,7 +428,7 @@ Most importantly, EDE option does not offer
         <t>On receipt of the DNS response, the following
       actions are performed specific to Structured Error EDNS(0) option, in no particular order:</t>
         <ul>
-          <li>The requestor MUST verify that the response was received over an encrypted DNS channel.</li>
+          <li>The requestor MUST check that the response was received over an encrypted DNS channel. If not, the requestor MUST discard any returned Structured Error EDNS(0) option option.</li>
           <li>If the DNS response contains more than one Structured Error EDNS(0)
 	option, the requestor MUST discard all Structured Error ENDS(0) options.</li>
           <li>The DNS response MUST also contain an extended error code
