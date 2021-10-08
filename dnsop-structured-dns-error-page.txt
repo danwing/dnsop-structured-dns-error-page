@@ -84,7 +84,7 @@ Table of Contents
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
      10.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -590,6 +590,10 @@ Internet-Draft            Data for Filtered DNS             October 2021
    and the expanded URIs from the "c" and "r" will point at the DNS
    resolver not under the attacker's control.
 
+      |  The authors anticipate enhancements to
+      |  [I-D.reddy-add-resolver-info] will reduce or eliminate the
+      |  concern described in previous paragraph.
+
    Because this specification still allows DNS filtering to respond with
    an empty answer, NXDOMAIN, or forged answer (as the DNS server sees
    fit), this specification remains incompatible with client-based
@@ -604,10 +608,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
    This document requests IANA assign a DNS EDNS0 Option Code (OPT)
    value in the Expert Review range named "Structured DNS Error".
 
-   This document requests IANA to register the "application/
-   json+structured-dns-error" media type in the "Media Types" registry
-   [IANA-MediaTypes].  This registration follows the procedures
-   specified in [RFC6838]:
 
 
 
@@ -617,6 +617,11 @@ Wing, et al.              Expires 11 April 2022                [Page 11]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
+
+   This document requests IANA to register the "application/
+   json+structured-dns-error" media type in the "Media Types" registry
+   [IANA-MediaTypes].  This registration follows the procedures
+   specified in [RFC6838]:
 
       Type name: application
 
@@ -658,6 +663,17 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    This section is to be removed before publishing as an RFC.
 
+
+
+
+
+
+
+Wing, et al.              Expires 11 April 2022                [Page 12]
+
+Internet-Draft            Data for Filtered DNS             October 2021
+
+
 9.1.  Changes from 00 to 01
 
    *  removed support for multiple responsible parties
@@ -666,13 +682,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    *  partial URI sent in "c" and "r" names, combined with "d" name sent
       in JSON to minimize attack surface and minimize JSON length
-
-
-
-Wing, et al.              Expires 11 April 2022                [Page 12]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
 
    *  moved EDNS(0) forgery-mitigation text, some Security
       Considerations text, and some other text from
@@ -713,15 +722,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 10.2.  Informative References
 
-   [I-D.ietf-dprive-dnsoquic]
-              Huitema, C., Dickinson, S., and A. Mankin, "Specification
-              of DNS over Dedicated QUIC Connections", Work in Progress,
-              Internet-Draft, draft-ietf-dprive-dnsoquic-04, 3 September
-              2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              dprive-dnsoquic-04>.
-
-
-
 
 
 
@@ -729,6 +729,13 @@ Wing, et al.              Expires 11 April 2022                [Page 13]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
+
+   [I-D.ietf-dprive-dnsoquic]
+              Huitema, C., Dickinson, S., and A. Mankin, "Specification
+              of DNS over Dedicated QUIC Connections", Work in Progress,
+              Internet-Draft, draft-ietf-dprive-dnsoquic-04, 3 September
+              2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              dprive-dnsoquic-04>.
 
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
@@ -770,13 +777,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
-   [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
-              Lawrence, "Extended DNS Errors", RFC 8914,
-              DOI 10.17487/RFC8914, October 2020,
-              <https://www.rfc-editor.org/info/rfc8914>.
-
-Authors' Addresses
-
 
 
 
@@ -785,6 +785,13 @@ Wing, et al.              Expires 11 April 2022                [Page 14]
 
 Internet-Draft            Data for Filtered DNS             October 2021
 
+
+   [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
+              Lawrence, "Extended DNS Errors", RFC 8914,
+              DOI 10.17487/RFC8914, October 2020,
+              <https://www.rfc-editor.org/info/rfc8914>.
+
+Authors' Addresses
 
    Dan Wing
    Citrix Systems, Inc.
@@ -815,13 +822,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
    France
 
    Email: mohamed.boucadair@orange.com
-
-
-
-
-
-
-
 
 
 
