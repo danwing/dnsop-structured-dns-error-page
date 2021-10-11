@@ -1199,7 +1199,7 @@ li > p:last-of-type {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 11 April 2022</td>
+<td class="center">Expires 14 April 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1212,12 +1212,12 @@ li > p:last-of-type {
 <dd class="internet-draft">draft-wing-dnsop-structured-dns-error-page-01</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-10-08" class="published">8 October 2021</time>
+<time datetime="2021-10-11" class="published">11 October 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-04-11">11 April 2022</time></dd>
+<dd class="expires"><time datetime="2022-04-14">14 April 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1271,7 +1271,7 @@ li > p:last-of-type {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 April 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 April 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1798,24 +1798,18 @@ for 23 days","o":"example.net Filtering Service","r":\
 <p id="section-7-2">To minimize impact of man-in-the-middle attacks on the
       DNS channel, the client validates the response as described
       in <a href="#process-response" class="xref">Section 5.3</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">If the web server responding to "c" or "r" URIs web server
-      desires, it can HTTP redirect the request elsewhere, such as
-      might be common for "r" to point the user at a government-owned
-      domain explaining government-mandated filtering.  To improve
-      privacy of such redirection, unnecessary query parameters MUST
-      be stripped by the HTTP server from the HTTP target URL.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">If the browser visits either of the URIs in the response ("c"
+<p id="section-7-3">If the browser visits either of the URIs in the response ("c"
       or "r"), the browser SHOULD reduce the attack surface of the
       client by using an isolated environment precautions such as
       clearly labeling the page as untrusted or prevent user
       interaction with the page. Such isolation should prevent
       transmitting cookies, block JavaScript, block auto-fill of
       credentials or personal information, and be isolated from the
-      user's normal environment.<a href="#section-7-4" class="pilcrow">¶</a></p>
-<p id="section-7-5">When displaying the
+      user's normal environment.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">When displaying the
       free-form text of "o" and "j", the browser SHOULD NOT make any
-      of those elements into actionable (clickable) links.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6">Although the "d" value is validated, an attacker able to
+      of those elements into actionable (clickable) links.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">Although the "d" value is validated, an attacker able to
       inject the Structured Error EDNS(0) option so that a DNS proxy
       or DNS forwarder, unaware of the option, will forward it and
       pass the validation checks described in <a href="#process-response" class="xref">Section 5.3</a>.  This means the other JSON fields
@@ -1824,20 +1818,20 @@ for 23 days","o":"example.net Filtering Service","r":\
       nefarious purposes, because the "d" field has to match the
       encrypted DNS server's name and the expanded URIs from the "c"
       and "r" will point at the DNS resolver not under the attacker's
-      control.<a href="#section-7-6" class="pilcrow">¶</a></p>
-<aside id="section-7-7">
-        <p id="section-7-7.1">The authors anticipate enhancements to
+      control.<a href="#section-7-5" class="pilcrow">¶</a></p>
+<aside id="section-7-6">
+        <p id="section-7-6.1">The authors anticipate enhancements to
       <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span> will reduce or
-      eliminate the concern described in previous paragraph.<a href="#section-7-7.1" class="pilcrow">¶</a></p>
+      eliminate the concern described in previous paragraph.<a href="#section-7-6.1" class="pilcrow">¶</a></p>
 </aside>
-<p id="section-7-8">Because this specification still allows DNS filtering to
+<p id="section-7-7">Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
       with client-based DNSSEC validation.  However, it is possible to
       maintain compatibility with DNSSEC by returning the real (unfiltered)
       answer with its DNSSEC signature intact.  By also returning the
       EDNS(0) Structured Error, the DNS requestor can be informed of
-      the filtering (from the DNS responder).<a href="#section-7-8" class="pilcrow">¶</a></p>
+      the filtering (from the DNS responder).<a href="#section-7-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="IANA">
