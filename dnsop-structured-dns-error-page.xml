@@ -562,6 +562,7 @@ for 23 days","o":"example.net Filtering Service","r":\
       eliminate the concern described in previous paragraph.</t></aside>
 
 
+<!--
       <t>Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
@@ -570,7 +571,8 @@ for 23 days","o":"example.net Filtering Service","r":\
       answer with its DNSSEC signature intact. By also returning the
       EDNS(0) Structured Error, the DNS requestor can be informed of
       the filtering (from the DNS responder).</t>
-      
+-->
+
       <!--
       <t>The client knows it is connecting to an HTTPS server returning the
       error page. To reduce threat surface the client can retrieve the Error
