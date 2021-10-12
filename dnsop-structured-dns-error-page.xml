@@ -516,9 +516,9 @@ Most importantly, EDE option does not offer
 for 23 days","o":"example.net Filtering Service","r":\
 "?country=atlantis"}]]></artwork>
       </figure>      
-      <t>Upon receipt, the two partial URIs ("c" and "r") are extended
+      <t>Upon receipt, the two partial URIs ("c" and "r") are expanded
       to become fully-formed URIs. The class, type, and name are
-      pulled from the DNS response (which matches the associated
+      pulled from the DNS response (that matches the associated
       query) so that the fully-formed "c" URI becomes
       "https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org"
       and the "r" URI becomes
@@ -529,7 +529,7 @@ for 23 days","o":"example.net Filtering Service","r":\
       <t>Security considerations in Section 6 of <xref target="RFC8914"/> and <xref target="RFC8624"/> need to be
       taken into consideration.</t>
 
-      <t>To minimize impact of man-in-the-middle attacks on the
+      <t>To minimize impact of active on-path attacks on the
       DNS channel, the client validates the response as described
       in <xref target="process-response"/>.</t>
       
@@ -546,7 +546,7 @@ for 23 days","o":"example.net Filtering Service","r":\
       free-form text of "o" and "j", the browser SHOULD NOT make any
       of those elements into actionable (clickable) links.</t>
 
-      <t>Although the "d" value is validated, an attacker able to
+      <t>Although the "d" value is validated, an attacker who is able to
       inject the Structured Error EDNS(0) option so that a DNS proxy
       or DNS forwarder, unaware of the option, will forward it and
       pass the validation checks described in <xref
@@ -565,14 +565,14 @@ for 23 days","o":"example.net Filtering Service","r":\
       <t>Because this specification still allows DNS filtering to
       respond with an empty answer, NXDOMAIN, or forged answer (as the
       DNS server sees fit), this specification remains incompatible
-      with client-based DNSSEC validation.  However, it is possible to
+      with client-based DNSSEC validation. However, it is possible to
       maintain compatibility with DNSSEC by returning the real (unfiltered)
-      answer with its DNSSEC signature intact.  By also returning the
+      answer with its DNSSEC signature intact. By also returning the
       EDNS(0) Structured Error, the DNS requestor can be informed of
       the filtering (from the DNS responder).</t>
       
       <!--
-      <t>The client knows it is connecting to a HTTPS server returning the
+      <t>The client knows it is connecting to an HTTPS server returning the
       error page. To reduce threat surface the client can retrieve the Error
       Page URL using, for example, an isolated environment and take other
       precautions such as clearly labeling the page as untrusted or prevent
