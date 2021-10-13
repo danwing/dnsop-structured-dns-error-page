@@ -395,7 +395,7 @@ Most importantly, EDE option does not offer
       <t>To reduce packet overhead the generated JSON SHOULD be as
       short as possible: short domain names, concise text in the values for the "j"
       and "o" names, and minified JSON (that is, without spaces or line breaks
-      between JSON elements)).</t>
+      between JSON elements).</t>
       <t>The JSON data can be parsed to display to the user, logged, or otherwise used
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.</t>
@@ -512,7 +512,10 @@ Most importantly, EDE option does not offer
 
       <figure anchor="example-minified">
         <name>Minified response</name>
-        <artwork name="" type="" align="left" alt=""><![CDATA[{"c":"?time=1621902483","d":"ns.example.com","j":"malware present \
+        <artwork name="" type="" align="left" alt=""><![CDATA[
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+{"c":"?time=1621902483","d":"ns.example.com","j":"malware present \
 for 23 days","o":"example.net Filtering Service","r":\
 "?country=atlantis"}]]></artwork>
       </figure>      
