@@ -36,7 +36,7 @@
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
   <front>
     <title abbrev="Data for Filtered DNS">Structured Data for Filtered DNS</title>
-    <seriesInfo name="Internet-Draft" value="draft-wing-dnsop-structured-dns-error-page-01"/>
+    <seriesInfo name="Internet-Draft" value="draft-wing-dnsop-structured-dns-error-page-02"/>
     <author fullname="Dan Wing" initials="D." surname="Wing">
       <organization abbrev="Citrix">Citrix Systems, Inc.</organization>
       <address>
@@ -538,6 +538,18 @@ Most importantly, EDE option does not offer
       <t>To minimize impact of active on-path attacks on the
       DNS channel, the client validates the response as described
       in <xref target="process-response"/>.</t>
+
+      <t>A client might choose to display the information in the
+      Structured Error EDNS(0) Option Code if and only if the
+      encrypted resolver has sufficient reputation, according to some
+      local policy (e.g. user configuration, administrative
+      configuration, or a built-in list of respectable resolvers).
+      This limits the ability of a malicious encrypted resolver to
+      cause harm.  If the client decides not to display the all of the
+      information in the Structured Error EDNS(0) Option Code, it can
+      be logged for diagnostics purpose and the client can only
+      display the resolver hostname that blocked the domain to the
+      end-user.</t>
       
       <t>If the browser visits either of the URIs in the response ("c"
       or "r"), the browser SHOULD reduce the attack surface of the
@@ -546,7 +558,8 @@ Most importantly, EDE option does not offer
       interaction with the page. Such isolation should prevent
       transmitting cookies, block JavaScript, block auto-fill of
       credentials or personal information, and be isolated from the
-      user's normal environment.</t>
+      user's normal environment.  The user's preferred language SHOULD
+      be included in the Content-Language header.</t>
 
       <t>When displaying the
       free-form text of "o" and "j", the browser SHOULD NOT make any

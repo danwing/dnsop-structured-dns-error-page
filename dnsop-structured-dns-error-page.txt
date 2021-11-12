@@ -5,12 +5,12 @@
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Intended status: Standards Track                                T. Reddy
-Expires: 16 April 2022                                            Akamai
+Expires: 16 May 2022                                              Akamai
                                                                  N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                         13 October 2021
+                                                        12 November 2021
 
 
                     Structured Data for Filtered DNS
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 April 2022.
+   This Internet-Draft will expire on 16 May 2022.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 1]
+Wing, et al.               Expires 16 May 2022                  [Page 1]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -84,7 +84,7 @@ Table of Contents
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
      10.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 2]
+Wing, et al.               Expires 16 May 2022                  [Page 2]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    Users of DNS services which perform filtering may wish to receive
@@ -165,9 +165,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 3]
+Wing, et al.               Expires 16 May 2022                  [Page 3]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
        *  However, configuring the local root certificate on endpoints
@@ -221,9 +221,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 4]
+Wing, et al.               Expires 16 May 2022                  [Page 4]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    3.  The extended error codes Blocked, Censored, and Filtered defined
@@ -277,9 +277,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 5]
+Wing, et al.               Expires 16 May 2022                  [Page 5]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    meaningful error message, and would not need to connect to such a
@@ -333,9 +333,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 6]
+Wing, et al.               Expires 16 May 2022                  [Page 6]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
                                                 1   1   1   1   1   1
@@ -389,9 +389,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 7]
+Wing, et al.               Expires 16 May 2022                  [Page 7]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    To reduce packet overhead the generated JSON SHOULD be as short as
@@ -445,9 +445,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 8]
+Wing, et al.               Expires 16 May 2022                  [Page 8]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    *  The DNS response MUST also contain an extended error code of
@@ -501,9 +501,9 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                 [Page 9]
+Wing, et al.               Expires 16 May 2022                  [Page 9]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    *  DNS forwarders (or DNS proxies) are supposed to propagate unknown
@@ -557,13 +557,24 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-Wing, et al.              Expires 16 April 2022                [Page 10]
+Wing, et al.               Expires 16 May 2022                 [Page 10]
 
-Internet-Draft            Data for Filtered DNS             October 2021
+Internet-Draft            Data for Filtered DNS            November 2021
 
 
    To minimize impact of active on-path attacks on the DNS channel, the
    client validates the response as described in Section 5.3.
+
+   A client might choose to display the information in the Structured
+   Error EDNS(0) Option Code if and only if the encrypted resolver has
+   sufficient reputation, according to some local policy (e.g. user
+   configuration, administrative configuration, or a built-in list of
+   respectable resolvers).  This limits the ability of a malicious
+   encrypted resolver to cause harm.  If the client decides not to
+   display the all of the information in the Structured Error EDNS(0)
+   Option Code, it can be logged for diagnostics purpose and the client
+   can only display the resolver hostname that blocked the domain to the
+   end-user.
 
    If the browser visits either of the URIs in the response ("c" or
    "r"), the browser SHOULD reduce the attack surface of the client by
@@ -571,7 +582,8 @@ Internet-Draft            Data for Filtered DNS             October 2021
    the page as untrusted or prevent user interaction with the page.
    Such isolation should prevent transmitting cookies, block JavaScript,
    block auto-fill of credentials or personal information, and be
-   isolated from the user's normal environment.
+   isolated from the user's normal environment.  The user's preferred
+   language SHOULD be included in the Content-Language header.
 
    When displaying the free-form text of "o" and "j", the browser SHOULD
    NOT make any of those elements into actionable (clickable) links.
@@ -595,28 +607,21 @@ Internet-Draft            Data for Filtered DNS             October 2021
    This document requests IANA assign a DNS EDNS0 Option Code (OPT)
    value in the Expert Review range named "Structured DNS Error".
 
+
+
+
+
+
+
+Wing, et al.               Expires 16 May 2022                 [Page 11]
+
+Internet-Draft            Data for Filtered DNS            November 2021
+
+
    This document requests IANA to register the "application/
    json+structured-dns-error" media type in the "Media Types" registry
    [IANA-MediaTypes].  This registration follows the procedures
    specified in [RFC6838]:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 16 April 2022                [Page 11]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
 
       Type name: application
 
@@ -658,6 +663,17 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    This section is to be removed before publishing as an RFC.
 
+
+
+
+
+
+
+Wing, et al.               Expires 16 May 2022                 [Page 12]
+
+Internet-Draft            Data for Filtered DNS            November 2021
+
+
 9.1.  Changes from 00 to 01
 
    *  removed support for multiple responsible parties
@@ -666,13 +682,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
    *  partial URI sent in "c" and "r" names, combined with "d" name sent
       in JSON to minimize attack surface and minimize JSON length
-
-
-
-Wing, et al.              Expires 16 April 2022                [Page 12]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
 
    *  moved EDNS(0) forgery-mitigation text, some Security
       Considerations text, and some other text from
@@ -708,12 +717,25 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 10.2.  Informative References
 
+
+
+
+
+
+
+
+
+Wing, et al.               Expires 16 May 2022                 [Page 13]
+
+Internet-Draft            Data for Filtered DNS            November 2021
+
+
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Dickinson, S., and A. Mankin, "DNS over
               Dedicated QUIC Connections", Work in Progress, Internet-
-              Draft, draft-ietf-dprive-dnsoquic-05, 11 October 2021,
+              Draft, draft-ietf-dprive-dnsoquic-06, 20 October 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-dprive-
-              dnsoquic-05>.
+              dnsoquic-06>.
 
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
@@ -721,14 +743,6 @@ Internet-Draft            Data for Filtered DNS             October 2021
               resolver-info-04, 7 October 2021,
               <https://datatracker.ietf.org/doc/html/draft-reddy-add-
               resolver-info-04>.
-
-
-
-
-Wing, et al.              Expires 16 April 2022                [Page 13]
-
-Internet-Draft            Data for Filtered DNS             October 2021
-
 
    [I-D.reddy-dnsop-error-page]
               Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
@@ -763,6 +777,15 @@ Internet-Draft            Data for Filtered DNS             October 2021
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
+
+
+
+
+Wing, et al.               Expires 16 May 2022                 [Page 14]
+
+Internet-Draft            Data for Filtered DNS            November 2021
+
+
    [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
               Lawrence, "Extended DNS Errors", RFC 8914,
               DOI 10.17487/RFC8914, October 2020,
@@ -775,15 +798,6 @@ Authors' Addresses
    United States of America
 
    Email: dwing-ietf@fuggles.com
-
-
-
-
-
-
-Wing, et al.              Expires 16 April 2022                [Page 14]
-
-Internet-Draft            Data for Filtered DNS             October 2021
 
 
    Tirumaleswar Reddy
@@ -823,18 +837,4 @@ Internet-Draft            Data for Filtered DNS             October 2021
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 16 April 2022                [Page 15]
+Wing, et al.               Expires 16 May 2022                 [Page 15]
