@@ -32,7 +32,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-wing-dnsop-structured-dns-error-page-01" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3" consensus="true">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-wing-dnsop-structured-dns-error-page-01" ipr="trust200902" obsoletes="" updates="RFC8914" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3" consensus="true">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
   <front>
     <title abbrev="Data for Filtered DNS">Structured Data for Filtered DNS</title>
@@ -293,21 +293,11 @@ Most importantly, EDE option does not offer
    This approach thus avoids the need to install a
    local root certificate authority on those IT-managed devices.</t>
    
-      <t>This document describes a protocol containing parsable data
-      in a new <xref target="RFC6891" format="default">EDNS(0)</xref>
-      option code.</t>
-      
-      <t>Clients indicate their support of this specification in their
-      DNS query so the DNS server can tailor its DNS response
-      accordingly.  The information returned in a DNS response allows
-      combinations of headless devices (i.e., those lacking a display
-      or other means to communicate with a human), operating systems,
-      and web browsers to be informed of the filtering.  This
-      information returned can be logged and/or displayed to the user,
-      as appropriate for the user interface capabilities of the client
-      hardware and software.</t>
+   <t>This document describes a format for computer-parsable data in
+   the EXTRA-TEXT field of <xref target="RFC8914">Extended DNS
+   Errors</xref>.</t>
 
-   <t>This document does not recomment DNS filtering, but provides a
+   <t>This document does not recommend DNS filtering but provides a
    mechanism for better transparency to explain to the users why some 
    DNS queries are filtered.</t>
 	    
@@ -328,36 +318,13 @@ Most importantly, EDE option does not offer
       <t>"Encrypted DNS" refers to any encrypted scheme to convey DNS
       messages, for example, DNS-over-HTTPS <xref target="RFC8484" format="default"/>, DNS-over-TLS <xref target="RFC7858" format="default"/>, or DNS-over-QUIC <xref target="I-D.ietf-dprive-dnsoquic" format="default"/>.</t>
     </section>
-    <section anchor="option-code" title="Structured Error EDNS(0) Option Code">
-      <t>This document defines a new EDNS(0) <xref target="RFC6891"/> option code (OPT) to include JSON
-      providing information in the DNS response describing filtering
-      that occurred for this query, defined in <xref target="format"/>.</t>
-      <t>The value of this EDNS(0) option code (OPT) is TBA-BY-IANA.</t>
-      <figure align="center" anchor="format" title="Structured Error EDNS(0) Option Code">
-        <artwork align="center"><![CDATA[
-                                             1   1   1   1   1   1
-     0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
-   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-   |           STRUCTURED-ERROR-LENGTH (fixed, two octets)         |
-   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-   /              STRUCTURED-ERROR-JSON (variable size)            /                                                                                           
-   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-]]></artwork>
-      </figure>
-      <t>The description of the fields is as follows:</t>
-      <dl newline="false" spacing="normal">
-        <dt>STRUCTURED-ERROR-LENGTH:</dt>
-        <dd>Two octets containing the length of
-	  STRUCTURED-ERROR-JSON, in octets.  It MUST NOT be set to
-	  0.</dd>
-        <dt>STRUCTURED-ERROR-JSON:</dt>
-        <dd>JSON containing DNS filtering information encoded in
-	  JSON, defined in <xref target="json"/>.</dd>
-      </dl>
-    </section>
-    <section anchor="json" numbered="true" toc="default">
-      <name>Structured JSON</name>
-      <t>STRUCTURED-ERROR-JSON contains the following JSON names:</t>
+
+    <section anchor="option-code">
+      <name>JSON in EXTRA-TEXXT field</name>
+      <t>Servers compliant with this specification will send JSON data
+      in the <xref target="RFC8914">EXTRA-TEXT field</xref>.  This JSON
+      contains the following JSON names:</t>
+      
       <dl newline="false" spacing="normal">
         <dt>c: (complaint)</dt>
         <dd>a partial URI for the user to further diagnose and possibly report
@@ -366,10 +333,10 @@ Most importantly, EDE option does not offer
 	still allows a URI to be formed.</dd>
 
 	<dt>d: (domain)</dt>
-	<dd>Contains the domain-name of the encrypted DNS server. This is used
-	to create the expanded URIs for both the "c" and "r" fields, and also
-	detect undesired forwarding of EDNS(0) options.  This field is
-	mandatory.</dd>
+	<dd>Contains the domain-name of the encrypted DNS server. This
+	is used to create the expanded URIs for both the "c" and "r"
+	fields, and also detect undesired forwarding of the EXTRA-TEXT
+	EDNS(0) option.  This field is mandatory.</dd>
 
         <dt>j: (justification)</dt>
         <dd>the textual justification for
@@ -401,53 +368,51 @@ Most importantly, EDE option does not offer
       to assist the end-user or IT staff with troubleshooting and diagnosing
       the cause of the DNS filtering.</t>
     </section>
+
     <section anchor="operation" numbered="true" toc="default">
       <name>Protocol Operation</name>
       <section anchor="generate-request">
         <name>Client Generating Request</name>
-        <t>When generating a DNS query, the client MUST include the Structured Error
-      EDNS(0) option when encrypted DNS is used so the DNS server knows that the client is compliant with this
-      specification.</t>
+        <t>When generating a DNS query, the client MUST include the OPT pseudo-RR
+	to elicit the Extended DNS Error<xref target="RFC8914"></xref><xref target="RFC6891"></xref>.</t>
       </section>
       <section>
         <name>Server Generating Response</name>
         <t>When the DNS server filters its DNS response to an A or AAAA
       record query, the DNS response MAY contain an empty answer,
       NXDOMAIN, or a forged A or AAAA response, as desired by the DNS
-      server.  In addition, if the query contained the Structured Error
-      EDNS(0) option, the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-      as described below.</t>
-        <t>Over time a domain name might be filtered, then not filtered,
-      then filtered again.  Additionally, the user might take minutes
-      or even days before investigating a filtered DNS query.  Thus
-      the complaint URI is RECOMMENDED to include sufficient detail to determine
-      the filtering state when the DNS filtering occurred.  If and how this is
-      encoded into the complaint URI is an implementation decision.</t>
+      server.  In addition, if the query contained the OPT pseudo-RR
+      the DNS server MAY return more detail in the EXTRA-TEXT field
+      as described in <xref target="process-response"></xref>.</t>
+
       </section>
       <section anchor="process-response">
         <name>Client Processing Response</name>
         <t>On receipt of the DNS response, the following
-      actions are performed specific to Structured Error EDNS(0) option, in no particular order:</t>
+      actions are performed specific to EXTRA-TEXT field:</t>
         <ul>
-          <li>The requestor MUST check that the response was received over an encrypted DNS channel.  If not, the requestor MUST discard any returned Structured Error EDNS(0) option.</li>
-          <li>If the DNS response contains more than one Structured Error EDNS(0)
-	option, the requestor MUST discard all Structured Error ENDS(0) options.</li>
+          <li>The requestor MUST check that the response was received
+          over an encrypted DNS channel.  If not, the requestor MUST
+          discard data in EXTRA-TEXT.</li>
+	  <li>Servers which don't support this specification might use
+	  plain text in the EXTRA-TEXT field so requestor SHOULD
+	  properly handle both plaintext and JSON text in the
+	  EXTRA-TEXT field.</li>
           <li>The DNS response MUST also contain an extended error code
-	of "Censored", "Blocked", "Filtered" or "Forged", otherwise
-	  the Structured Error EDNS(0) option is discarded.</li>
-
+	of <xref target="RFC8914">"Censored", "Blocked", "Filtered" or "Forged"</xref>, otherwise
+	  the EXTRA-TEXT field is discarded.</li>
+	  
 	  <li>If either of the mandatory JSON names "d" and "j" are
 	  missing or have empty values in the Structured Error EDNS(0)
-	  option, the option is discarded.</li>
+	  option, the entire JSON is discarded.</li>
 
-	  <li>
-	  The Requestor expands the values in "c" and "r" by prefixing
-	  the two values with "https://" and the value of the "d"
-	  name.  Then the Requestor further expands each of the "c"
-	  and "r" URIs by appending two URL query parameters: "type"
-	  indicating the name of the DNS resource record type queried
-	  and "name" indicating the name of the DNS resource record
-	  queried.</li>
+	  <li>The Requestor expands the values in "c" and "r" by
+	  prefixing the two values with "https://" and the value of
+	  the "d" name.  Then the Requestor further expands each of
+	  the "c" and "r" URIs by appending two URL query parameters:
+	  "type" indicating the name of the DNS resource record type
+	  queried and "name" indicating the name of the DNS resource
+	  record queried.</li>
 
 	</ul>
     
@@ -463,8 +428,8 @@ Most importantly, EDE option does not offer
       DNS, and cannot exchange encrypted DNS messages.  Both of these
       fallback mechanisms adversely impacts security and privacy.  If
       the DNS client has enabled opportunistic privacy profile for DoT,
-      the DNS client MUST ignore the Structured DNS Error EDNS(0) option
-      responses, but SHOULD process other parts of the response.</li>
+      the DNS client MUST ignore the EXTRA-TEXT field of the
+      EDE responses, but SHOULD process other parts of the response.</li>
           <li>If a DNS client has enabled strict privacy profile (<xref target="RFC8310">Section 5 of</xref>)
       for DoT, the DNS client requires an encrypted
       connection and successful authentication of the DNS server; this
@@ -472,32 +437,55 @@ Most importantly, EDE option does not offer
       the expense of providing no DNS service if an encrypted,
       authenticated connection is not available).  If the DNS client has
       enabled strict privacy profile for DoT, the client MAY process the
-      Structured DNS Error EDNS(0) option of the DNS response.  Note that the
+      EXTRA-TEXT field of the DNS response.  Note that the
       strict and opportunistic privacy profiles as defined in <xref target="RFC8310"/>
       only apply to DoT; there has been no such distinction
       made for DoH.</li>
           <li>If the DNS client determines that the encrypted DNS server does
-      not offer DNS filtering service, it MUST reject the Structured Error
-      EDNS(0) option.  For example, the DNS client can learn whether the
+      not offer DNS filtering service, it MUST discard the EXTRA-TEXT field
+      of the EDE response.  For example, the DNS client can learn whether the
       encrypted DNS resolver performs DNS-based content filtering or not
       by retrieving resolver information using the method defined in
       <xref target="I-D.reddy-add-resolver-info"/>.</li>
-          <li>DNS forwarders (or DNS proxies) are supposed to propagate unknown
-      EDNS(0) options (<xref target="RFC5625">Sections 4.1 and 4.4.1 of</xref>), which means
-      the Structured Error EDNS(0) option may get propagated by such a DNS
-      server.  To detect this scenario, the DNS client MUST verify the
-      domain name in the Structured Error "d" value matches the domain name of the
-      encrypted DNS resolver.  If this match fails, the DNS client MUST
-      ignore the Structured Error EDNS(0) option in the response.</li>
+
+      <li>When a forwarder receives an EDE option, whether or not (and
+      how) to pass along JSON information in the EXTRA-TEXT on to
+      their client is implementation dependent <xref
+      target="RFC5625"></xref>. Implementations MAY choose to not
+      forward the JSON information, or they MAY choose to create a new
+      EDE option that conveys the information in the "j" and "d"
+      fields encoded in the JSON object.  To check if the EXTRA-TEXT
+      originated from its server (rather than by something further
+      upstream) the DNS client MUST verify the domain name in the
+      Structured Error "d" value matches the domain name of the
+      encrypted DNS resolver.  If this match fails the DNS client
+      discards the EXTRA-TEXT field.</li>
         </ul>
       </section>
     </section>
+
+    <section numbered="true" toc="default">
+      <name>Implementation notes</name>
+          <t>Over time a domain name might be filtered, then not filtered,
+      then filtered again.  Additionally, the user might take minutes
+      or even days before investigating a filtered DNS query.  Thus
+      the complaint URI is RECOMMENDED to include sufficient detail to determine
+      the filtering state when the DNS filtering occurred.  If and how this is
+	  encoded into the complaint URI is an implementation decision.</t>
+
+	  <t>The TTL value in filtered DNS responses is typically a
+	  very short duration (e.g., 2 seconds) to handle domain
+	  category and reputation updates.</t>
+
+
+    </section>
+
     <section numbered="true" toc="default">
       <name>Examples</name>
       <t>An example showing the nameserver at 'ns.example.net' that filtered a DNS
       "A" record query for 'example.org' is shown in <xref target="example-json" format="default"/>.</t>
       <figure anchor="example-json">
-        <name>JSON returned in EDNS(0) Structured Error response</name>
+        <name>JSON returned in EXTRA-TEXT field of Extended DNS Error response</name>
         <artwork name="" type="" align="left" alt=""><![CDATA[  
   {
     "c": "?time=1621902483",
@@ -540,13 +528,13 @@ Most importantly, EDE option does not offer
       in <xref target="process-response"/>.</t>
 
       <t>A client might choose to display the information in the
-      Structured Error EDNS(0) Option Code if and only if the
+      EXTRA-TEXT field if and only if the
       encrypted resolver has sufficient reputation, according to some
       local policy (e.g. user configuration, administrative
       configuration, or a built-in list of respectable resolvers).
       This limits the ability of a malicious encrypted resolver to
       cause harm.  If the client decides not to display the all of the
-      information in the Structured Error EDNS(0) Option Code, it can
+      information in the EXTRA-TEXT field, it can
       be logged for diagnostics purpose and the client can only
       display the resolver hostname that blocked the domain to the
       end-user.</t>
@@ -566,7 +554,7 @@ Most importantly, EDE option does not offer
       of those elements into actionable (clickable) links.</t>
 
       <t>Although the "d" value is validated, an attacker who is able to
-      inject the Structured Error EDNS(0) option so that a DNS proxy
+      inject (or modify) the EXTRA-TEXT field so that a DNS proxy
       or DNS forwarder, unaware of the option, will forward it and
       pass the validation checks described in <xref
       target="process-response"/>.  This means the other JSON fields
@@ -615,9 +603,6 @@ Most importantly, EDE option does not offer
     </section>
     <section anchor="IANA" numbered="true" toc="default">
       <name>IANA Considerations</name>
-      <t>This document requests IANA assign a DNS EDNS0 Option Code (OPT)
-      value in the Expert Review range named "Structured DNS Error".</t>
-
       <t>This document requests IANA to register the
       "application/json+structured-dns-error" media type in the "Media Types"
       registry <xref target="IANA-MediaTypes" format="default"/>. This registration
@@ -665,7 +650,16 @@ Most importantly, EDE option does not offer
     <section numbered="true" toc="default" removeInRFC="true">
       <name>Changes</name>
       <section numbered="true" toc="exclude">
-        <name>Changes from 00 to 01</name>
+        <name>Changes from 01 to 02</name>
+        <ul>
+          <li>repurpose Extended DNS Error's EXTRA-TEXT field to carry JSON, which also means this document updates RFC8914</li>
+	  <li>clarified DNS forwarders might forward EXTRA-TEXT without change or might rewrite "j" and "d".</li>
+	  <li>consolidated implementation notes</li>
+	</ul>
+      </section>
+
+      <section numbered="true" toc="exclude">
+	<name>Changes from 00 to 01</name>
         <ul>
           <li>removed support for multiple responsible parties</li>
           <li>one-character JSON names to minimize JSON length</li>

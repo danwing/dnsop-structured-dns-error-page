@@ -4,13 +4,13 @@
 
 DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
-Intended status: Standards Track                                T. Reddy
-Expires: 16 May 2022                                              Akamai
-                                                                 N. Cook
+Updates: RFC8914 (if approved)                                  T. Reddy
+Intended status: Standards Track                                  Akamai
+Expires: 24 July 2022                                            N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                        12 November 2021
+                                                         20 January 2022
 
 
                     Structured Data for Filtered DNS
@@ -44,18 +44,18 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 May 2022.
+   This Internet-Draft will expire on 24 July 2022.
 
 Copyright Notice
 
-   Copyright (c) 2021 IETF Trust and the persons identified as the
+   Copyright (c) 2022 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 1]
+Wing, et al.              Expires 24 July 2022                  [Page 1]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -71,13 +71,13 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   3.  Structured Error EDNS(0) Option Code  . . . . . . . . . . . .   6
-   4.  Structured JSON . . . . . . . . . . . . . . . . . . . . . . .   7
-   5.  Protocol Operation  . . . . . . . . . . . . . . . . . . . . .   8
-     5.1.  Client Generating Request . . . . . . . . . . . . . . . .   8
-     5.2.  Server Generating Response  . . . . . . . . . . . . . . .   8
-     5.3.  Client Processing Response  . . . . . . . . . . . . . . .   8
-   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   3.  JSON in EXTRA-TEXXT field . . . . . . . . . . . . . . . . . .   6
+   4.  Protocol Operation  . . . . . . . . . . . . . . . . . . . . .   7
+     4.1.  Client Generating Request . . . . . . . . . . . . . . . .   7
+     4.2.  Server Generating Response  . . . . . . . . . . . . . . .   7
+     4.3.  Client Processing Response  . . . . . . . . . . . . . . .   7
+   5.  Implementation notes  . . . . . . . . . . . . . . . . . . . .   9
+   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
    9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 2]
+Wing, et al.              Expires 24 July 2022                  [Page 2]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
    Users of DNS services which perform filtering may wish to receive
@@ -165,9 +165,9 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 3]
+Wing, et al.              Expires 24 July 2022                  [Page 3]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
        *  However, configuring the local root certificate on endpoints
@@ -221,9 +221,9 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 4]
+Wing, et al.              Expires 24 July 2022                  [Page 4]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
    3.  The extended error codes Blocked, Censored, and Filtered defined
@@ -277,28 +277,19 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 5]
+Wing, et al.              Expires 24 July 2022                  [Page 5]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
    meaningful error message, and would not need to connect to such a
    block page.  This approach thus avoids the need to install a local
    root certificate authority on those IT-managed devices.
 
-   This document describes a protocol containing parsable data in a new
-   EDNS(0) [RFC6891] option code.
+   This document describes a format for computer-parsable data in the
+   EXTRA-TEXT field of Extended DNS Errors [RFC8914].
 
-   Clients indicate their support of this specification in their DNS
-   query so the DNS server can tailor its DNS response accordingly.  The
-   information returned in a DNS response allows combinations of
-   headless devices (i.e., those lacking a display or other means to
-   communicate with a human), operating systems, and web browsers to be
-   informed of the filtering.  This information returned can be logged
-   and/or displayed to the user, as appropriate for the user interface
-   capabilities of the client hardware and software.
-
-   This document does not recomment DNS filtering, but provides a
+   This document does not recommend DNS filtering but provides a
    mechanism for better transparency to explain to the users why some
    DNS queries are filtered.
 
@@ -321,44 +312,11 @@ Internet-Draft            Data for Filtered DNS            November 2021
    messages, for example, DNS-over-HTTPS [RFC8484], DNS-over-TLS
    [RFC7858], or DNS-over-QUIC [I-D.ietf-dprive-dnsoquic].
 
-3.  Structured Error EDNS(0) Option Code
+3.  JSON in EXTRA-TEXXT field
 
-   This document defines a new EDNS(0) [RFC6891] option code (OPT) to
-   include JSON providing information in the DNS response describing
-   filtering that occurred for this query, defined in Figure 1.
-
-   The value of this EDNS(0) option code (OPT) is TBA-BY-IANA.
-
-
-
-
-
-Wing, et al.               Expires 16 May 2022                  [Page 6]
-
-Internet-Draft            Data for Filtered DNS            November 2021
-
-
-                                                1   1   1   1   1   1
-        0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
-      +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-      |           STRUCTURED-ERROR-LENGTH (fixed, two octets)         |
-      +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-      /              STRUCTURED-ERROR-JSON (variable size)            /
-      +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-
-               Figure 1: Structured Error EDNS(0) Option Code
-
-   The description of the fields is as follows:
-
-   STRUCTURED-ERROR-LENGTH:  Two octets containing the length of
-      STRUCTURED-ERROR-JSON, in octets.  It MUST NOT be set to 0.
-
-   STRUCTURED-ERROR-JSON:  JSON containing DNS filtering information
-      encoded in JSON, defined in Section 4.
-
-4.  Structured JSON
-
-   STRUCTURED-ERROR-JSON contains the following JSON names:
+   Servers compliant with this specification will send JSON data in the
+   EXTRA-TEXT field [RFC8914].  This JSON contains the following JSON
+   names:
 
    c: (complaint)  a partial URI for the user to further diagnose and
       possibly report mis-classified DNS filtering.  The value is
@@ -367,11 +325,18 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
    d: (domain)  Contains the domain-name of the encrypted DNS server.
       This is used to create the expanded URIs for both the "c" and "r"
-      fields, and also detect undesired forwarding of EDNS(0) options.
-      This field is mandatory.
+      fields, and also detect undesired forwarding of the EXTRA-TEXT
+      EDNS(0) option.  This field is mandatory.
 
    j: (justification)  the textual justification for this particular DNS
       filtering.  This field is mandatory.
+
+
+
+Wing, et al.              Expires 24 July 2022                  [Page 6]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
 
    o: (organization)  human-friendly name of the organization that
       filtered this particular DNS query.  This field is optional.
@@ -383,17 +348,6 @@ Internet-Draft            Data for Filtered DNS            November 2021
       regulation (for an ISP performing filtering).  This field is
       optional, but note its absence still allows a URI to be formed.
 
-
-
-
-
-
-
-Wing, et al.               Expires 16 May 2022                  [Page 7]
-
-Internet-Draft            Data for Filtered DNS            November 2021
-
-
    To reduce packet overhead the generated JSON SHOULD be as short as
    possible: short domain names, concise text in the values for the "j"
    and "o" names, and minified JSON (that is, without spaces or line
@@ -403,60 +357,50 @@ Internet-Draft            Data for Filtered DNS            November 2021
    otherwise used to assist the end-user or IT staff with
    troubleshooting and diagnosing the cause of the DNS filtering.
 
-5.  Protocol Operation
+4.  Protocol Operation
 
-5.1.  Client Generating Request
+4.1.  Client Generating Request
 
-   When generating a DNS query, the client MUST include the Structured
-   Error EDNS(0) option when encrypted DNS is used so the DNS server
-   knows that the client is compliant with this specification.
+   When generating a DNS query, the client MUST include the OPT pseudo-
+   RR to elicit the Extended DNS Error[RFC8914][RFC6891].
 
-5.2.  Server Generating Response
+4.2.  Server Generating Response
 
    When the DNS server filters its DNS response to an A or AAAA record
    query, the DNS response MAY contain an empty answer, NXDOMAIN, or a
    forged A or AAAA response, as desired by the DNS server.  In
-   addition, if the query contained the Structured Error EDNS(0) option,
-   the DNS server MAY return more detail in the STRUCTURED-ERROR-JSON,
-   as described below.
+   addition, if the query contained the OPT pseudo-RR the DNS server MAY
+   return more detail in the EXTRA-TEXT field as described in
+   Section 4.3.
 
-   Over time a domain name might be filtered, then not filtered, then
-   filtered again.  Additionally, the user might take minutes or even
-   days before investigating a filtered DNS query.  Thus the complaint
-   URI is RECOMMENDED to include sufficient detail to determine the
-   filtering state when the DNS filtering occurred.  If and how this is
-   encoded into the complaint URI is an implementation decision.
-
-5.3.  Client Processing Response
+4.3.  Client Processing Response
 
    On receipt of the DNS response, the following actions are performed
-   specific to Structured Error EDNS(0) option, in no particular order:
+   specific to EXTRA-TEXT field:
 
    *  The requestor MUST check that the response was received over an
-      encrypted DNS channel.  If not, the requestor MUST discard any
-      returned Structured Error EDNS(0) option.
+      encrypted DNS channel.  If not, the requestor MUST discard data in
+      EXTRA-TEXT.
 
-   *  If the DNS response contains more than one Structured Error
-      EDNS(0) option, the requestor MUST discard all Structured Error
-      ENDS(0) options.
-
-
+   *  Servers which don't support this specification might use plain
+      text in the EXTRA-TEXT field so requestor SHOULD properly handle
+      both plaintext and JSON text in the EXTRA-TEXT field.
 
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 8]
+Wing, et al.              Expires 24 July 2022                  [Page 7]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
    *  The DNS response MUST also contain an extended error code of
-      "Censored", "Blocked", "Filtered" or "Forged", otherwise the
-      Structured Error EDNS(0) option is discarded.
+      "Censored", "Blocked", "Filtered" or "Forged" [RFC8914], otherwise
+      the EXTRA-TEXT field is discarded.
 
    *  If either of the mandatory JSON names "d" and "j" are missing or
       have empty values in the Structured Error EDNS(0) option, the
-      option is discarded.
+      entire JSON is discarded.
 
    *  The Requestor expands the values in "c" and "r" by prefixing the
       two values with "https://" and the value of the "d" name.  Then
@@ -476,7 +420,7 @@ Internet-Draft            Data for Filtered DNS            November 2021
       DNS, and cannot exchange encrypted DNS messages.  Both of these
       fallback mechanisms adversely impacts security and privacy.  If
       the DNS client has enabled opportunistic privacy profile for DoT,
-      the DNS client MUST ignore the Structured DNS Error EDNS(0) option
+      the DNS client MUST ignore the EXTRA-TEXT field of the EDE
       responses, but SHOULD process other parts of the response.
 
    *  If a DNS client has enabled strict privacy profile (Section 5 of
@@ -486,14 +430,13 @@ Internet-Draft            Data for Filtered DNS            November 2021
       the expense of providing no DNS service if an encrypted,
       authenticated connection is not available).  If the DNS client has
       enabled strict privacy profile for DoT, the client MAY process the
-      Structured DNS Error EDNS(0) option of the DNS response.  Note
-      that the strict and opportunistic privacy profiles as defined in
-      [RFC8310] only apply to DoT; there has been no such distinction
-      made for DoH.
+      EXTRA-TEXT field of the DNS response.  Note that the strict and
+      opportunistic privacy profiles as defined in [RFC8310] only apply
+      to DoT; there has been no such distinction made for DoH.
 
    *  If the DNS client determines that the encrypted DNS server does
-      not offer DNS filtering service, it MUST reject the Structured
-      Error EDNS(0) option.  For example, the DNS client can learn
+      not offer DNS filtering service, it MUST discard the EXTRA-TEXT
+      field of the EDE response.  For example, the DNS client can learn
       whether the encrypted DNS resolver performs DNS-based content
       filtering or not by retrieving resolver information using the
       method defined in [I-D.reddy-add-resolver-info].
@@ -501,24 +444,41 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
 
 
-Wing, et al.               Expires 16 May 2022                  [Page 9]
+
+Wing, et al.              Expires 24 July 2022                  [Page 8]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
-   *  DNS forwarders (or DNS proxies) are supposed to propagate unknown
-      EDNS(0) options (Sections 4.1 and 4.4.1 of [RFC5625]), which means
-      the Structured Error EDNS(0) option may get propagated by such a
-      DNS server.  To detect this scenario, the DNS client MUST verify
-      the domain name in the Structured Error "d" value matches the
-      domain name of the encrypted DNS resolver.  If this match fails,
-      the DNS client MUST ignore the Structured Error EDNS(0) option in
-      the response.
+   *  When a forwarder receives an EDE option, whether or not (and how)
+      to pass along JSON information in the EXTRA-TEXT on to their
+      client is implementation dependent [RFC5625].  Implementations MAY
+      choose to not forward the JSON information, or they MAY choose to
+      create a new EDE option that conveys the information in the "j"
+      and "d" fields encoded in the JSON object.  To check if the EXTRA-
+      TEXT originated from its server (rather than by something further
+      upstream) the DNS client MUST verify the domain name in the
+      Structured Error "d" value matches the domain name of the
+      encrypted DNS resolver.  If this match fails the DNS client
+      discards the EXTRA-TEXT field.
+
+5.  Implementation notes
+
+   Over time a domain name might be filtered, then not filtered, then
+   filtered again.  Additionally, the user might take minutes or even
+   days before investigating a filtered DNS query.  Thus the complaint
+   URI is RECOMMENDED to include sufficient detail to determine the
+   filtering state when the DNS filtering occurred.  If and how this is
+   encoded into the complaint URI is an implementation decision.
+
+   The TTL value in filtered DNS responses is typically a very short
+   duration (e.g., 2 seconds) to handle domain category and reputation
+   updates.
 
 6.  Examples
 
    An example showing the nameserver at 'ns.example.net' that filtered a
-   DNS "A" record query for 'example.org' is shown in Figure 2.
+   DNS "A" record query for 'example.org' is shown in Figure 1.
 
 
      {
@@ -529,10 +489,22 @@ Internet-Draft            Data for Filtered DNS            November 2021
        "r": "?country=atlantis"
      }
 
-        Figure 2: JSON returned in EDNS(0) Structured Error response
+     Figure 1: JSON returned in EXTRA-TEXT field of Extended DNS Error
+                                  response
 
-   In Figure 3 the same content is shown with minified JSON (no
+   In Figure 2 the same content is shown with minified JSON (no
    whitespace, no blank lines) with '\' line wrapping per [RFC8792].
+
+
+
+
+
+
+
+Wing, et al.              Expires 24 July 2022                  [Page 9]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
 
      ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
@@ -540,7 +512,7 @@ Internet-Draft            Data for Filtered DNS            November 2021
      for 23 days","o":"example.net Filtering Service","r":\
      "?country=atlantis"}
 
-                        Figure 3: Minified response
+                        Figure 2: Minified response
 
    Upon receipt, the two partial URIs ("c" and "r") are expanded to
    become fully-formed URIs.  The class, type, and name are pulled from
@@ -555,26 +527,18 @@ Internet-Draft            Data for Filtered DNS            November 2021
    Security considerations in Section 6 of [RFC8914] apply to this
    document.
 
-
-
-Wing, et al.               Expires 16 May 2022                 [Page 10]
-
-Internet-Draft            Data for Filtered DNS            November 2021
-
-
    To minimize impact of active on-path attacks on the DNS channel, the
-   client validates the response as described in Section 5.3.
+   client validates the response as described in Section 4.3.
 
-   A client might choose to display the information in the Structured
-   Error EDNS(0) Option Code if and only if the encrypted resolver has
-   sufficient reputation, according to some local policy (e.g. user
-   configuration, administrative configuration, or a built-in list of
-   respectable resolvers).  This limits the ability of a malicious
-   encrypted resolver to cause harm.  If the client decides not to
-   display the all of the information in the Structured Error EDNS(0)
-   Option Code, it can be logged for diagnostics purpose and the client
-   can only display the resolver hostname that blocked the domain to the
-   end-user.
+   A client might choose to display the information in the EXTRA-TEXT
+   field if and only if the encrypted resolver has sufficient
+   reputation, according to some local policy (e.g. user configuration,
+   administrative configuration, or a built-in list of respectable
+   resolvers).  This limits the ability of a malicious encrypted
+   resolver to cause harm.  If the client decides not to display the all
+   of the information in the EXTRA-TEXT field, it can be logged for
+   diagnostics purpose and the client can only display the resolver
+   hostname that blocked the domain to the end-user.
 
    If the browser visits either of the URIs in the response ("c" or
    "r"), the browser SHOULD reduce the attack surface of the client by
@@ -588,10 +552,20 @@ Internet-Draft            Data for Filtered DNS            November 2021
    When displaying the free-form text of "o" and "j", the browser SHOULD
    NOT make any of those elements into actionable (clickable) links.
 
+
+
+
+
+
+Wing, et al.              Expires 24 July 2022                 [Page 10]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
    Although the "d" value is validated, an attacker who is able to
-   inject the Structured Error EDNS(0) option so that a DNS proxy or DNS
+   inject (or modify) the EXTRA-TEXT field so that a DNS proxy or DNS
    forwarder, unaware of the option, will forward it and pass the
-   validation checks described in Section 5.3.  This means the other
+   validation checks described in Section 4.3.  This means the other
    JSON fields can be controlled by the attacker.  The "j" and "o"
    fields are, perhaps, the most interesting for an attacker to modify
    for nefarious purposes, because the "d" field has to match the
@@ -604,24 +578,45 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
 8.  IANA Considerations
 
-   This document requests IANA assign a DNS EDNS0 Option Code (OPT)
-   value in the Expert Review range named "Structured DNS Error".
-
-
-
-
-
-
-
-Wing, et al.               Expires 16 May 2022                 [Page 11]
-
-Internet-Draft            Data for Filtered DNS            November 2021
-
-
    This document requests IANA to register the "application/
    json+structured-dns-error" media type in the "Media Types" registry
    [IANA-MediaTypes].  This registration follows the procedures
    specified in [RFC6838]:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 24 July 2022                 [Page 11]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
 
       Type name: application
 
@@ -663,18 +658,25 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
    This section is to be removed before publishing as an RFC.
 
+9.1.  Changes from 01 to 02
+
+   *  repurpose Extended DNS Error's EXTRA-TEXT field to carry JSON,
+      which also means this document updates RFC8914
+
+   *  clarified DNS forwarders might forward EXTRA-TEXT without change
+      or might rewrite "j" and "d".
 
 
 
 
-
-
-Wing, et al.               Expires 16 May 2022                 [Page 12]
+Wing, et al.              Expires 24 July 2022                 [Page 12]
 
-Internet-Draft            Data for Filtered DNS            November 2021
+Internet-Draft            Data for Filtered DNS             January 2022
 
 
-9.1.  Changes from 00 to 01
+   *  consolidated implementation notes
+
+9.2.  Changes from 00 to 01
 
    *  removed support for multiple responsible parties
 
@@ -717,25 +719,20 @@ Internet-Draft            Data for Filtered DNS            November 2021
 
 10.2.  Informative References
 
-
-
-
-
-
-
-
-
-Wing, et al.               Expires 16 May 2022                 [Page 13]
-
-Internet-Draft            Data for Filtered DNS            November 2021
-
-
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Dickinson, S., and A. Mankin, "DNS over
               Dedicated QUIC Connections", Work in Progress, Internet-
-              Draft, draft-ietf-dprive-dnsoquic-06, 20 October 2021,
+
+
+
+Wing, et al.              Expires 24 July 2022                 [Page 13]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
+              Draft, draft-ietf-dprive-dnsoquic-08, 11 January 2022,
               <https://datatracker.ietf.org/doc/html/draft-ietf-dprive-
-              dnsoquic-06>.
+              dnsoquic-08>.
 
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
@@ -777,19 +774,17 @@ Internet-Draft            Data for Filtered DNS            November 2021
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
-
-
-
-
-Wing, et al.               Expires 16 May 2022                 [Page 14]
-
-Internet-Draft            Data for Filtered DNS            November 2021
-
-
    [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
               Lawrence, "Extended DNS Errors", RFC 8914,
               DOI 10.17487/RFC8914, October 2020,
               <https://www.rfc-editor.org/info/rfc8914>.
+
+
+
+Wing, et al.              Expires 24 July 2022                 [Page 14]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
 
 Authors' Addresses
 
@@ -837,4 +832,9 @@ Authors' Addresses
 
 
 
-Wing, et al.               Expires 16 May 2022                 [Page 15]
+
+
+
+
+
+Wing, et al.              Expires 24 July 2022                 [Page 15]
