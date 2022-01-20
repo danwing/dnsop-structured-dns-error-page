@@ -14,7 +14,7 @@ Expires: 24 July 2022                                            N. Cook
 
 
                     Structured Data for Filtered DNS
-             draft-wing-dnsop-structured-dns-error-page-01
+             draft-wing-dnsop-structured-dns-error-page-02
 
 Abstract
 
