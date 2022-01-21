@@ -1557,7 +1557,7 @@ li > p:last-of-type {
         <dd style="margin-left: 1.5em" id="section-3-2.4">Contains the domain-name of the encrypted DNS server. This
  is used to create the expanded URIs for both the "c" and "r"
  fields, and also detect undesired forwarding of the EXTRA-TEXT
- EDNS(0) option.  This field is mandatory.<a href="#section-3-2.4" class="pilcrow">¶</a>
+ field of the Extended DNS Error option.  This field is mandatory.<a href="#section-3-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-2.5">j: (justification)</dt>
@@ -1636,8 +1636,8 @@ li > p:last-of-type {
    the EXTRA-TEXT field is discarded.<a href="#section-4.3-2.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-4.3-2.4">If either of the mandatory JSON names "d" and "j" are
-   missing or have empty values in the Structured Error EDNS(0)
-   option, the entire JSON is discarded.<a href="#section-4.3-2.4" class="pilcrow">¶</a>
+   missing or have empty values in the EXTRA-TEXT field
+   the entire JSON is discarded.<a href="#section-4.3-2.4" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-4.3-2.5">The Requestor expands the values in "c" and "r" by
    prefixing the two values with "https://" and the value of

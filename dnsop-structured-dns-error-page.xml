@@ -336,7 +336,7 @@ Most importantly, EDE option does not offer
 	<dd>Contains the domain-name of the encrypted DNS server. This
 	is used to create the expanded URIs for both the "c" and "r"
 	fields, and also detect undesired forwarding of the EXTRA-TEXT
-	EDNS(0) option.  This field is mandatory.</dd>
+	field of the Extended DNS Error option.  This field is mandatory.</dd>
 
         <dt>j: (justification)</dt>
         <dd>the textual justification for
@@ -403,8 +403,8 @@ Most importantly, EDE option does not offer
 	  the EXTRA-TEXT field is discarded.</li>
 	  
 	  <li>If either of the mandatory JSON names "d" and "j" are
-	  missing or have empty values in the Structured Error EDNS(0)
-	  option, the entire JSON is discarded.</li>
+	  missing or have empty values in the EXTRA-TEXT field
+	  the entire JSON is discarded.</li>
 
 	  <li>The Requestor expands the values in "c" and "r" by
 	  prefixing the two values with "https://" and the value of

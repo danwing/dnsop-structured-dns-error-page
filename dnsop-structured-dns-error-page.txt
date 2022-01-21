@@ -326,7 +326,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
    d: (domain)  Contains the domain-name of the encrypted DNS server.
       This is used to create the expanded URIs for both the "c" and "r"
       fields, and also detect undesired forwarding of the EXTRA-TEXT
-      EDNS(0) option.  This field is mandatory.
+      field of the Extended DNS Error option.  This field is mandatory.
 
    j: (justification)  the textual justification for this particular DNS
       filtering.  This field is mandatory.
@@ -399,8 +399,8 @@ Internet-Draft            Data for Filtered DNS             January 2022
       the EXTRA-TEXT field is discarded.
 
    *  If either of the mandatory JSON names "d" and "j" are missing or
-      have empty values in the Structured Error EDNS(0) option, the
-      entire JSON is discarded.
+      have empty values in the EXTRA-TEXT field the entire JSON is
+      discarded.
 
    *  The Requestor expands the values in "c" and "r" by prefixing the
       two values with "https://" and the value of the "d" name.  Then
