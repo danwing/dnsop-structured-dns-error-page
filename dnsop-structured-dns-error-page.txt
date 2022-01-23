@@ -6,11 +6,11 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: RFC8914 (if approved)                                  T. Reddy
 Intended status: Standards Track                                  Akamai
-Expires: 24 July 2022                                            N. Cook
+Expires: 27 July 2022                                            N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                         20 January 2022
+                                                         23 January 2022
 
 
                     Structured Data for Filtered DNS
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 July 2022.
+   This Internet-Draft will expire on 27 July 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wing, et al.              Expires 24 July 2022                  [Page 1]
+Wing, et al.              Expires 27 July 2022                  [Page 1]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -63,19 +63,19 @@ Internet-Draft            Data for Filtered DNS             January 2022
    license-info) in effect on the date of publication of this document.
    Please review these documents carefully, as they describe your rights
    and restrictions with respect to this document.  Code Components
-   extracted from this document must include Simplified BSD License text
-   as described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Simplified BSD License.
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   3.  JSON in EXTRA-TEXXT field . . . . . . . . . . . . . . . . . .   6
+   3.  I-JSON in EXTRA-TEXT field  . . . . . . . . . . . . . . . . .   6
    4.  Protocol Operation  . . . . . . . . . . . . . . . . . . . . .   7
      4.1.  Client Generating Request . . . . . . . . . . . . . . . .   7
      4.2.  Server Generating Response  . . . . . . . . . . . . . . .   7
-     4.3.  Client Processing Response  . . . . . . . . . . . . . . .   7
+     4.3.  Client Processing Response  . . . . . . . . . . . . . . .   8
    5.  Implementation notes  . . . . . . . . . . . . . . . . . . . .   9
    6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
@@ -83,7 +83,7 @@ Table of Contents
    9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.              Expires 24 July 2022                  [Page 2]
+Wing, et al.              Expires 27 July 2022                  [Page 2]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -165,7 +165,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 24 July 2022                  [Page 3]
+Wing, et al.              Expires 27 July 2022                  [Page 3]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -221,7 +221,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 24 July 2022                  [Page 4]
+Wing, et al.              Expires 27 July 2022                  [Page 4]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -277,7 +277,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 24 July 2022                  [Page 5]
+Wing, et al.              Expires 27 July 2022                  [Page 5]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -312,31 +312,39 @@ Internet-Draft            Data for Filtered DNS             January 2022
    messages, for example, DNS-over-HTTPS [RFC8484], DNS-over-TLS
    [RFC7858], or DNS-over-QUIC [I-D.ietf-dprive-dnsoquic].
 
-3.  JSON in EXTRA-TEXXT field
+3.  I-JSON in EXTRA-TEXT field
 
    Servers compliant with this specification will send JSON data in the
-   EXTRA-TEXT field [RFC8914].  This JSON contains the following JSON
-   names:
+   EXTRA-TEXT field [RFC8914].  Precisely, the JSON object MUST use the
+   I-JSON message format [RFC7493].  Note that[RFC7493] was based on
+   [RFC7159], but [RFC7159] was replaced by [RFC8259].  Requiring the
+   use of I-JSON instead of more general JSON format greatly increases
+   the likelihood of interoperability.  All names MUST consist only of
+   lower-case ASCII characters, digits, and hyphens (that is, Unicode
+   characters U+0061 through 007A, U+0030 through U+0039, and U+002D).
+   These names MUST be 63 characters or shorter.  All names in the
+   returned object MUST be defined in the IANA registry Section 8.  This
+   JSON contains the following JSON names:
 
    c: (complaint)  a partial URI for the user to further diagnose and
       possibly report mis-classified DNS filtering.  The value is
       converted to an expanded absolute URI.  This field is optional,
       but note its absence still allows a URI to be formed.
 
-   d: (domain)  Contains the domain-name of the encrypted DNS server.
-      This is used to create the expanded URIs for both the "c" and "r"
-      fields, and also detect undesired forwarding of the EXTRA-TEXT
-      field of the Extended DNS Error option.  This field is mandatory.
-
-   j: (justification)  the textual justification for this particular DNS
-      filtering.  This field is mandatory.
 
 
-
-Wing, et al.              Expires 24 July 2022                  [Page 6]
+Wing, et al.              Expires 27 July 2022                  [Page 6]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
+
+   d: (domain)  Contains the domain-name of the encrypted DNS server.
+      This is used to create the expanded URIs for both the "c" and "r"
+      fields, and also detect undesired forwarding of the EXTRA-TEXT
+      field in the Extended DNS Error option.  This field is mandatory.
+
+   j: (justification)  the textual justification for this particular DNS
+      filtering.  This field is mandatory.
 
    o: (organization)  human-friendly name of the organization that
       filtered this particular DNS query.  This field is optional.
@@ -362,7 +370,8 @@ Internet-Draft            Data for Filtered DNS             January 2022
 4.1.  Client Generating Request
 
    When generating a DNS query, the client MUST include the OPT pseudo-
-   RR to elicit the Extended DNS Error[RFC8914][RFC6891].
+   RR [RFC6891] to elicit the Extended DNS Error option [RFC8914] in the
+   DNS response.
 
 4.2.  Server Generating Response
 
@@ -373,10 +382,23 @@ Internet-Draft            Data for Filtered DNS             January 2022
    return more detail in the EXTRA-TEXT field as described in
    Section 4.3.
 
+
+
+
+
+
+
+
+Wing, et al.              Expires 27 July 2022                  [Page 7]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
 4.3.  Client Processing Response
 
-   On receipt of the DNS response, the following actions are performed
-   specific to EXTRA-TEXT field:
+   On receipt of the DNS response, if the EXTRA-TEXT field contains
+   valid JSON, the following actions are performed specific to EXTRA-
+   TEXT field:
 
    *  The requestor MUST check that the response was received over an
       encrypted DNS channel.  If not, the requestor MUST discard data in
@@ -385,14 +407,6 @@ Internet-Draft            Data for Filtered DNS             January 2022
    *  Servers which don't support this specification might use plain
       text in the EXTRA-TEXT field so requestor SHOULD properly handle
       both plaintext and JSON text in the EXTRA-TEXT field.
-
-
-
-
-Wing, et al.              Expires 24 July 2022                  [Page 7]
-
-Internet-Draft            Data for Filtered DNS             January 2022
-
 
    *  The DNS response MUST also contain an extended error code of
       "Censored", "Blocked", "Filtered" or "Forged" [RFC8914], otherwise
@@ -428,6 +442,14 @@ Internet-Draft            Data for Filtered DNS             January 2022
       connection and successful authentication of the DNS server; this
       mitigates both passive eavesdropping and client redirection (at
       the expense of providing no DNS service if an encrypted,
+
+
+
+Wing, et al.              Expires 27 July 2022                  [Page 8]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
       authenticated connection is not available).  If the DNS client has
       enabled strict privacy profile for DoT, the client MAY process the
       EXTRA-TEXT field of the DNS response.  Note that the strict and
@@ -441,15 +463,6 @@ Internet-Draft            Data for Filtered DNS             January 2022
       filtering or not by retrieving resolver information using the
       method defined in [I-D.reddy-add-resolver-info].
 
-
-
-
-
-Wing, et al.              Expires 24 July 2022                  [Page 8]
-
-Internet-Draft            Data for Filtered DNS             January 2022
-
-
    *  When a forwarder receives an EDE option, whether or not (and how)
       to pass along JSON information in the EXTRA-TEXT on to their
       client is implementation dependent [RFC5625].  Implementations MAY
@@ -459,7 +472,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
       TEXT originated from its server (rather than by something further
       upstream) the DNS client MUST verify the domain name in the
       Structured Error "d" value matches the domain name of the
-      encrypted DNS resolver.  If this match fails the DNS client
+      encrypted DNS resolver.  If this match fails, the DNS client
       discards the EXTRA-TEXT field.
 
 5.  Implementation notes
@@ -481,6 +494,18 @@ Internet-Draft            Data for Filtered DNS             January 2022
    DNS "A" record query for 'example.org' is shown in Figure 1.
 
 
+
+
+
+
+
+
+
+Wing, et al.              Expires 27 July 2022                  [Page 9]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
      {
        "c": "?time=1621902483",
        "d": "ns.example.com",
@@ -494,17 +519,6 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
    In Figure 2 the same content is shown with minified JSON (no
    whitespace, no blank lines) with '\' line wrapping per [RFC8792].
-
-
-
-
-
-
-
-Wing, et al.              Expires 24 July 2022                  [Page 9]
-
-Internet-Draft            Data for Filtered DNS             January 2022
-
 
      ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
@@ -538,7 +552,15 @@ Internet-Draft            Data for Filtered DNS             January 2022
    resolver to cause harm.  If the client decides not to display the all
    of the information in the EXTRA-TEXT field, it can be logged for
    diagnostics purpose and the client can only display the resolver
-   hostname that blocked the domain to the end-user.
+   hostname that blocked the domain and error description for the EDE
+   code to the end-user.
+
+
+
+Wing, et al.              Expires 27 July 2022                 [Page 10]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
 
    If the browser visits either of the URIs in the response ("c" or
    "r"), the browser SHOULD reduce the attack surface of the client by
@@ -551,16 +573,6 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
    When displaying the free-form text of "o" and "j", the browser SHOULD
    NOT make any of those elements into actionable (clickable) links.
-
-
-
-
-
-
-Wing, et al.              Expires 24 July 2022                 [Page 10]
-
-Internet-Draft            Data for Filtered DNS             January 2022
-
 
    Although the "d" value is validated, an attacker who is able to
    inject (or modify) the EXTRA-TEXT field so that a DNS proxy or DNS
@@ -601,19 +613,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 24 July 2022                 [Page 11]
+Wing, et al.              Expires 27 July 2022                 [Page 11]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -669,7 +669,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 24 July 2022                 [Page 12]
+Wing, et al.              Expires 27 July 2022                 [Page 12]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -708,9 +708,27 @@ Internet-Draft            Data for Filtered DNS             January 2022
               DOI 10.17487/RFC6891, April 2013,
               <https://www.rfc-editor.org/info/rfc6891>.
 
+   [RFC7159]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", RFC 7159, DOI 10.17487/RFC7159, March
+              2014, <https://www.rfc-editor.org/info/rfc7159>.
+
+   [RFC7493]  Bray, T., Ed., "The I-JSON Message Format", RFC 7493,
+              DOI 10.17487/RFC7493, March 2015,
+              <https://www.rfc-editor.org/info/rfc7493>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+
+
+
+
+
+Wing, et al.              Expires 27 July 2022                 [Page 13]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
 
    [RFC8310]  Dickinson, S., Gillmor, D., and T. Reddy, "Usage Profiles
               for DNS over TLS and DNS over DTLS", RFC 8310,
@@ -722,14 +740,6 @@ Internet-Draft            Data for Filtered DNS             January 2022
    [I-D.ietf-dprive-dnsoquic]
               Huitema, C., Dickinson, S., and A. Mankin, "DNS over
               Dedicated QUIC Connections", Work in Progress, Internet-
-
-
-
-Wing, et al.              Expires 24 July 2022                 [Page 13]
-
-Internet-Draft            Data for Filtered DNS             January 2022
-
-
               Draft, draft-ietf-dprive-dnsoquic-08, 11 January 2022,
               <https://datatracker.ietf.org/doc/html/draft-ietf-dprive-
               dnsoquic-08>.
@@ -761,6 +771,21 @@ Internet-Draft            Data for Filtered DNS             January 2022
               Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
               2016, <https://www.rfc-editor.org/info/rfc7858>.
 
+   [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", STD 90, RFC 8259,
+              DOI 10.17487/RFC8259, December 2017,
+              <https://www.rfc-editor.org/info/rfc8259>.
+
+
+
+
+
+
+Wing, et al.              Expires 27 July 2022                 [Page 14]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
    [RFC8484]  Hoffman, P. and P. McManus, "DNS Queries over HTTPS
               (DoH)", RFC 8484, DOI 10.17487/RFC8484, October 2018,
               <https://www.rfc-editor.org/info/rfc8484>.
@@ -778,13 +803,6 @@ Internet-Draft            Data for Filtered DNS             January 2022
               Lawrence, "Extended DNS Errors", RFC 8914,
               DOI 10.17487/RFC8914, October 2020,
               <https://www.rfc-editor.org/info/rfc8914>.
-
-
-
-Wing, et al.              Expires 24 July 2022                 [Page 14]
-
-Internet-Draft            Data for Filtered DNS             January 2022
-
 
 Authors' Addresses
 
@@ -816,6 +834,14 @@ Authors' Addresses
    35000 Rennes
    France
 
+
+
+
+Wing, et al.              Expires 27 July 2022                 [Page 15]
+
+Internet-Draft            Data for Filtered DNS             January 2022
+
+
    Email: mohamed.boucadair@orange.com
 
 
@@ -837,4 +863,34 @@ Authors' Addresses
 
 
 
-Wing, et al.              Expires 24 July 2022                 [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 27 July 2022                 [Page 16]
