@@ -362,17 +362,16 @@ Most importantly, EDE option does not offer
 
       <t>Servers compliant with this specification will send JSON data in the
       <xref target="RFC8914">EXTRA-TEXT field</xref>. Precisely, the JSON
-      object MUST use the I-JSON message format <xref target="RFC7493" />.
-      Note that<xref target="RFC7493" /> was based on <xref
-      target="RFC7159" />, but <xref target="RFC7159" /> was replaced by <xref
-      target="RFC8259" />. Requiring the use of I-JSON instead of more general
-      JSON format greatly increases the likelihood of interoperability. All
-      names MUST consist only of lower-case ASCII characters, digits, and
-      hyphens (that is, Unicode characters U+0061 through 007A, U+0030 through
-      U+0039, and U+002D). These names MUST be 63 characters or shorter. All
-      names in the returned object MUST be defined in the IANA registry <xref
-      target="IANA" />. This JSON contains the following JSON names:</t>
+      object MUST use the I-JSON message format <xref target="RFC7493"/>.
+      Requiring the use of I-JSON instead of more general
+      JSON format greatly increases the likelihood of interoperability.</t>
 
+      <aside><t>Note that <xref target="RFC7493" /> was based on <xref
+      target="RFC7159" />, but <xref target="RFC7159" /> was replaced by <xref
+      target="RFC8259" />.</t></aside>      
+
+      <t>This document defines the following JSON names:</t>
+      
       <dl newline="false" spacing="normal">
         <dt>c: (complaint)</dt>
 
@@ -408,6 +407,12 @@ Most importantly, EDE option does not offer
         formed.</dd>
       </dl>
 
+      <t>New JSON names MUST be defined in the <xref target="IANA">IANA registry</xref>,
+      consist only of lower-case ASCII characters, digits, and
+      hyphens (that is, Unicode characters U+0061 through 007A, U+0030 through
+      U+0039, and U+002D). These names MUST be 63 characters or shorter and it
+      is RECOMMENDED they be as short as possible.</t>
+      
       <t>To reduce packet overhead the generated JSON SHOULD be as short as
       possible: short domain names, concise text in the values for the "j" and
       "o" names, and minified JSON (that is, without spaces or line breaks
@@ -438,11 +443,23 @@ Most importantly, EDE option does not offer
         if the query contained the OPT pseudo-RR the DNS server MAY return
         more detail in the EXTRA-TEXT field as described in <xref
         target="process-response" />.</t>
+
+	      <t>Over time a domain name might be filtered, then not filtered, then
+      filtered again. Additionally, the user might take minutes or even days
+      before investigating a filtered DNS query. Thus the complaint URI is
+      RECOMMENDED to include sufficient detail to determine the filtering
+      state when the DNS filtering occurred. If and how this is encoded into
+      the complaint URI is an implementation decision.</t>
+
       </section>
 
       <section anchor="process-response">
         <name>Client Processing Response</name>
 
+	<t>Clients should expect servers to return small TTL values in
+	filtered DNS responses (e.g., 2 seconds) to handle domain
+	category and reputation updates.</t>
+	
         <t>On receipt of the DNS response, if the EXTRA-TEXT field contains
         valid JSON, the following actions are performed specific to EXTRA-TEXT
         field:</t>
@@ -478,7 +495,7 @@ Most importantly, EDE option does not offer
           and "&amp;" accordingly.</t>
         </aside>
 
-        <ul>
+	<ul>
           <li>If a DNS client has enabled opportunistic privacy profile (<xref
           target="RFC8310">Section 5 of</xref>) for DoT, the DNS client will
           either fallback to an encrypted connection without authenticating
@@ -520,23 +537,10 @@ Most importantly, EDE option does not offer
           the encrypted DNS resolver. If this match fails, the DNS client
           discards the EXTRA-TEXT field.</li>
         </ul>
+
       </section>
     </section>
 
-    <section numbered="true" toc="default">
-      <name>Implementation notes</name>
-
-      <t>Over time a domain name might be filtered, then not filtered, then
-      filtered again. Additionally, the user might take minutes or even days
-      before investigating a filtered DNS query. Thus the complaint URI is
-      RECOMMENDED to include sufficient detail to determine the filtering
-      state when the DNS filtering occurred. If and how this is encoded into
-      the complaint URI is an implementation decision.</t>
-
-      <t>The TTL value in filtered DNS responses is typically a very short
-      duration (e.g., 2 seconds) to handle domain category and reputation
-      updates.</t>
-    </section>
 
     <section numbered="true" toc="default">
       <name>Examples</name>
