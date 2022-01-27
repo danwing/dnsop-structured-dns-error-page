@@ -730,9 +730,8 @@ Most importantly, EDE option does not offer
           which also means this document updates RFC8914</li>
 
           <li>clarified DNS forwarders might forward EXTRA-TEXT without change
-          or might rewrite "j" and "d".</li>
+          or might rewrite "j" and "d"</li>
 
-          <li>consolidated implementation notes</li>
         </ul>
       </section>
 
