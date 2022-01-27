@@ -446,31 +446,31 @@ Most importantly, EDE option does not offer
 
 	      <t>Over time a domain name might be filtered, then not filtered, then
       filtered again. Additionally, the user might take minutes or even days
-      before investigating a filtered DNS query. Thus the complaint URI is
+      before investigating a filtered DNS query. Thus, the complaint URI is
       RECOMMENDED to include sufficient detail to determine the filtering
       state when the DNS filtering occurred. If and how this is encoded into
       the complaint URI is an implementation decision.</t>
 
+	<t>Servers may decide to return small TTL values in
+	filtered DNS responses (e.g., 2 seconds) to handle domain
+	category and reputation updates.</t>
+	      
       </section>
 
       <section anchor="process-response">
         <name>Client Processing Response</name>
 
-	<t>Clients should expect servers to return small TTL values in
-	filtered DNS responses (e.g., 2 seconds) to handle domain
-	category and reputation updates.</t>
-	
-        <t>On receipt of the DNS response, if the EXTRA-TEXT field contains
-        valid JSON, the following actions are performed specific to EXTRA-TEXT
-        field:</t>
+        <t>On receipt of a DNS response with an Extended DNS Error
+        option, the following actions are performed if the EXTRA-TEXT field contains
+        valid JSON:</t>
 
         <ul>
           <li>The requestor MUST check that the response was received over an
           encrypted DNS channel. If not, the requestor MUST discard data in
-          EXTRA-TEXT.</li>
+          the EXTRA-TEXT field.</li>
 
           <li>Servers which don't support this specification might use plain
-          text in the EXTRA-TEXT field so requestor SHOULD properly handle
+          text in the EXTRA-TEXT field so that requestors SHOULD properly handle
           both plaintext and JSON text in the EXTRA-TEXT field.</li>
 
           <li>The DNS response MUST also contain an extended error code of
@@ -478,7 +478,7 @@ Most importantly, EDE option does not offer
           "Forged"</xref>, otherwise the EXTRA-TEXT field is discarded.</li>
 
           <li>If either of the mandatory JSON names "d" and "j" are missing or
-          have empty values in the EXTRA-TEXT field the entire JSON is
+          have empty values in the EXTRA-TEXT field, the entire JSON is
           discarded.</li>
 
           <li>The Requestor expands the values in "c" and "r" by prefixing the
