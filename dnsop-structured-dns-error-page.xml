@@ -615,7 +615,19 @@ Most importantly, EDE option does not offer
       auto-fill of credentials or personal information, and be isolated from
       the user's normal environment. The user's preferred language SHOULD be
       included in the Content-Language header.</t>
+      
+      <t>The URIs in the response ("c" or "r") may be accessed via a browser.
+      In such a case, the browser SHOULD reduce the
+      attack surface of the client by using an isolated environment
+      precautions such as clearly labeling the page as untrusted or
+      prevent user interaction with the page.  Such isolation should
+      prevent transmitting cookies, block JavaScript, block auto-fill
+      of credentials or personal information, and be isolated from the
+      user's normal environment.  The Content-Language header can
+      disclose personal information so its inclusion is a local policy
+      choice of the client.</t>
 
+      
       <t>When displaying the free-form text of "o" and "j", the browser SHOULD
       NOT make any of those elements into actionable (clickable) links.</t>
 
