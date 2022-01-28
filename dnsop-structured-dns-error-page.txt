@@ -6,11 +6,11 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: RFC8914 (if approved)                                  T. Reddy
 Intended status: Standards Track                                  Akamai
-Expires: 29 July 2022                                            N. Cook
+Expires: 1 August 2022                                           N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                         25 January 2022
+                                                         28 January 2022
 
 
                     Structured Data for Filtered DNS
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 July 2022.
+   This Internet-Draft will expire on 1 August 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 1]
+Wing, et al.              Expires 1 August 2022                 [Page 1]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 2]
+Wing, et al.              Expires 1 August 2022                 [Page 2]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -165,7 +165,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 3]
+Wing, et al.              Expires 1 August 2022                 [Page 3]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -221,7 +221,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 4]
+Wing, et al.              Expires 1 August 2022                 [Page 4]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -277,7 +277,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 5]
+Wing, et al.              Expires 1 August 2022                 [Page 5]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -333,7 +333,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 6]
+Wing, et al.              Expires 1 August 2022                 [Page 6]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -382,42 +382,42 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
    Over time a domain name might be filtered, then not filtered, then
    filtered again.  Additionally, the user might take minutes or even
-   days before investigating a filtered DNS query.  Thus the complaint
+   days before investigating a filtered DNS query.  Thus, the complaint
    URI is RECOMMENDED to include sufficient detail to determine the
    filtering state when the DNS filtering occurred.  If and how this is
    encoded into the complaint URI is an implementation decision.
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 7]
+Wing, et al.              Expires 1 August 2022                 [Page 7]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
 
+   Servers may decide to return small TTL values in filtered DNS
+   responses (e.g., 2 seconds) to handle domain category and reputation
+   updates.
+
 4.3.  Client Processing Response
 
-   Clients should expect servers to return small TTL values in filtered
-   DNS responses (e.g., 2 seconds) to handle domain category and
-   reputation updates.
-
-   On receipt of the DNS response, if the EXTRA-TEXT field contains
-   valid JSON, the following actions are performed specific to EXTRA-
-   TEXT field:
+   On receipt of a DNS response with an Extended DNS Error option, the
+   following actions are performed if the EXTRA-TEXT field contains
+   valid JSON:
 
    *  The requestor MUST check that the response was received over an
       encrypted DNS channel.  If not, the requestor MUST discard data in
-      EXTRA-TEXT.
+      the EXTRA-TEXT field.
 
    *  Servers which don't support this specification might use plain
-      text in the EXTRA-TEXT field so requestor SHOULD properly handle
-      both plaintext and JSON text in the EXTRA-TEXT field.
+      text in the EXTRA-TEXT field so that requestors SHOULD properly
+      handle both plaintext and JSON text in the EXTRA-TEXT field.
 
    *  The DNS response MUST also contain an extended error code of
       "Censored", "Blocked", "Filtered" or "Forged" [RFC8914], otherwise
       the EXTRA-TEXT field is discarded.
 
    *  If either of the mandatory JSON names "d" and "j" are missing or
-      have empty values in the EXTRA-TEXT field the entire JSON is
+      have empty values in the EXTRA-TEXT field, the entire JSON is
       discarded.
 
    *  The Requestor expands the values in "c" and "r" by prefixing the
@@ -445,7 +445,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 8]
+Wing, et al.              Expires 1 August 2022                 [Page 8]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -501,7 +501,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                  [Page 9]
+Wing, et al.              Expires 1 August 2022                 [Page 9]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -557,10 +557,20 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                 [Page 10]
+Wing, et al.              Expires 1 August 2022                [Page 10]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
+
+   The URIs in the response ("c" or "r") may be accessed via a browser.
+   In such a case, the browser SHOULD reduce the attack surface of the
+   client by using an isolated environment precautions such as clearly
+   labeling the page as untrusted or prevent user interaction with the
+   page.  Such isolation should prevent transmitting cookies, block
+   JavaScript, block auto-fill of credentials or personal information,
+   and be isolated from the user's normal environment.  The Content-
+   Language header can disclose personal information so its inclusion is
+   a local policy choice of the client.
 
    When displaying the free-form text of "o" and "j", the browser SHOULD
    NOT make any of those elements into actionable (clickable) links.
@@ -603,17 +613,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 29 July 2022                 [Page 11]
+Wing, et al.              Expires 1 August 2022                [Page 11]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -669,7 +669,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                 [Page 12]
+Wing, et al.              Expires 1 August 2022                [Page 12]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -725,7 +725,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                 [Page 13]
+Wing, et al.              Expires 1 August 2022                [Page 13]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -781,7 +781,7 @@ Internet-Draft            Data for Filtered DNS             January 2022
 
 
 
-Wing, et al.              Expires 29 July 2022                 [Page 14]
+Wing, et al.              Expires 1 August 2022                [Page 14]
 
 Internet-Draft            Data for Filtered DNS             January 2022
 
@@ -837,4 +837,4 @@ Authors' Addresses
 
 
 
-Wing, et al.              Expires 29 July 2022                 [Page 15]
+Wing, et al.              Expires 1 August 2022                [Page 15]
