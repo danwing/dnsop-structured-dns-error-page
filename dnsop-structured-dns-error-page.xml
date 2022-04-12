@@ -376,7 +376,7 @@ Most importantly, EDE option does not offer
       <dl newline="false" spacing="normal">
         <dt>c: (contact)</dt>
 
-        <dd>The contact details of the IT/InfoSec team. This field is
+        <dd>The contact details of the IT/InfoSec team. This field is structured as an array of contact URIs such as Tel or SIPS URIs. At least one contact URI MUST be included. This field is
         mandatory.</dd>
 
         <dt>j: (justification)</dt>
