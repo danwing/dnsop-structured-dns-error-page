@@ -27,7 +27,7 @@
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="std" consensus="true"
-     docName="draft-wing-dnsop-structured-dns-error-page-02" ipr="trust200902"
+     docName="draft-wing-dnsop-structured-dns-error-page-03" ipr="trust200902"
      obsoletes="" sortRefs="true" submissionType="IETF" symRefs="true"
      tocDepth="4" tocInclude="true" updates="RFC8914" version="3"
      xml:lang="en">
@@ -119,9 +119,8 @@
       website.</t>
 
       <t>This document defines a mechanism to explain the reason for the DNS
-      filtering and provides HTTPS URIs to get more detail. This information
-      can be parsed by the client and displayed, logged, or used for other
-      purposes.</t>
+      filtering. This information can be parsed by the client and displayed,
+      logged, or used for other purposes.</t>
     </abstract>
   </front>
 
@@ -362,30 +361,23 @@ Most importantly, EDE option does not offer
 
       <t>Servers compliant with this specification will send JSON data in the
       <xref target="RFC8914">EXTRA-TEXT field</xref>. Precisely, the JSON
-      object MUST use the I-JSON message format <xref target="RFC7493"/>.
-      Requiring the use of I-JSON instead of more general
-      JSON format greatly increases the likelihood of interoperability.</t>
+      object MUST use the I-JSON message format <xref target="RFC7493" />.
+      Requiring the use of I-JSON instead of more general JSON format greatly
+      increases the likelihood of interoperability.</t>
 
-      <aside><t>Note that <xref target="RFC7493" /> was based on <xref
-      target="RFC7159" />, but <xref target="RFC7159" /> was replaced by <xref
-      target="RFC8259" />.</t></aside>      
+      <aside>
+        <t>Note that <xref target="RFC7493" /> was based on <xref
+        target="RFC7159" />, but <xref target="RFC7159" /> was replaced by
+        <xref target="RFC8259" />.</t>
+      </aside>
 
       <t>This document defines the following JSON names:</t>
-      
+
       <dl newline="false" spacing="normal">
-        <dt>c: (complaint)</dt>
+        <dt>c: (contact)</dt>
 
-        <dd>a partial URI for the user to further diagnose and possibly report
-        mis-classified DNS filtering. The value is converted to an expanded
-        absolute URI. This field is optional, but note its absence still
-        allows a URI to be formed.</dd>
-
-        <dt>d: (domain)</dt>
-
-        <dd>Contains the domain-name of the encrypted DNS server. This is used
-        to create the expanded URIs for both the "c" and "r" fields, and also
-        detect undesired forwarding of the EXTRA-TEXT field in the Extended
-        DNS Error option. This field is mandatory.</dd>
+        <dd>The contact details of the IT/InfoSec team. This field is
+        mandatory.</dd>
 
         <dt>j: (justification)</dt>
 
@@ -396,23 +388,14 @@ Most importantly, EDE option does not offer
 
         <dd>human-friendly name of the organization that filtered this
         particular DNS query. This field is optional.</dd>
-
-        <dt>r: (regulation)</dt>
-
-        <dd>a partial URI to retrieve the public or private rule, law, or
-        regulation describing the reason for this DNS filter. This might point
-        at an employment agreement (for an enterprise performing filtering) or
-        a national government regulation (for an ISP performing filtering).
-        This field is optional, but note its absence still allows a URI to be
-        formed.</dd>
       </dl>
 
-      <t>New JSON names MUST be defined in the <xref target="IANA">IANA registry</xref>,
-      consist only of lower-case ASCII characters, digits, and
-      hyphens (that is, Unicode characters U+0061 through 007A, U+0030 through
-      U+0039, and U+002D). These names MUST be 63 characters or shorter and it
-      is RECOMMENDED they be as short as possible.</t>
-      
+      <t>New JSON names MUST be defined in the <xref target="IANA">IANA
+      registry</xref>, consist only of lower-case ASCII characters, digits,
+      and hyphens (that is, Unicode characters U+0061 through 007A, U+0030
+      through U+0039, and U+002D). These names MUST be 63 characters or
+      shorter and it is RECOMMENDED they be as short as possible.</t>
+
       <t>To reduce packet overhead the generated JSON SHOULD be as short as
       possible: short domain names, concise text in the values for the "j" and
       "o" names, and minified JSON (that is, without spaces or line breaks
@@ -444,25 +427,19 @@ Most importantly, EDE option does not offer
         more detail in the EXTRA-TEXT field as described in <xref
         target="process-response" />.</t>
 
-	      <t>Over time a domain name might be filtered, then not filtered, then
-      filtered again. Additionally, the user might take minutes or even days
-      before investigating a filtered DNS query. Thus, the complaint URI is
-      RECOMMENDED to include sufficient detail to determine the filtering
-      state when the DNS filtering occurred. If and how this is encoded into
-      the complaint URI is an implementation decision.</t>
+        <t />
 
-	<t>Servers may decide to return small TTL values in
-	filtered DNS responses (e.g., 2 seconds) to handle domain
-	category and reputation updates.</t>
-	      
+        <t>Servers may decide to return small TTL values in filtered DNS
+        responses (e.g., 2 seconds) to handle domain category and reputation
+        updates.</t>
       </section>
 
       <section anchor="process-response">
         <name>Client Processing Response</name>
 
-        <t>On receipt of a DNS response with an Extended DNS Error
-        option, the following actions are performed if the EXTRA-TEXT field contains
-        valid JSON:</t>
+        <t>On receipt of a DNS response with an Extended DNS Error option, the
+        following actions are performed if the EXTRA-TEXT field contains valid
+        JSON:</t>
 
         <ul>
           <li>The requestor MUST check that the response was received over an
@@ -470,32 +447,21 @@ Most importantly, EDE option does not offer
           the EXTRA-TEXT field.</li>
 
           <li>Servers which don't support this specification might use plain
-          text in the EXTRA-TEXT field so that requestors SHOULD properly handle
-          both plaintext and JSON text in the EXTRA-TEXT field.</li>
+          text in the EXTRA-TEXT field so that requestors SHOULD properly
+          handle both plaintext and JSON text in the EXTRA-TEXT field.</li>
 
           <li>The DNS response MUST also contain an extended error code of
           <xref target="RFC8914">"Censored", "Blocked", "Filtered" or
           "Forged"</xref>, otherwise the EXTRA-TEXT field is discarded.</li>
 
-          <li>If either of the mandatory JSON names "d" and "j" are missing or
+          <li>If either of the mandatory JSON names "c" and "j" are missing or
           have empty values in the EXTRA-TEXT field, the entire JSON is
           discarded.</li>
-
-          <li>The Requestor expands the values in "c" and "r" by prefixing the
-          two values with "https://" and the value of the "d" name. Then the
-          Requestor further expands each of the "c" and "r" URIs by appending
-          two URL query parameters: "type" indicating the name of the DNS
-          resource record type queried and "name" indicating the name of the
-          DNS resource record queried.</li>
         </ul>
 
-        <aside>
-          <t>Note the parial URI value in "c" or "r" will already contain zero
-          or more query parameters so implementations should substitute "?"
-          and "&amp;" accordingly.</t>
-        </aside>
+        <aside />
 
-	<ul>
+        <ul>
           <li>If a DNS client has enabled opportunistic privacy profile (<xref
           target="RFC8310">Section 5 of</xref>) for DoT, the DNS client will
           either fallback to an encrypted connection without authenticating
@@ -530,17 +496,11 @@ Most importantly, EDE option does not offer
           client is implementation dependent <xref target="RFC5625" />.
           Implementations MAY choose to not forward the JSON information, or
           they MAY choose to create a new EDE option that conveys the
-          information in the "j" and "d" fields encoded in the JSON object. To
-          check if the EXTRA-TEXT originated from its server (rather than by
-          something further upstream) the DNS client MUST verify the domain
-          name in the Structured Error "d" value matches the domain name of
-          the encrypted DNS resolver. If this match fails, the DNS client
-          discards the EXTRA-TEXT field.</li>
+          information in the "c" and "j" fields encoded in the JSON object.
+          </li>
         </ul>
-
       </section>
     </section>
-
 
     <section numbered="true" toc="default">
       <name>Examples</name>
@@ -555,11 +515,9 @@ Most importantly, EDE option does not offer
 
         <artwork align="left" alt="" name="" type=""><![CDATA[  
   {
-    "c": "?time=1621902483",
-    "d": "ns.example.com",
+    "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com"],
     "j": "malware present for 23 days",
     "o": "example.net Filtering Service",
-    "r": "?country=atlantis"
   }]]></artwork>
       </figure>
 
@@ -573,18 +531,11 @@ Most importantly, EDE option does not offer
         <artwork align="left" alt="" name="" type=""><![CDATA[
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
-  {"c":"?time=1621902483","d":"ns.example.com","j":"malware present \
-  for 23 days","o":"example.net Filtering Service","r":\
-  "?country=atlantis"}]]></artwork>
+  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],"j":"malware present \
+  for 23 days","o":"example.net Filtering Service"}]]></artwork>
       </figure>
 
-      <t>Upon receipt, the two partial URIs ("c" and "r") are expanded to
-      become fully-formed URIs. The class, type, and name are pulled from the
-      DNS response (that matches the associated query) so that the
-      fully-formed "c" URI becomes
-      "https://ns.example.net?time=1621902483&amp;type=a&amp;name=example.org"
-      and the "r" URI becomes
-      "https://ns.example.net?country=atlantis&amp;type=a&amp;name=example.org".</t>
+      <t />
     </section>
 
     <section anchor="Security" numbered="true" toc="default">
@@ -605,47 +556,33 @@ Most importantly, EDE option does not offer
       client decides not to display the all of the information in the
       EXTRA-TEXT field, it can be logged for diagnostics purpose and the
       client can only display the resolver hostname that blocked the domain
-      and error description for the EDE code to the end-user.</t>
+      and error description for the EDE code to the end-user. </t>
 
-      <t>If the browser visits either of the URIs in the response ("c" or
-      "r"), the browser SHOULD reduce the attack surface of the client by
-      using an isolated environment precautions such as clearly labeling the
-      page as untrusted or prevent user interaction with the page. Such
-      isolation should prevent transmitting cookies, block JavaScript, block
-      auto-fill of credentials or personal information, and be isolated from
-      the user's normal environment. The user's preferred language SHOULD be
-      included in the Content-Language header.</t>
-      
-      <t>The URIs in the response ("c" or "r") may be accessed via a browser.
-      In such a case, the browser SHOULD reduce the
-      attack surface of the client by using an isolated environment
-      precautions such as clearly labeling the page as untrusted or
-      prevent user interaction with the page.  Such isolation should
-      prevent transmitting cookies, block JavaScript, block auto-fill
-      of credentials or personal information, and be isolated from the
-      user's normal environment.  The Content-Language header can
-      disclose personal information so its inclusion is a local policy
-      choice of the client.</t>
-
-      
-      <t>When displaying the free-form text of "o" and "j", the browser SHOULD
+      <t>When displaying the free-form text of "c" and "j", the browser SHOULD
       NOT make any of those elements into actionable (clickable) links.</t>
 
-      <t>Although the "d" value is validated, an attacker who is able to
-      inject (or modify) the EXTRA-TEXT field so that a DNS proxy or DNS
-      forwarder, unaware of the option, will forward it and pass the
-      validation checks described in <xref target="process-response" />. This
-      means the other JSON fields can be controlled by the attacker. The "j"
-      and "o" fields are, perhaps, the most interesting for an attacker to
-      modify for nefarious purposes, because the "d" field has to match the
-      encrypted DNS server's name and the expanded URIs from the "c" and "r"
-      will point at the DNS resolver not under the attacker's control.</t>
+      <t>An attacker who is able to inject (or modify) the EXTRA-TEXT field so
+      that a DNS proxy or DNS forwarder, unaware of the option, will forward
+      it and pass the validation checks described in <xref
+      target="process-response" />. This means the JSON fields can be
+      controlled by the attacker. The "c" and "j" fields are, perhaps, the
+      most interesting for an attacker to modify for nefarious purposes. </t>
 
       <aside>
         <t>The authors anticipate enhancements to <xref
         target="I-D.reddy-add-resolver-info" /> will reduce or eliminate the
         concern described in previous paragraph.</t>
       </aside>
+
+      <t />
+
+      <t />
+
+      <t />
+
+      <t />
+
+      <aside />
 
       <!--
       <t>Because this specification still allows DNS filtering to
@@ -743,7 +680,6 @@ Most importantly, EDE option does not offer
 
           <li>clarified DNS forwarders might forward EXTRA-TEXT without change
           or might rewrite "j" and "d"</li>
-
         </ul>
       </section>
 
