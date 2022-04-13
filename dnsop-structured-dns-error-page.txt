@@ -459,7 +459,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
      {
        "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com"],
        "j": "malware present for 23 days",
-       "o": "example.net Filtering Service",
+       "o": "example.net Filtering Service"
      }
 
      Figure 1: JSON returned in EXTRA-TEXT field of Extended DNS Error

@@ -517,7 +517,7 @@ Most importantly, EDE option does not offer
   {
     "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com"],
     "j": "malware present for 23 days",
-    "o": "example.net Filtering Service",
+    "o": "example.net Filtering Service"
   }]]></artwork>
       </figure>
 
