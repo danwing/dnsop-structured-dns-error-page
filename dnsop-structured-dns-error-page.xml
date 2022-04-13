@@ -531,8 +531,9 @@ Most importantly, EDE option does not offer
         <artwork align="left" alt="" name="" type=""><![CDATA[
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
-  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],"j":"malware present \
-  for 23 days","o":"example.net Filtering Service"}]]></artwork>
+  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],\
+  "j":"malware present for 23 days","o":"example.net Filtering \
+  Service"}]]></artwork>
       </figure>
 
       <t />
@@ -671,6 +672,17 @@ Most importantly, EDE option does not offer
     <section numbered="true" removeInRFC="true" toc="default">
       <name>Changes</name>
 
+      <section numbered="true" toc="exclude">
+        <name>Changes from 02 to 03</name>
+
+        <ul>
+          <li>Switch to tel: and sip: for c: (contact).</li>
+	  
+          <li>Removed 'partial URI' text</li>
+
+        </ul>
+      </section>
+      
       <section numbered="true" toc="exclude">
         <name>Changes from 01 to 02</name>
 

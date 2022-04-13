@@ -6,11 +6,11 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: RFC8914 (if approved)                                  T. Reddy
 Intended status: Standards Track                                  Akamai
-Expires: 14 October 2022                                         N. Cook
+Expires: 15 October 2022                                         N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                           12 April 2022
+                                                           13 April 2022
 
 
                     Structured Data for Filtered DNS
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 October 2022.
+   This Internet-Draft will expire on 15 October 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 1]
+Wing, et al.             Expires 15 October 2022                [Page 1]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -63,9 +63,9 @@ Internet-Draft            Data for Filtered DNS               April 2022
    license-info) in effect on the date of publication of this document.
    Please review these documents carefully, as they describe your rights
    and restrictions with respect to this document.  Code Components
-   extracted from this document must include Revised BSD License text as
-   described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Revised BSD License.
+   extracted from this document must include Simplified BSD License text
+   as described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Simplified BSD License.
 
 Table of Contents
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 2]
+Wing, et al.             Expires 15 October 2022                [Page 2]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -165,7 +165,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 3]
+Wing, et al.             Expires 15 October 2022                [Page 3]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -221,7 +221,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 4]
+Wing, et al.             Expires 15 October 2022                [Page 4]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -277,7 +277,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 5]
+Wing, et al.             Expires 15 October 2022                [Page 5]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -319,7 +319,9 @@ Internet-Draft            Data for Filtered DNS               April 2022
    This document defines the following JSON names:
 
    c: (contact)  The contact details of the IT/InfoSec team.  This field
-      is mandatory.
+      is structured as an array of contact URIs such as Tel or SIPS
+      URIs.  At least one contact URI MUST be included.  This field is
+      mandatory.
 
    j: (justification)  the textual justification for this particular DNS
       filtering.  This field is mandatory.
@@ -331,9 +333,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-
-
-Wing, et al.             Expires 14 October 2022                [Page 6]
+Wing, et al.             Expires 15 October 2022                [Page 6]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -389,7 +389,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 7]
+Wing, et al.             Expires 15 October 2022                [Page 7]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -445,7 +445,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-Wing, et al.             Expires 14 October 2022                [Page 8]
+Wing, et al.             Expires 15 October 2022                [Page 8]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -468,12 +468,13 @@ Internet-Draft            Data for Filtered DNS               April 2022
    In Figure 2 the same content is shown with minified JSON (no
    whitespace, no blank lines) with '\' line wrapping per [RFC8792].
 
-  ============== NOTE: '\' line wrapping per RFC 8792 ===============
+     ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
-  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],"j":"malware present \
-  for 23 days","o":"example.net Filtering Service"}
+     {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],\
+     "j":"malware present for 23 days","o":"example.net Filtering \
+     Service"}
 
-                     Figure 2: Minified response
+                        Figure 2: Minified response
 
 
 6.  Security Considerations
@@ -500,8 +501,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-
-Wing, et al.             Expires 14 October 2022                [Page 9]
+Wing, et al.             Expires 15 October 2022                [Page 9]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -557,7 +557,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
 
 
-Wing, et al.             Expires 14 October 2022               [Page 10]
+Wing, et al.             Expires 15 October 2022               [Page 10]
 
 Internet-Draft            Data for Filtered DNS               April 2022
 
@@ -602,7 +602,21 @@ Internet-Draft            Data for Filtered DNS               April 2022
 
    This section is to be removed before publishing as an RFC.
 
-8.1.  Changes from 01 to 02
+8.1.  Changes from 02 to 03
+
+   *  Switch to tel: and sip: for c: (contact).
+
+   *  Removed 'partial URI' text
+
+8.2.  Changes from 01 to 02
+
+
+
+
+Wing, et al.             Expires 15 October 2022               [Page 11]
+
+Internet-Draft            Data for Filtered DNS               April 2022
+
 
    *  repurpose Extended DNS Error's EXTRA-TEXT field to carry JSON,
       which also means this document updates RFC8914
@@ -610,15 +624,7 @@ Internet-Draft            Data for Filtered DNS               April 2022
    *  clarified DNS forwarders might forward EXTRA-TEXT without change
       or might rewrite "j" and "d"
 
-
-
-
-Wing, et al.             Expires 14 October 2022               [Page 11]
-
-Internet-Draft            Data for Filtered DNS               April 2022
-
-
-8.2.  Changes from 00 to 01
+8.3.  Changes from 00 to 01
 
    *  removed support for multiple responsible parties
 
@@ -658,6 +664,16 @@ Internet-Draft            Data for Filtered DNS               April 2022
               DOI 10.17487/RFC7493, March 2015,
               <https://www.rfc-editor.org/info/rfc7493>.
 
+
+
+
+
+
+Wing, et al.             Expires 15 October 2022               [Page 12]
+
+Internet-Draft            Data for Filtered DNS               April 2022
+
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -666,13 +682,6 @@ Internet-Draft            Data for Filtered DNS               April 2022
               for DNS over TLS and DNS over DTLS", RFC 8310,
               DOI 10.17487/RFC8310, March 2018,
               <https://www.rfc-editor.org/info/rfc8310>.
-
-
-
-Wing, et al.             Expires 14 October 2022               [Page 12]
-
-Internet-Draft            Data for Filtered DNS               April 2022
-
 
 9.2.  Informative References
 
@@ -686,9 +695,9 @@ Internet-Draft            Data for Filtered DNS               April 2022
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
               Work in Progress, Internet-Draft, draft-reddy-add-
-              resolver-info-04, 7 October 2021,
+              resolver-info-05, 13 April 2022,
               <https://datatracker.ietf.org/doc/html/draft-reddy-add-
-              resolver-info-04>.
+              resolver-info-05>.
 
    [I-D.reddy-dnsop-error-page]
               Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
@@ -710,6 +719,17 @@ Internet-Draft            Data for Filtered DNS               April 2022
               Layer Security (TLS)", RFC 7858, DOI 10.17487/RFC7858, May
               2016, <https://www.rfc-editor.org/info/rfc7858>.
 
+
+
+
+
+
+
+Wing, et al.             Expires 15 October 2022               [Page 13]
+
+Internet-Draft            Data for Filtered DNS               April 2022
+
+
    [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
               Interchange Format", STD 90, RFC 8259,
               DOI 10.17487/RFC8259, December 2017,
@@ -722,13 +742,6 @@ Internet-Draft            Data for Filtered DNS               April 2022
    [RFC8499]  Hoffman, P., Sullivan, A., and K. Fujiwara, "DNS
               Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
               January 2019, <https://www.rfc-editor.org/info/rfc8499>.
-
-
-
-Wing, et al.             Expires 14 October 2022               [Page 13]
-
-Internet-Draft            Data for Filtered DNS               April 2022
-
 
    [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
               "Handling Long Lines in Content of Internet-Drafts and
@@ -745,6 +758,7 @@ Authors' Addresses
    Dan Wing
    Citrix Systems, Inc.
    United States of America
+
    Email: dwing-ietf@fuggles.com
 
 
@@ -753,19 +767,30 @@ Authors' Addresses
    Bangalore
    Karnataka
    India
+
    Email: kondtir@gmail.com
 
 
    Neil Cook
    Open-Xchange
    United Kingdom
+
    Email: neil.cook@noware.co.uk
+
+
+
+
+
+Wing, et al.             Expires 15 October 2022               [Page 14]
+
+Internet-Draft            Data for Filtered DNS               April 2022
 
 
    Mohamed Boucadair
    Orange
    35000 Rennes
    France
+
    Email: mohamed.boucadair@orange.com
 
 
@@ -781,4 +806,35 @@ Authors' Addresses
 
 
 
-Wing, et al.             Expires 14 October 2022               [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.             Expires 15 October 2022               [Page 15]
