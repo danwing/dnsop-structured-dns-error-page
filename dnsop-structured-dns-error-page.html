@@ -15,27 +15,29 @@
       for the filtering. Existing mechanisms to provide detail to end users
       cause harm especially if the blocked DNS response is to an HTTPS
       website. 
-       This document defines a mechanism to explain the reason for the DNS
-      filtering. This information can be parsed by the client and displayed,
-      logged, or used for other purposes. 
+       This document updates the EXTRA-TEXT field of Extended DNS Error
+      [RFC8914] to provide details on the DNS filtering.  This information
+      can be parsed by the client and displayed, logged, or used for other
+      purposes. 
     " name="description">
-<meta content="xml2rfc 3.10.0" name="generator">
+<meta content="xml2rfc 3.12.4" name="generator">
 <meta content="draft-wing-dnsop-structured-dns-error-page-03" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.10.0
+  xml2rfc 3.12.4
     Python 3.9.12
     appdirs 1.4.4
-    ConfigArgParse 1.5.1
-    google-i18n-address 2.5.0
+    ConfigArgParse 1.5.3
+    google-i18n-address 2.5.1
     html5lib 1.1
     intervaltree 3.1.0
     Jinja2 2.11.3
     kitchen 1.2.6
-    lxml 4.6.3
-    pycountry 20.7.3
-    pyflakes 2.3.1
-    PyYAML 5.4.1
-    requests 2.25.1
+    lxml 4.8.0
+    MarkupSafe 2.0.1
+    pycountry 22.3.5
+    pyflakes 2.4.0
+    PyYAML 6.0
+    requests 2.27.1
     setuptools 60.10.0
     six 1.16.0
 -->
@@ -1198,7 +1200,7 @@ li > p:last-of-type {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wing, et al.</td>
-<td class="center">Expires 15 October 2022</td>
+<td class="center">Expires 23 October 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1211,15 +1213,15 @@ li > p:last-of-type {
 <dd class="internet-draft"></dd>
 <dt class="label-updates">Updates:</dt>
 <dd class="updates">
-<a href="https://www.rfc-editor.org/rfc/rfcRFC8914" class="eref">RFC8914</a> (if approved)</dd>
+<a href="https://www.rfc-editor.org/rfc/rfc8914" class="eref">8914</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-04-13" class="published">13 April 2022</time>
+<time datetime="2022-04-21" class="published">21 April 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-10-15">15 October 2022</time></dd>
+<dd class="expires"><time datetime="2022-10-23">23 October 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1249,9 +1251,10 @@ li > p:last-of-type {
       for the filtering. Existing mechanisms to provide detail to end users
       cause harm especially if the blocked DNS response is to an HTTPS
       website.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">This document defines a mechanism to explain the reason for the DNS
-      filtering. This information can be parsed by the client and displayed,
-      logged, or used for other purposes.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document updates the EXTRA-TEXT field of Extended DNS Error
+      [RFC8914] to provide details on the DNS filtering.  This information
+      can be parsed by the client and displayed, logged, or used for other
+      purposes.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1272,7 +1275,7 @@ li > p:last-of-type {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 October 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 October 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1290,9 +1293,9 @@ li > p:last-of-type {
             publication of this document. Please review these documents
             carefully, as they describe your rights and restrictions with
             respect to this document. Code Components extracted from this
-            document must include Simplified BSD License text as described in
+            document must include Revised BSD License text as described in
             Section 4.e of the Trust Legal Provisions and are provided without
-            warranty as described in the Simplified BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="toc">
@@ -1371,7 +1374,7 @@ li > p:last-of-type {
       using DNS-based content filtering.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Users of DNS services which perform filtering may wish to receive
       more information about such filtering to resolve problems with the
-      filter -- for example to contact the administrator to whitelist a domain
+      filter -- for example to contact the administrator to allowlist a domain
       that was erroneously filtered or to understand the reason a particular
       domain was filtered. With that information, the user can choose another
       network, open a trouble ticket with the DNS administrator to resolve
@@ -1406,18 +1409,19 @@ li > p:last-of-type {
               is not a viable option in several deployments like home
               networks, schools, Small Office/Home Office (SOHO), and Small/
               Medium Enterprise (SME). In these cases, the typical behavior is
-              that the forged DNS response directs the user towards a server
-              hosted to display the block page which breaks the TLS
-              connection. For web-browsing this then results in an HTTPS
-              certificate error message indicating that a secure connection
-              could not be established, which gives no information to the
-              end-user about the reason for the error. The typical errors are
+              that the filtered DNS response points to a server
+              that will display the block page.  If the client is using
+       HTTPS (via web browser or another application) this results in
+       a certificate validation error which gives no information to the
+              end-user about the reason for the DNS filtering. Browsers will display
+       errors such as
               "The security certificate presented by this website was not
               issued by a trusted certificate authority" (Internet
               Explorer/Edge"), "The site's security certificate is not
               trusted" (Chrome), "This Connection is Untrusted" (Firefox),
               "Safari can't verify the identity of the website..." (Safari on
-              MacOS)".<a href="#section-1-4.1.2.1.1" class="pilcrow">¶</a></p>
+              MacOS).  Applications might display even more cryptic error
+       messages.<a href="#section-1-4.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.1.2.2">Enterprise networks do not assume that all the connected
             devices are managed by the IT team or Mobile Device Management
@@ -1426,10 +1430,10 @@ li > p:last-of-type {
             cannot be installed on IoT devices without a device management
             tool.<a href="#section-1-4.1.2.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1-4.1.2.3">An end user does not know why the connection was reset and,
+            <li class="normal" id="section-1-4.1.2.3">An end user does not know why the connection was prevented and,
             consequently, may repeatedly try to reach the domain but with no
             success. Frustrated, the end user may switch to an alternate
-            network that offers no DNS-level protection against malware and
+            network that offers no DNS filtering against malware and
             phishing, potentially compromising both security and privacy.
             Furthermore, certificate errors train users to click through
             certificate errors, which is a bad security practice. To eliminate
@@ -1530,11 +1534,10 @@ li > p:last-of-type {
       <h2 id="name-i-json-in-extra-text-field-2">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-i-json-in-extra-text-field-2" class="section-name selfRef">I-JSON in EXTRA-TEXT field</a>
       </h2>
-<p id="section-3-1">Servers compliant with this specification will send JSON data in the
-      <span><a href="#RFC8914" class="xref">EXTRA-TEXT field</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>. Precisely, the JSON
-      object MUST use the I-JSON message format <span>[<a href="#RFC7493" class="xref">RFC7493</a>]</span>.
-      Requiring the use of I-JSON instead of more general JSON format greatly
-      increases the likelihood of interoperability.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Servers compliant with this specification send I-JSON
+      data in the <span><a href="#RFC8914" class="xref">EXTRA-TEXT field</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span> using
+      the <span><a href="#RFC7493" class="xref">Internet JSON (I-JSON) message
+      format</a> [<a href="#RFC7493" class="xref">RFC7493</a>]</span>.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <aside id="section-3-2">
         <p id="section-3-2.1">Note that <span>[<a href="#RFC7493" class="xref">RFC7493</a>]</span> was based on <span>[<a href="#RFC7159" class="xref">RFC7159</a>]</span>, but <span>[<a href="#RFC7159" class="xref">RFC7159</a>]</span> was replaced by
         <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span>.<a href="#section-3-2.1" class="pilcrow">¶</a></p>
@@ -1542,8 +1545,10 @@ li > p:last-of-type {
 <p id="section-3-3">This document defines the following JSON names:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-3-4">
         <dt id="section-3-4.1">c: (contact)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-4.2">The contact details of the IT/InfoSec team. This field is structured as an array of contact URIs such as Tel or SIPS URIs. At least one contact URI MUST be included. This field is
-        mandatory.<a href="#section-3-4.2" class="pilcrow">¶</a>
+        <dd style="margin-left: 1.5em" id="section-3-4.2">The contact details of the IT/InfoSec team to report
+        mis-classified DNS filtering. This field is structured as an array
+        of contact URIs (e.g., tel, sips, https).  At least one
+        contact URI MUST be included. This field is mandatory.<a href="#section-3-4.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-4.3">j: (justification)</dt>
@@ -1609,35 +1614,37 @@ li > p:last-of-type {
         following actions are performed if the EXTRA-TEXT field contains valid
         JSON:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3-2.1">The requestor MUST check that the response was received over an
+<li class="normal" id="section-4.3-2.1">The response MUST be received over an
           encrypted DNS channel. If not, the requestor MUST discard data in
           the EXTRA-TEXT field.<a href="#section-4.3-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.3-2.2">Servers which don't support this specification might use plain
+          <li class="normal" id="section-4.3-2.2">The response MUST be received from a DNS server which advertised EDE
+   support via <span><a href="#I-D.reddy-add-resolver-info" class="xref">RESINFO</a> [<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>.<a href="#section-4.3-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.3-2.3">Servers which don't support this specification might use plain
           text in the EXTRA-TEXT field so that requestors SHOULD properly
-          handle both plaintext and JSON text in the EXTRA-TEXT field.<a href="#section-4.3-2.2" class="pilcrow">¶</a>
+          handle both plaintext and JSON text in the EXTRA-TEXT field.<a href="#section-4.3-2.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.3-2.3">The DNS response MUST also contain an extended error code of
+          <li class="normal" id="section-4.3-2.4">The DNS response MUST also contain an extended error code of
           <span><a href="#RFC8914" class="xref">"Censored", "Blocked", "Filtered" or
-          "Forged"</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>, otherwise the EXTRA-TEXT field is discarded.<a href="#section-4.3-2.3" class="pilcrow">¶</a>
+          "Forged"</a> [<a href="#RFC8914" class="xref">RFC8914</a>]</span>, otherwise the EXTRA-TEXT field is discarded.<a href="#section-4.3-2.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.3-2.4">If either of the mandatory JSON names "c" and "j" are missing or
+          <li class="normal" id="section-4.3-2.5">If either of the mandatory JSON names "c" and "j" are missing or
           have empty values in the EXTRA-TEXT field, the entire JSON is
-          discarded.<a href="#section-4.3-2.4" class="pilcrow">¶</a>
+          discarded.<a href="#section-4.3-2.5" class="pilcrow">¶</a>
 </li>
         </ul>
-<aside id="section-4.3-3"></aside>
 <ul class="normal">
-<li class="normal" id="section-4.3-4.1">If a DNS client has enabled opportunistic privacy profile (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>) for DoT, the DNS client will
+<li class="normal" id="section-4.3-3.1">If a DNS client has enabled opportunistic privacy profile (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>) for DoT, the DNS client will
           either fallback to an encrypted connection without authenticating
           the DNS server provided by the local network or fallback to clear
           text DNS, and cannot exchange encrypted DNS messages. Both of these
           fallback mechanisms adversely impacts security and privacy. If the
           DNS client has enabled opportunistic privacy profile for DoT, the
           DNS client MUST ignore the EXTRA-TEXT field of the EDE responses,
-          but SHOULD process other parts of the response.<a href="#section-4.3-4.1" class="pilcrow">¶</a>
+          but SHOULD process other parts of the response.<a href="#section-4.3-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.3-4.2">If a DNS client has enabled strict privacy profile (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>) for DoT, the DNS client
+          <li class="normal" id="section-4.3-3.2">If a DNS client has enabled strict privacy profile (<span><a href="#RFC8310" class="xref">Section 5 of</a> [<a href="#RFC8310" class="xref">RFC8310</a>]</span>) for DoT, the DNS client
           requires an encrypted connection and successful authentication of
           the DNS server; this mitigates both passive eavesdropping and client
           redirection (at the expense of providing no DNS service if an
@@ -1645,21 +1652,21 @@ li > p:last-of-type {
           client has enabled strict privacy profile for DoT, the client MAY
           process the EXTRA-TEXT field of the DNS response. Note that the
           strict and opportunistic privacy profiles as defined in <span>[<a href="#RFC8310" class="xref">RFC8310</a>]</span> only apply to DoT; there has been no such
-          distinction made for DoH.<a href="#section-4.3-4.2" class="pilcrow">¶</a>
+          distinction made for DoH.<a href="#section-4.3-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.3-4.3">If the DNS client determines that the encrypted DNS server does
+          <li class="normal" id="section-4.3-3.3">If the DNS client determines that the encrypted DNS server does
           not offer DNS filtering service, it MUST discard the EXTRA-TEXT
           field of the EDE response. For example, the DNS client can learn
           whether the encrypted DNS resolver performs DNS-based content
           filtering or not by retrieving resolver information using the method
-          defined in <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>.<a href="#section-4.3-4.3" class="pilcrow">¶</a>
+          defined in <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>.<a href="#section-4.3-3.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.3-4.4">When a forwarder receives an EDE option, whether or not (and
+          <li class="normal" id="section-4.3-3.4">When a forwarder receives an EDE option, whether or not (and
           how) to pass along JSON information in the EXTRA-TEXT on to their
           client is implementation dependent <span>[<a href="#RFC5625" class="xref">RFC5625</a>]</span>.
           Implementations MAY choose to not forward the JSON information, or
           they MAY choose to create a new EDE option that conveys the
-          information in the "c" and "j" fields encoded in the JSON object.<a href="#section-4.3-4.4" class="pilcrow">¶</a>
+          information in the "c" and "j" fields encoded in the JSON object.<a href="#section-4.3-3.4" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1677,7 +1684,8 @@ li > p:last-of-type {
         <div class="alignLeft art-text artwork" id="section-5-2.1">
 <pre>
   {
-    "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com"],
+  "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com",
+        "https://ticket.example.com?d=example.org&amp;t=1650560748"],
     "j": "malware present for 23 days",
     "o": "example.net Filtering Service"
   }</pre>
@@ -1696,7 +1704,8 @@ li > p:last-of-type {
 <pre>
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
-  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],\
+  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
+  "https://ticket.example.com?d=example.org&amp;t=1650560748"], \
   "j":"malware present for 23 days","o":"example.net Filtering \
   Service"}</pre>
 </div>
@@ -1726,20 +1735,15 @@ li > p:last-of-type {
       and error description for the EDE code to the end-user.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">When displaying the free-form text of "c" and "j", the browser SHOULD
       NOT make any of those elements into actionable (clickable) links.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">An attacker who is able to inject (or modify) the EXTRA-TEXT field so
-      that a DNS proxy or DNS forwarder, unaware of the option, will forward
-      it and pass the validation checks described in <a href="#process-response" class="xref">Section 4.3</a>. This means the JSON fields can be
-      controlled by the attacker. The "c" and "j" fields are, perhaps, the
-      most interesting for an attacker to modify for nefarious purposes.<a href="#section-6-5" class="pilcrow">¶</a></p>
-<aside id="section-6-6">
-        <p id="section-6-6.1">The authors anticipate enhancements to <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span> will reduce or eliminate the
-        concern described in previous paragraph.<a href="#section-6-6.1" class="pilcrow">¶</a></p>
-</aside>
-<p id="section-6-7"></p>
-<p id="section-6-8"></p>
-<p id="section-6-9"></p>
-<p id="section-6-10"></p>
-<aside id="section-6-11"></aside>
+<p id="section-6-5">An attacker might inject (or modify) the EDE EXTRA-TEXT field with
+      an DNS proxy or DNS forwarder that is unaware of EDE.  Such a DNS proxy or
+      DNS forwarder will forward that attacker-controlled EDE option.  To prevent
+      such an attack, clients supporting this document MUST discard the EDE
+      option if their DNS server does not signal EDE support via RESINFO
+      <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>.  As recommended in
+      <span>[<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span>, RESINFO should be
+      retrieved over an encrypted DNS channel or integrity protected with
+      DNSSEC.<a href="#section-6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="IANA">
@@ -1800,9 +1804,17 @@ li > p:last-of-type {
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-changes-from-02-to-03-2" class="section-name selfRef">Changes from 02 to 03</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="section-8.1-1.1">Switch to tel: and sip: for c: (contact).<a href="#section-8.1-1.1" class="pilcrow">¶</a>
+<li class="normal" id="section-8.1-1.1">Require using <span><a href="#I-D.reddy-add-resolver-info" class="xref">RESINFO</a> [<a href="#I-D.reddy-add-resolver-info" class="xref">I-D.reddy-add-resolver-info</a>]</span> in
+   client processing and added discussion of attack mitigation of using RESINFO.<a href="#section-8.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-8.1-1.2">Removed 'partial URI' text<a href="#section-8.1-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-8.1-1.2">Removed validation of URI domain suffix, which we can't
+   do for some URLs (e.g., tel:), is difficult/impossible for
+   others when 3rd party is handling level one support (e.g.,
+   sips:). Instead rely on RESINFO telling us if EDE is supported by the
+   DNS server and, if so, expect it to properly support EDE rather than
+   blindly forward an unknown DNS option.<a href="#section-8.1-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-8.1-1.3">Removed 'partial URI' text<a href="#section-8.1-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>

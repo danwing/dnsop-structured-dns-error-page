@@ -29,7 +29,7 @@
 <rfc category="std" consensus="true"
      docName="draft-wing-dnsop-structured-dns-error-page-03" ipr="trust200902"
      obsoletes="" sortRefs="true" submissionType="IETF" symRefs="true"
-     tocDepth="4" tocInclude="true" updates="RFC8914" version="3"
+     tocDepth="4" tocInclude="true" updates="8914" version="3"
      xml:lang="en">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
 
@@ -118,9 +118,10 @@
       cause harm especially if the blocked DNS response is to an HTTPS
       website.</t>
 
-      <t>This document defines a mechanism to explain the reason for the DNS
-      filtering. This information can be parsed by the client and displayed,
-      logged, or used for other purposes.</t>
+      <t>This document updates the EXTRA-TEXT field of Extended DNS Error
+      [RFC8914] to provide details on the DNS filtering.  This information
+      can be parsed by the client and displayed, logged, or used for other
+      purposes.</t>
     </abstract>
   </front>
 
@@ -141,7 +142,7 @@
 
       <t>Users of DNS services which perform filtering may wish to receive
       more information about such filtering to resolve problems with the
-      filter -- for example to contact the administrator to whitelist a domain
+      filter -- for example to contact the administrator to allowlist a domain
       that was erroneously filtered or to understand the reason a particular
       domain was filtered. With that information, the user can choose another
       network, open a trouble ticket with the DNS administrator to resolve
@@ -217,18 +218,19 @@
               is not a viable option in several deployments like home
               networks, schools, Small Office/Home Office (SOHO), and Small/
               Medium Enterprise (SME). In these cases, the typical behavior is
-              that the forged DNS response directs the user towards a server
-              hosted to display the block page which breaks the TLS
-              connection. For web-browsing this then results in an HTTPS
-              certificate error message indicating that a secure connection
-              could not be established, which gives no information to the
-              end-user about the reason for the error. The typical errors are
+              that the filtered DNS response points to a server
+              that will display the block page.  If the client is using
+	      HTTPS (via web browser or another application) this results in
+	      a certificate validation error which gives no information to the
+              end-user about the reason for the DNS filtering. Browsers will display
+	      errors such as
               "The security certificate presented by this website was not
               issued by a trusted certificate authority" (Internet
               Explorer/Edge"), "The site's security certificate is not
               trusted" (Chrome), "This Connection is Untrusted" (Firefox),
               "Safari can't verify the identity of the website..." (Safari on
-              MacOS)".</t>
+              MacOS).  Applications might display even more cryptic error
+	      messages.</t>
             </li>
 
             <li>Enterprise networks do not assume that all the connected
@@ -238,10 +240,10 @@
             cannot be installed on IoT devices without a device management
             tool.</li>
 
-            <li>An end user does not know why the connection was reset and,
+            <li>An end user does not know why the connection was prevented and,
             consequently, may repeatedly try to reach the domain but with no
             success. Frustrated, the end user may switch to an alternate
-            network that offers no DNS-level protection against malware and
+            network that offers no DNS filtering against malware and
             phishing, potentially compromising both security and privacy.
             Furthermore, certificate errors train users to click through
             certificate errors, which is a bad security practice. To eliminate
@@ -359,11 +361,10 @@ Most importantly, EDE option does not offer
     <section anchor="option-code">
       <name>I-JSON in EXTRA-TEXT field</name>
 
-      <t>Servers compliant with this specification will send JSON data in the
-      <xref target="RFC8914">EXTRA-TEXT field</xref>. Precisely, the JSON
-      object MUST use the I-JSON message format <xref target="RFC7493" />.
-      Requiring the use of I-JSON instead of more general JSON format greatly
-      increases the likelihood of interoperability.</t>
+      <t>Servers compliant with this specification send I-JSON
+      data in the <xref target="RFC8914">EXTRA-TEXT field</xref> using
+      the <xref target="RFC7493">Internet JSON (I-JSON) message
+      format</xref>.</t>
 
       <aside>
         <t>Note that <xref target="RFC7493" /> was based on <xref
@@ -375,17 +376,17 @@ Most importantly, EDE option does not offer
 
       <dl newline="false" spacing="normal">
         <dt>c: (contact)</dt>
-
-        <dd>The contact details of the IT/InfoSec team. This field is structured as an array of contact URIs such as Tel or SIPS URIs. At least one contact URI MUST be included. This field is
-        mandatory.</dd>
+        <dd>The contact details of the IT/InfoSec team to report
+        mis-classified DNS filtering. This field is structured as an array
+        of contact URIs (e.g., tel, sips, https).  At least one
+        contact URI MUST be included. This field is mandatory.
+	</dd>
 
         <dt>j: (justification)</dt>
-
         <dd>the textual justification for this particular DNS filtering. This
         field is mandatory.</dd>
 
         <dt>o: (organization)</dt>
-
         <dd>human-friendly name of the organization that filtered this
         particular DNS query. This field is optional.</dd>
       </dl>
@@ -442,10 +443,13 @@ Most importantly, EDE option does not offer
         JSON:</t>
 
         <ul>
-          <li>The requestor MUST check that the response was received over an
+          <li>The response MUST be received over an
           encrypted DNS channel. If not, the requestor MUST discard data in
           the EXTRA-TEXT field.</li>
 
+	  <li>The response MUST be received from a DNS server which advertised EDE
+	  support via <xref target="I-D.reddy-add-resolver-info">RESINFO</xref>.</li>
+	  
           <li>Servers which don't support this specification might use plain
           text in the EXTRA-TEXT field so that requestors SHOULD properly
           handle both plaintext and JSON text in the EXTRA-TEXT field.</li>
@@ -459,7 +463,6 @@ Most importantly, EDE option does not offer
           discarded.</li>
         </ul>
 
-        <aside />
 
         <ul>
           <li>If a DNS client has enabled opportunistic privacy profile (<xref
@@ -515,7 +518,8 @@ Most importantly, EDE option does not offer
 
         <artwork align="left" alt="" name="" type=""><![CDATA[  
   {
-    "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com"],
+  "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com",
+        "https://ticket.example.com?d=example.org&t=1650560748"],
     "j": "malware present for 23 days",
     "o": "example.net Filtering Service"
   }]]></artwork>
@@ -531,7 +535,8 @@ Most importantly, EDE option does not offer
         <artwork align="left" alt="" name="" type=""><![CDATA[
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
-  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com"],\
+  {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
+  "https://ticket.example.com?d=example.org&t=1650560748"], \
   "j":"malware present for 23 days","o":"example.net Filtering \
   Service"}]]></artwork>
       </figure>
@@ -562,28 +567,17 @@ Most importantly, EDE option does not offer
       <t>When displaying the free-form text of "c" and "j", the browser SHOULD
       NOT make any of those elements into actionable (clickable) links.</t>
 
-      <t>An attacker who is able to inject (or modify) the EXTRA-TEXT field so
-      that a DNS proxy or DNS forwarder, unaware of the option, will forward
-      it and pass the validation checks described in <xref
-      target="process-response" />. This means the JSON fields can be
-      controlled by the attacker. The "c" and "j" fields are, perhaps, the
-      most interesting for an attacker to modify for nefarious purposes. </t>
+      <t>An attacker might inject (or modify) the EDE EXTRA-TEXT field with
+      an DNS proxy or DNS forwarder that is unaware of EDE.  Such a DNS proxy or
+      DNS forwarder will forward that attacker-controlled EDE option.  To prevent
+      such an attack, clients supporting this document MUST discard the EDE
+      option if their DNS server does not signal EDE support via RESINFO
+      <xref target="I-D.reddy-add-resolver-info"></xref>.  As recommended in
+      <xref target="I-D.reddy-add-resolver-info"></xref>, RESINFO should be
+      retrieved over an encrypted DNS channel or integrity protected with
+      DNSSEC.</t>
+      
 
-      <aside>
-        <t>The authors anticipate enhancements to <xref
-        target="I-D.reddy-add-resolver-info" /> will reduce or eliminate the
-        concern described in previous paragraph.</t>
-      </aside>
-
-      <t />
-
-      <t />
-
-      <t />
-
-      <t />
-
-      <aside />
 
       <!--
       <t>Because this specification still allows DNS filtering to
@@ -676,10 +670,19 @@ Most importantly, EDE option does not offer
         <name>Changes from 02 to 03</name>
 
         <ul>
-          <li>Switch to tel: and sip: for c: (contact).</li>
-	  
-          <li>Removed 'partial URI' text</li>
+          <li>Require using <xref target="I-D.reddy-add-resolver-info">RESINFO</xref> in
+	  client processing and added discussion of attack mitigation of using RESINFO.</li>
 
+	  <li>Removed validation of URI domain suffix, which we can't
+	  do for some URLs (e.g., tel:), is difficult/impossible for
+	  others when 3rd party is handling level one support (e.g.,
+	  sips:). Instead rely on RESINFO telling us if EDE is supported by the
+	  DNS server and, if so, expect it to properly support EDE rather than
+	  blindly forward an unknown DNS option.</li>
+
+	  <li>Removed 'partial URI' text</li>
+
+	  
         </ul>
       </section>
       
