@@ -352,7 +352,7 @@ Most importantly, EDE option does not offer
     <section anchor="option-code">
       <name>I-JSON in EXTRA-TEXT field</name>
 
-      <t>Servers compliant with this specification send I-JSON data in the
+      <t>Servers that are compliant with this specification send I-JSON data in the
       <xref target="RFC8914">EXTRA-TEXT field</xref> using the <xref
       target="RFC7493">Internet JSON (I-JSON) message format</xref>.</t>
 
