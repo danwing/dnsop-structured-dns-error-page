@@ -29,8 +29,7 @@
 <rfc category="std" consensus="true"
      docName="draft-wing-dnsop-structured-dns-error-page-03" ipr="trust200902"
      obsoletes="" sortRefs="true" submissionType="IETF" symRefs="true"
-     tocDepth="4" tocInclude="true" updates="8914" version="3"
-     xml:lang="en">
+     tocDepth="4" tocInclude="true" updates="8914" version="3" xml:lang="en">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
 
   <front>
@@ -119,8 +118,8 @@
       website.</t>
 
       <t>This document updates the EXTRA-TEXT field of Extended DNS Error
-      [RFC8914] to provide details on the DNS filtering.  This information
-      can be parsed by the client and displayed, logged, or used for other
+      [RFC8914] to provide details on the DNS filtering. This information can
+      be parsed by the client and displayed, logged, or used for other
       purposes.</t>
     </abstract>
   </front>
@@ -218,19 +217,18 @@
               is not a viable option in several deployments like home
               networks, schools, Small Office/Home Office (SOHO), and Small/
               Medium Enterprise (SME). In these cases, the typical behavior is
-              that the filtered DNS response points to a server
-              that will display the block page.  If the client is using
-	      HTTPS (via web browser or another application) this results in
-	      a certificate validation error which gives no information to the
-              end-user about the reason for the DNS filtering. Browsers will display
-	      errors such as
-              "The security certificate presented by this website was not
-              issued by a trusted certificate authority" (Internet
-              Explorer/Edge"), "The site's security certificate is not
-              trusted" (Chrome), "This Connection is Untrusted" (Firefox),
+              that the filtered DNS response points to a server that will
+              display the block page. If the client is using HTTPS (via web
+              browser or another application) this results in a certificate
+              validation error which gives no information to the end-user
+              about the reason for the DNS filtering. Browsers will display
+              errors such as "The security certificate presented by this
+              website was not issued by a trusted certificate authority"
+              (Internet Explorer/Edge"), "The site's security certificate is
+              not trusted" (Chrome), "This Connection is Untrusted" (Firefox),
               "Safari can't verify the identity of the website..." (Safari on
-              MacOS).  Applications might display even more cryptic error
-	      messages.</t>
+              MacOS). Applications might display even more cryptic error
+              messages.</t>
             </li>
 
             <li>Enterprise networks do not assume that all the connected
@@ -240,19 +238,19 @@
             cannot be installed on IoT devices without a device management
             tool.</li>
 
-            <li>An end user does not know why the connection was prevented and,
-            consequently, may repeatedly try to reach the domain but with no
-            success. Frustrated, the end user may switch to an alternate
-            network that offers no DNS filtering against malware and
-            phishing, potentially compromising both security and privacy.
-            Furthermore, certificate errors train users to click through
-            certificate errors, which is a bad security practice. To eliminate
-            the need for an end user to click through certificate errors, an
-            end user may manually install a local root certificate on a host
-            device. Doing so, however, is also a bad security practice as it
-            creates a security vulnerability that may be exploited by a MITM
-            attack. When a manually installed local root certificate expires,
-            the user has to (again) manually install the new local root
+            <li>An end user does not know why the connection was prevented
+            and, consequently, may repeatedly try to reach the domain but with
+            no success. Frustrated, the end user may switch to an alternate
+            network that offers no DNS filtering against malware and phishing,
+            potentially compromising both security and privacy. Furthermore,
+            certificate errors train users to click through certificate
+            errors, which is a bad security practice. To eliminate the need
+            for an end user to click through certificate errors, an end user
+            may manually install a local root certificate on a host device.
+            Doing so, however, is also a bad security practice as it creates a
+            security vulnerability that may be exploited by a MITM attack.
+            When a manually installed local root certificate expires, the user
+            has to (again) manually install the new local root
             certificate.</li>
           </ul>
         </li>
@@ -276,19 +274,11 @@
         discussed in bullets (1) and (2), but the user still does not know the
         exact reason nor he/she is aware of the exact entity blocking the
         access to the domain. For example, a DNS server may block access to a
-        domain based on the content category such as "Adult Content" to
-        enforce parental control, "Violence &amp; Terrorism" due to an
-        external requirement imposed by an external entity (e.g., Law
-        Enforcement Agency), etc. These content categories cannot be
-        standardized because the classification of domains into content
-        categories is vendor specific, typically ranges from 40 to 100 types
-        of categories depending on the vendor and the categories keep
-        evolving. Furthermore, the threat data used to categorize domains may
-        sometimes misclassify domains (e.g., domains wrongly classified as
-        Domain Generation Algorithm (DGA) by deep learning techniques, domain
-        wrongly classified as phishing due to crowd sourcing, new domains not
-        categorized by the threat data). A user needs to know the contact
-        details of the IT/InfoSec team to raise a complaint.</li>
+        domain based on the content category such as "Malware" to protect the
+        endpoint from malicious software, "Phishing" to prevent the user from
+        revealing sensitive information to the attacker, etc. A user needs to
+        know the contact details of the IT/InfoSec team to raise a
+        complaint.</li>
 
         <li>When a resolver or forwarder forwards the received EDE option, the
         EXTRA-TEXT field only conveys the source of the error (Section 3 of
@@ -361,10 +351,9 @@ Most importantly, EDE option does not offer
     <section anchor="option-code">
       <name>I-JSON in EXTRA-TEXT field</name>
 
-      <t>Servers compliant with this specification send I-JSON
-      data in the <xref target="RFC8914">EXTRA-TEXT field</xref> using
-      the <xref target="RFC7493">Internet JSON (I-JSON) message
-      format</xref>.</t>
+      <t>Servers compliant with this specification send I-JSON data in the
+      <xref target="RFC8914">EXTRA-TEXT field</xref> using the <xref
+      target="RFC7493">Internet JSON (I-JSON) message format</xref>.</t>
 
       <aside>
         <t>Note that <xref target="RFC7493" /> was based on <xref
@@ -376,17 +365,25 @@ Most importantly, EDE option does not offer
 
       <dl newline="false" spacing="normal">
         <dt>c: (contact)</dt>
+
         <dd>The contact details of the IT/InfoSec team to report
-        mis-classified DNS filtering. This field is structured as an array
-        of contact URIs (e.g., tel, sips, https).  At least one
-        contact URI MUST be included. This field is mandatory.
-	</dd>
+        mis-classified DNS filtering. This field is structured as an array of
+        contact URIs (e.g., tel, sips, https). At least one contact URI MUST
+        be included. This field is mandatory.</dd>
 
         <dt>j: (justification)</dt>
-        <dd>the textual justification for this particular DNS filtering. This
-        field is mandatory.</dd>
+
+        <dd>the textual justification for this particular DNS filtering. The
+        field should be treated only as diagnostic information for IT staff.
+        This field is mandatory.</dd>
+
+        <dt>s: (suberror)</dt>
+
+        <dd>the suberror code for this particular DNS filtering. This field is
+        optional.</dd>
 
         <dt>o: (organization)</dt>
+
         <dd>human-friendly name of the organization that filtered this
         particular DNS query. This field is optional.</dd>
       </dl>
@@ -443,13 +440,13 @@ Most importantly, EDE option does not offer
         JSON:</t>
 
         <ul>
-          <li>The response MUST be received over an
-          encrypted DNS channel. If not, the requestor MUST discard data in
-          the EXTRA-TEXT field.</li>
+          <li>The response MUST be received over an encrypted DNS channel. If
+          not, the requestor MUST discard data in the EXTRA-TEXT field.</li>
 
-	  <li>The response MUST be received from a DNS server which advertised EDE
-	  support via <xref target="I-D.reddy-add-resolver-info">RESINFO</xref>.</li>
-	  
+          <li>The response MUST be received from a DNS server which advertised
+          EDE support via <xref
+          target="I-D.reddy-add-resolver-info">RESINFO</xref>.</li>
+
           <li>Servers which don't support this specification might use plain
           text in the EXTRA-TEXT field so that requestors SHOULD properly
           handle both plaintext and JSON text in the EXTRA-TEXT field.</li>
@@ -461,8 +458,10 @@ Most importantly, EDE option does not offer
           <li>If either of the mandatory JSON names "c" and "j" are missing or
           have empty values in the EXTRA-TEXT field, the entire JSON is
           discarded.</li>
-        </ul>
 
+          <li>The JSON name "s" MUST NOT be present with the extended error
+          code "Censored".</li>
+        </ul>
 
         <ul>
           <li>If a DNS client has enabled opportunistic privacy profile (<xref
@@ -499,8 +498,8 @@ Most importantly, EDE option does not offer
           client is implementation dependent <xref target="RFC5625" />.
           Implementations MAY choose to not forward the JSON information, or
           they MAY choose to create a new EDE option that conveys the
-          information in the "c" and "j" fields encoded in the JSON object.
-          </li>
+          information in the "c", "s" and "j" fields encoded in the JSON
+          object.</li>
         </ul>
       </section>
     </section>
@@ -521,6 +520,7 @@ Most importantly, EDE option does not offer
   "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com",
         "https://ticket.example.com?d=example.org&t=1650560748"],
     "j": "malware present for 23 days",
+    "s": 1,
     "o": "example.net Filtering Service"
   }]]></artwork>
       </figure>
@@ -536,7 +536,7 @@ Most importantly, EDE option does not offer
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
   {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
-  "https://ticket.example.com?d=example.org&t=1650560748"], \
+  "https://ticket.example.com?d=example.org&t=1650560748"],"s": 1, \
   "j":"malware present for 23 days","o":"example.net Filtering \
   Service"}]]></artwork>
       </figure>
@@ -561,23 +561,22 @@ Most importantly, EDE option does not offer
       the ability of a malicious encrypted resolver to cause harm. If the
       client decides not to display the all of the information in the
       EXTRA-TEXT field, it can be logged for diagnostics purpose and the
-      client can only display the resolver hostname that blocked the domain
-      and error description for the EDE code to the end-user. </t>
+      client can only display the resolver hostname that blocked the domain,
+      error description for the EDE code and the suberror description for the
+      "s'" field to the end-user.</t>
 
-      <t>When displaying the free-form text of "c" and "j", the browser SHOULD
+      <t>When displaying the free-form text of "c" and "o", the browser SHOULD
       NOT make any of those elements into actionable (clickable) links.</t>
 
-      <t>An attacker might inject (or modify) the EDE EXTRA-TEXT field with
-      an DNS proxy or DNS forwarder that is unaware of EDE.  Such a DNS proxy or
-      DNS forwarder will forward that attacker-controlled EDE option.  To prevent
-      such an attack, clients supporting this document MUST discard the EDE
-      option if their DNS server does not signal EDE support via RESINFO
-      <xref target="I-D.reddy-add-resolver-info"></xref>.  As recommended in
-      <xref target="I-D.reddy-add-resolver-info"></xref>, RESINFO should be
+      <t>An attacker might inject (or modify) the EDE EXTRA-TEXT field with an
+      DNS proxy or DNS forwarder that is unaware of EDE. Such a DNS proxy or
+      DNS forwarder will forward that attacker-controlled EDE option. To
+      prevent such an attack, clients supporting this document MUST discard
+      the EDE option if their DNS server does not signal EDE support via
+      RESINFO <xref target="I-D.reddy-add-resolver-info" />. As recommended in
+      <xref target="I-D.reddy-add-resolver-info" />, RESINFO should be
       retrieved over an encrypted DNS channel or integrity protected with
       DNSSEC.</t>
-      
-
 
       <!--
       <t>Because this specification still allows DNS filtering to
@@ -613,7 +612,7 @@ Most importantly, EDE option does not offer
     </section>
 
     <section anchor="IANA" numbered="true" toc="default">
-      <name>IANA Considerations</name>
+      <name>IANA Considerationsd</name>
 
       <t>This document requests IANA to register the
       "application/json+structured-dns-error" media type in the "Media Types"
@@ -657,9 +656,138 @@ Most importantly, EDE option does not offer
    Provisional registration?  No]]></artwork>
 
       <t />
+
+      <section anchor="procedure">
+        <name>New registry for SubError Codes</name>
+
+        <t>IANA is requested to create a new registry, entitled "SubError
+        Codes". A registration procedure for suberror codes MUST include the
+        following fields:</t>
+
+        <ul spacing="normal">
+          <li>Number: wire format suberror code (range 0-255)</li>
+
+          <li>Meaning: a short description</li>
+
+          <li>Reference: pointer to specification text</li>
+
+          <li>Change Controller: Person or entity, with contact information if
+          appropriate.</li>
+        </ul>
+
+        <t />
+
+        <t>New entries in this registry are subject to an Expert Review
+        registration policy <xref target="RFC8126" />. The designated expert
+        MUST ensure that the Reference is stable and publicly available, and
+        that it specifies the suberror code and a short description. The
+        Format Reference MAY be any individual's Internet-Draft, or a document
+        from any other source with similar assurances of stability and
+        availability.</t>
+
+        <t />
+
+        <t />
+
+        <t />
+      </section>
     </section>
 
-    <!--    <section title="Acknowledgements">
+    <section anchor="iana-keys">
+      <name>Initial contents</name>
+
+      <t>The registry shall initially be populated with the following suberror
+      codes. :</t>
+
+      <table>
+        <thead>
+          <tr>
+            <th align="left">Number</th>
+
+            <th align="left">Meaning</th>
+
+            <th align="left">Reference</th>
+
+            <th align="left">Change Controller</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td align="left">0</td>
+
+            <td align="left">No error</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+
+          <tr>
+            <td align="left">1</td>
+
+            <td align="left">Malware</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+
+          <tr>
+            <td align="left">2</td>
+
+            <td align="left">Phishing</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+
+          <tr>
+            <td align="left">3</td>
+
+            <td align="left">Spam</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+
+          <tr>
+            <td align="left">4</td>
+
+            <td align="left">Spyware</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+
+          <tr>
+            <td align="left">5</td>
+
+            <td align="left">Adware</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+
+          <tr>
+            <td align="left">6</td>
+
+            <td align="left">Network policy imposed by the operator of the
+            network</td>
+
+            <td align="left">This document</td>
+
+            <td align="left">IETF</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!--
 </section>
 -->
 
@@ -670,22 +798,22 @@ Most importantly, EDE option does not offer
         <name>Changes from 02 to 03</name>
 
         <ul>
-          <li>Require using <xref target="I-D.reddy-add-resolver-info">RESINFO</xref> in
-	  client processing and added discussion of attack mitigation of using RESINFO.</li>
+          <li>Require using <xref
+          target="I-D.reddy-add-resolver-info">RESINFO</xref> in client
+          processing and added discussion of attack mitigation of using
+          RESINFO.</li>
 
-	  <li>Removed validation of URI domain suffix, which we can't
-	  do for some URLs (e.g., tel:), is difficult/impossible for
-	  others when 3rd party is handling level one support (e.g.,
-	  sips:). Instead rely on RESINFO telling us if EDE is supported by the
-	  DNS server and, if so, expect it to properly support EDE rather than
-	  blindly forward an unknown DNS option.</li>
+          <li>Removed validation of URI domain suffix, which we can't do for
+          some URLs (e.g., tel:), is difficult/impossible for others when 3rd
+          party is handling level one support (e.g., sips:). Instead rely on
+          RESINFO telling us if EDE is supported by the DNS server and, if so,
+          expect it to properly support EDE rather than blindly forward an
+          unknown DNS option.</li>
 
-	  <li>Removed 'partial URI' text</li>
-
-	  
+          <li>Removed 'partial URI' text</li>
         </ul>
       </section>
-      
+
       <section numbered="true" toc="exclude">
         <name>Changes from 01 to 02</name>
 
@@ -746,6 +874,9 @@ Most importantly, EDE option does not offer
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8310.xml"
+                    xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
         <!--
