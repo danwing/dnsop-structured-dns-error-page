@@ -121,6 +121,7 @@
       [RFC8914] to provide details on the DNS filtering. This information can
       be parsed by the client and displayed, logged, or used for other
       purposes.</t>
+      <t>This document updates RFC 8914.</t>
     </abstract>
   </front>
 
