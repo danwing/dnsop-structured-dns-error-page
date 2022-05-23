@@ -662,7 +662,7 @@ Most importantly, EDE option does not offer
         <name>New registry for SubError Codes</name>
 
         <t>IANA is requested to create a new registry, entitled "SubError
-        Codes". A registration procedure for suberror codes MUST include the
+        Codes" under "Domain Name System (DNS) Parameters, Extended DNS Error Codes" registry. A registration procedure for suberror codes MUST include the
         following fields:</t>
 
         <ul spacing="normal">
