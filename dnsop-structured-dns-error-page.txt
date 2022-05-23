@@ -24,10 +24,11 @@ Abstract
    end users cause harm especially if the blocked DNS response is to an
    HTTPS website.
 
-   This document updates the EXTRA-TEXT field of Extended DNS Error
-   [RFC8914] to provide details on the DNS filtering.  This information
-   can be parsed by the client and displayed, logged, or used for other
-   purposes.
+   This document updates the EXTRA-TEXT field of Extended DNS Error to
+   provide details on the DNS filtering.  This information can be parsed
+   by the client and displayed, logged, or used for other purposes.
+
+   This document updates RFC 8914.
 
 Status of This Memo
 
@@ -46,10 +47,9 @@ Status of This Memo
 
    This Internet-Draft will expire on 24 November 2022.
 
-Copyright Notice
 
-   Copyright (c) 2022 IETF Trust and the persons identified as the
-   document authors.  All rights reserved.
+
+
 
 
 
@@ -57,6 +57,11 @@ Wing, et al.            Expires 24 November 2022                [Page 1]
 
 Internet-Draft            Data for Filtered DNS                 May 2022
 
+
+Copyright Notice
+
+   Copyright (c) 2022 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -80,7 +85,7 @@ Table of Contents
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
    7.  IANA Considerationsd  . . . . . . . . . . . . . . . . . . . .  10
      7.1.  New registry for SubError Codes . . . . . . . . . . . . .  11
-   8.  Initial contents  . . . . . . . . . . . . . . . . . . . . . .  12
+   8.  Initial Sub-errors  . . . . . . . . . . . . . . . . . . . . .  12
    9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  13
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
@@ -99,11 +104,6 @@ Table of Contents
    Internet Service Providers typically block access to some DNS domains
    due to a requirement imposed by an external entity (e.g., law
    enforcement agency) also performed using DNS-based content filtering.
-
-
-
-
-
 
 
 
@@ -307,9 +307,9 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 3.  I-JSON in EXTRA-TEXT field
 
-   Servers compliant with this specification send I-JSON data in the
-   EXTRA-TEXT field [RFC8914] using the Internet JSON (I-JSON) message
-   format [RFC7493].
+   Servers that are compliant with this specification send I-JSON data
+   in the EXTRA-TEXT field [RFC8914] using the Internet JSON (I-JSON)
+   message format [RFC7493].
 
       |  Note that [RFC7493] was based on [RFC7159], but [RFC7159] was
       |  replaced by [RFC8259].
@@ -384,8 +384,8 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    *  The response MUST be received over an encrypted DNS channel.  If
       not, the requestor MUST discard data in the EXTRA-TEXT field.
 
-   *  The response MUST be received from a DNS server which advertised
-      EDE support via RESINFO [I-D.reddy-add-resolver-info].
+
+
 
 
 
@@ -393,6 +393,10 @@ Wing, et al.            Expires 24 November 2022                [Page 7]
 
 Internet-Draft            Data for Filtered DNS                 May 2022
 
+
+   *  The response MUST be received from a DNS server which advertised
+      EDE support via a trusted channel, e.g., RESINFO
+      [I-D.reddy-add-resolver-info].
 
    *  Servers which don't support this specification might use plain
       text in the EXTRA-TEXT field so that requestors SHOULD properly
@@ -436,10 +440,6 @@ Internet-Draft            Data for Filtered DNS                 May 2022
       whether the encrypted DNS resolver performs DNS-based content
       filtering or not by retrieving resolver information using the
       method defined in [I-D.reddy-add-resolver-info].
-
-
-
-
 
 
 
@@ -600,16 +600,16 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 7.1.  New registry for SubError Codes
 
-   IANA is requested to create a new registry, entitled "SubError
-   Codes".  A registration procedure for suberror codes MUST include the
-   following fields:
+   IANA is requested to create a new registry, entitled "SubError Codes"
+   under "Domain Name System (DNS) Parameters, Extended DNS Error Codes"
+   registry.  A registration procedure for suberror codes MUST include
+   the following fields:
 
    *  Number: wire format suberror code (range 0-255)
 
    *  Meaning: a short description
 
-   *  Reference: pointer to specification text
-
+   *  Reference: pointer to the specification text
 
 
 
@@ -626,14 +626,14 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    registration policy [RFC8126].  The designated expert MUST ensure
    that the Reference is stable and publicly available, and that it
    specifies the suberror code and a short description.  The Format
-   Reference MAY be any individual's Internet-Draft, or a document from
+   Reference may be any individual's Internet-Draft, or a document from
    any other source with similar assurances of stability and
    availability.
 
 
 
 
-8.  Initial contents
+8.  Initial Sub-errors
 
    The registry shall initially be populated with the following suberror
    codes. :
@@ -642,7 +642,7 @@ Internet-Draft            Data for Filtered DNS                 May 2022
      | Number | Meaning                     | Reference | Change     |
      |        |                             |           | Controller |
      +========+=============================+===========+============+
-     | 0      | No error                    | This      | IETF       |
+     | 0      | Reserved                    | This      | IETF       |
      |        |                             | document  |            |
      +--------+-----------------------------+-----------+------------+
      | 1      | Malware                     | This      | IETF       |

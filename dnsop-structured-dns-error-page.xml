@@ -117,10 +117,10 @@
       cause harm especially if the blocked DNS response is to an HTTPS
       website.</t>
 
-      <t>This document updates the EXTRA-TEXT field of Extended DNS Error
-      to provide details on the DNS filtering. This information can
-      be parsed by the client and displayed, logged, or used for other
-      purposes.</t>
+      <t>This document updates the EXTRA-TEXT field of Extended DNS Error to
+      provide details on the DNS filtering. This information can be parsed by
+      the client and displayed, logged, or used for other purposes.</t>
+
       <t>This document updates RFC 8914.</t>
     </abstract>
   </front>
@@ -352,8 +352,8 @@ Most importantly, EDE option does not offer
     <section anchor="option-code">
       <name>I-JSON in EXTRA-TEXT field</name>
 
-      <t>Servers that are compliant with this specification send I-JSON data in the
-      <xref target="RFC8914">EXTRA-TEXT field</xref> using the <xref
+      <t>Servers that are compliant with this specification send I-JSON data
+      in the <xref target="RFC8914">EXTRA-TEXT field</xref> using the <xref
       target="RFC7493">Internet JSON (I-JSON) message format</xref>.</t>
 
       <aside>
@@ -662,8 +662,9 @@ Most importantly, EDE option does not offer
         <name>New registry for SubError Codes</name>
 
         <t>IANA is requested to create a new registry, entitled "SubError
-        Codes" under "Domain Name System (DNS) Parameters, Extended DNS Error Codes" registry. A registration procedure for suberror codes MUST include the
-        following fields:</t>
+        Codes" under "Domain Name System (DNS) Parameters, Extended DNS Error
+        Codes" registry. A registration procedure for suberror codes MUST
+        include the following fields:</t>
 
         <ul spacing="normal">
           <li>Number: wire format suberror code (range 0-255)</li>
@@ -717,7 +718,7 @@ Most importantly, EDE option does not offer
           <tr>
             <td align="left">0</td>
 
-            <td align="left">No error</td>
+            <td align="left">Reserved</td>
 
             <td align="left">This document</td>
 
