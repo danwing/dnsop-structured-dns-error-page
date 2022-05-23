@@ -445,7 +445,7 @@ Most importantly, EDE option does not offer
           not, the requestor MUST discard data in the EXTRA-TEXT field.</li>
 
           <li>The response MUST be received from a DNS server which advertised
-          EDE support via <xref
+          EDE support via a trusted channel, e.g., <xref
           target="I-D.reddy-add-resolver-info">RESINFO</xref>.</li>
 
           <li>Servers which don't support this specification might use plain
