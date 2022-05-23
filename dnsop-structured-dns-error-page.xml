@@ -682,7 +682,7 @@ Most importantly, EDE option does not offer
         registration policy <xref target="RFC8126" />. The designated expert
         MUST ensure that the Reference is stable and publicly available, and
         that it specifies the suberror code and a short description. The
-        Format Reference MAY be any individual's Internet-Draft, or a document
+        Format Reference may be any individual's Internet-Draft, or a document
         from any other source with similar assurances of stability and
         availability.</t>
 
