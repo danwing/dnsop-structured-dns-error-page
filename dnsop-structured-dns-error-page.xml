@@ -695,7 +695,7 @@ Most importantly, EDE option does not offer
     </section>
 
     <section anchor="iana-keys">
-      <name>Initial contents</name>
+      <name>Initial Sub-errors</name>
 
       <t>The registry shall initially be populated with the following suberror
       codes. :</t>
