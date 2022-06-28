@@ -27,7 +27,7 @@
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="std" consensus="true"
-     docName="draft-wing-dnsop-structured-dns-error-page-03" ipr="trust200902"
+     docName="draft-wing-dnsop-structured-dns-error-page-04" ipr="trust200902"
      obsoletes="" sortRefs="true" submissionType="IETF" symRefs="true"
      tocDepth="4" tocInclude="true" updates="8914" version="3" xml:lang="en">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
@@ -346,7 +346,7 @@ Most importantly, EDE option does not offer
       messages, for example, DNS-over-HTTPS <xref format="default"
       target="RFC8484" />, DNS-over-TLS <xref format="default"
       target="RFC7858" />, or DNS-over-QUIC <xref format="default"
-      target="I-D.ietf-dprive-dnsoquic" />.</t>
+      target="RFC9250" />.</t>
     </section>
 
     <section anchor="option-code">
@@ -425,8 +425,6 @@ Most importantly, EDE option does not offer
         if the query contained the OPT pseudo-RR the DNS server MAY return
         more detail in the EXTRA-TEXT field as described in <xref
         target="process-response" />.</t>
-
-        <t />
 
         <t>Servers may decide to return small TTL values in filtered DNS
         responses (e.g., 2 seconds) to handle domain category and reputation
@@ -537,12 +535,11 @@ Most importantly, EDE option does not offer
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
   {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
-  "https://ticket.example.com?d=example.org&t=1650560748"],"s": 1, \
+  "https://ticket.example.com?d=example.org&t=1650560748"],"s":1, \
   "j":"malware present for 23 days","o":"example.net Filtering \
   Service"}]]></artwork>
       </figure>
 
-      <t />
     </section>
 
     <section anchor="Security" numbered="true" toc="default">
@@ -656,8 +653,6 @@ Most importantly, EDE option does not offer
 
    Provisional registration?  No]]></artwork>
 
-      <t />
-
       <section anchor="procedure">
         <name>New registry for SubError Codes</name>
 
@@ -677,8 +672,6 @@ Most importantly, EDE option does not offer
           appropriate.</li>
         </ul>
 
-        <t />
-
         <t>New entries in this registry are subject to an Expert Review
         registration policy <xref target="RFC8126" />. The designated expert
         MUST ensure that the Reference is stable and publicly available, and
@@ -687,11 +680,6 @@ Most importantly, EDE option does not offer
         from any other source with similar assurances of stability and
         availability.</t>
 
-        <t />
-
-        <t />
-
-        <t />
       </section>
     </section>
 
@@ -795,6 +783,14 @@ Most importantly, EDE option does not offer
 
     <section numbered="true" removeInRFC="true" toc="default">
       <name>Changes</name>
+
+     <section numbered="true" toc="exclude">
+        <name>Changes from 03 to 04</name>
+       <ul>
+         <li>Clarified text content is for IT staff</li>
+         <li>Introduced 'suberror' terminology and associated IANA registration</li>
+       </ul>
+      </section>
 
       <section numbered="true" toc="exclude">
         <name>Changes from 02 to 03</name>
@@ -923,7 +919,7 @@ Most importantly, EDE option does not offer
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8259.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dprive-dnsoquic.xml"
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.9250.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"

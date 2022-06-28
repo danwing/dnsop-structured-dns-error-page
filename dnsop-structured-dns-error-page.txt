@@ -6,15 +6,15 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: 8914 (if approved)                                     T. Reddy
 Intended status: Standards Track                                  Akamai
-Expires: 24 November 2022                                        N. Cook
+Expires: 30 December 2022                                        N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                             23 May 2022
+                                                            28 June 2022
 
 
                     Structured Data for Filtered DNS
-             draft-wing-dnsop-structured-dns-error-page-03
+             draft-wing-dnsop-structured-dns-error-page-04
 
 Abstract
 
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 November 2022.
+   This Internet-Draft will expire on 30 December 2022.
 
 
 
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 1]
+Wing, et al.            Expires 30 December 2022                [Page 1]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
 Copyright Notice
@@ -86,11 +86,11 @@ Table of Contents
    7.  IANA Considerationsd  . . . . . . . . . . . . . . . . . . . .  10
      7.1.  New registry for SubError Codes . . . . . . . . . . . . .  11
    8.  Initial Sub-errors  . . . . . . . . . . . . . . . . . . . . .  12
-   9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  13
+   9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
      10.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 2]
+Wing, et al.            Expires 30 December 2022                [Page 2]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    Users of DNS services which perform filtering may wish to receive
@@ -165,9 +165,9 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 3]
+Wing, et al.            Expires 30 December 2022                [Page 3]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
        *  However, configuring the local root certificate on endpoints
@@ -221,9 +221,9 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 4]
+Wing, et al.            Expires 30 December 2022                [Page 4]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    3.  The extended error codes Blocked, Censored, and Filtered defined
@@ -277,9 +277,9 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 5]
+Wing, et al.            Expires 30 December 2022                [Page 5]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    This document does not recommend DNS filtering but provides a
@@ -303,7 +303,7 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
    "Encrypted DNS" refers to any encrypted scheme to convey DNS
    messages, for example, DNS-over-HTTPS [RFC8484], DNS-over-TLS
-   [RFC7858], or DNS-over-QUIC [I-D.ietf-dprive-dnsoquic].
+   [RFC7858], or DNS-over-QUIC [RFC9250].
 
 3.  I-JSON in EXTRA-TEXT field
 
@@ -333,9 +333,9 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 6]
+Wing, et al.            Expires 30 December 2022                [Page 6]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    New JSON names MUST be defined in the IANA registry (Section 7),
@@ -370,7 +370,6 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    return more detail in the EXTRA-TEXT field as described in
    Section 4.3.
 
-
    Servers may decide to return small TTL values in filtered DNS
    responses (e.g., 2 seconds) to handle domain category and reputation
    updates.
@@ -384,19 +383,16 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    *  The response MUST be received over an encrypted DNS channel.  If
       not, the requestor MUST discard data in the EXTRA-TEXT field.
 
-
-
-
-
-
-Wing, et al.            Expires 24 November 2022                [Page 7]
-
-Internet-Draft            Data for Filtered DNS                 May 2022
-
-
    *  The response MUST be received from a DNS server which advertised
       EDE support via a trusted channel, e.g., RESINFO
       [I-D.reddy-add-resolver-info].
+
+
+
+Wing, et al.            Expires 30 December 2022                [Page 7]
+
+Internet-Draft            Data for Filtered DNS                June 2022
+
 
    *  Servers which don't support this specification might use plain
       text in the EXTRA-TEXT field so that requestors SHOULD properly
@@ -445,9 +441,13 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022                [Page 8]
+
+
+
+
+Wing, et al.            Expires 30 December 2022                [Page 8]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    *  When a forwarder receives an EDE option, whether or not (and how)
@@ -480,12 +480,11 @@ Internet-Draft            Data for Filtered DNS                 May 2022
      ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
      {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
-     "https://ticket.example.com?d=example.org&t=1650560748"],"s": 1, \
+     "https://ticket.example.com?d=example.org&t=1650560748"],"s":1, \
      "j":"malware present for 23 days","o":"example.net Filtering \
      Service"}
 
                         Figure 2: Minified response
-
 
 6.  Security Considerations
 
@@ -498,15 +497,15 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    A client might choose to display the information in the EXTRA-TEXT
    field if and only if the encrypted resolver has sufficient
    reputation, according to some local policy (e.g. user configuration,
-
-
-
-Wing, et al.            Expires 24 November 2022                [Page 9]
-
-Internet-Draft            Data for Filtered DNS                 May 2022
-
-
    administrative configuration, or a built-in list of respectable
+
+
+
+Wing, et al.            Expires 30 December 2022                [Page 9]
+
+Internet-Draft            Data for Filtered DNS                June 2022
+
+
    resolvers).  This limits the ability of a malicious encrypted
    resolver to cause harm.  If the client decides not to display the all
    of the information in the EXTRA-TEXT field, it can be logged for
@@ -557,9 +556,10 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022               [Page 10]
+
+Wing, et al.            Expires 30 December 2022               [Page 10]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
       Type name: application
@@ -597,7 +597,6 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
       Provisional registration?  No
 
-
 7.1.  New registry for SubError Codes
 
    IANA is requested to create a new registry, entitled "SubError Codes"
@@ -613,14 +612,14 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022               [Page 11]
+
+Wing, et al.            Expires 30 December 2022               [Page 11]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    *  Change Controller: Person or entity, with contact information if
       appropriate.
-
 
    New entries in this registry are subject to an Expert Review
    registration policy [RFC8126].  The designated expert MUST ensure
@@ -629,9 +628,6 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    Reference may be any individual's Internet-Draft, or a document from
    any other source with similar assurances of stability and
    availability.
-
-
-
 
 8.  Initial Sub-errors
 
@@ -666,19 +662,25 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
                                   Table 1
 
-
-
-
-Wing, et al.            Expires 24 November 2022               [Page 12]
-
-Internet-Draft            Data for Filtered DNS                 May 2022
-
-
 9.  Changes
 
    This section is to be removed before publishing as an RFC.
 
-9.1.  Changes from 02 to 03
+
+
+
+Wing, et al.            Expires 30 December 2022               [Page 12]
+
+Internet-Draft            Data for Filtered DNS                June 2022
+
+
+9.1.  Changes from 03 to 04
+
+   *  Clarified text content is for IT staff
+
+   *  Introduced 'suberror' terminology and associated IANA registration
+
+9.2.  Changes from 02 to 03
 
    *  Require using RESINFO [I-D.reddy-add-resolver-info] in client
       processing and added discussion of attack mitigation of using
@@ -693,7 +695,7 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
    *  Removed 'partial URI' text
 
-9.2.  Changes from 01 to 02
+9.3.  Changes from 01 to 02
 
    *  repurpose Extended DNS Error's EXTRA-TEXT field to carry JSON,
       which also means this document updates RFC8914
@@ -701,7 +703,7 @@ Internet-Draft            Data for Filtered DNS                 May 2022
    *  clarified DNS forwarders might forward EXTRA-TEXT without change
       or might rewrite "j" and "d"
 
-9.3.  Changes from 00 to 01
+9.4.  Changes from 00 to 01
 
    *  removed support for multiple responsible parties
 
@@ -718,17 +720,20 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 10.1.  Normative References
 
+
+
+
+
+
+Wing, et al.            Expires 30 December 2022               [Page 13]
+
+Internet-Draft            Data for Filtered DNS                June 2022
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-Wing, et al.            Expires 24 November 2022               [Page 13]
-
-Internet-Draft            Data for Filtered DNS                 May 2022
-
 
    [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -764,13 +769,6 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 10.2.  Informative References
 
-   [I-D.ietf-dprive-dnsoquic]
-              Huitema, C., Dickinson, S., and A. Mankin, "DNS over
-              Dedicated QUIC Connections", Work in Progress, Internet-
-              Draft, draft-ietf-dprive-dnsoquic-12, 20 April 2022,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-dprive-
-              dnsoquic-12>.
-
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
               Work in Progress, Internet-Draft, draft-reddy-add-
@@ -781,9 +779,11 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-Wing, et al.            Expires 24 November 2022               [Page 14]
+
+
+Wing, et al.            Expires 30 December 2022               [Page 14]
 
-Internet-Draft            Data for Filtered DNS                 May 2022
+Internet-Draft            Data for Filtered DNS                June 2022
 
 
    [I-D.reddy-dnsop-error-page]
@@ -829,19 +829,24 @@ Internet-Draft            Data for Filtered DNS                 May 2022
               DOI 10.17487/RFC8914, October 2020,
               <https://www.rfc-editor.org/info/rfc8914>.
 
+   [RFC9250]  Huitema, C., Dickinson, S., and A. Mankin, "DNS over
+              Dedicated QUIC Connections", RFC 9250,
+              DOI 10.17487/RFC9250, May 2022,
+              <https://www.rfc-editor.org/info/rfc9250>.
+
+
+
+
+Wing, et al.            Expires 30 December 2022               [Page 15]
+
+Internet-Draft            Data for Filtered DNS                June 2022
+
+
 Authors' Addresses
 
    Dan Wing
    Citrix Systems, Inc.
    United States of America
-
-
-
-Wing, et al.            Expires 24 November 2022               [Page 15]
-
-Internet-Draft            Data for Filtered DNS                 May 2022
-
-
    Email: dwing-ietf@fuggles.com
 
 
@@ -888,9 +893,4 @@ Internet-Draft            Data for Filtered DNS                 May 2022
 
 
 
-
-
-
-
-
-Wing, et al.            Expires 24 November 2022               [Page 16]
+Wing, et al.            Expires 30 December 2022               [Page 16]
