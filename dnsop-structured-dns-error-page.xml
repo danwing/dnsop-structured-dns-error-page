@@ -411,7 +411,7 @@ Most importantly, EDE option does not offer
       <section anchor="generate-request">
         <name>Client Generating Request</name>
 
-        <t>When generating a DNS query, the client MUST include the OPT
+        <t>When generating a DNS query, the client MUST include the EDE OPT
         pseudo-RR <xref target="RFC6891" /> to elicit the Extended DNS Error
         option <xref target="RFC8914" /> in the DNS response.</t>
       </section>
@@ -504,6 +504,26 @@ Most importantly, EDE option does not offer
     </section>
 
     <section numbered="true" toc="default">
+      <name>Interoperation with RPZ Servers</name>
+
+      <t>This section discusses operation with an <xref
+      target="I-D.ietf-dnsop-dns-rpz">RPZ server</xref> that indicates
+      filtering with a NXDOMAIN response with the Recursion Available
+      bit cleared (RA=0).</t>
+
+      <t>When the DNS client supports this specification but the
+      server does not, the server will continue replying when a query
+      is RPZ filtered with NXDOMAIN and RA=0.</t>
+
+      <t>When the DNS client supports this specification and the
+      server supports this specification, the client learns of the
+      server's support via <xref target="I-D.reddy-add-resolver-info"/> and the
+      client includes the EDE OPT pseudo-RR in the query.  This allows
+      the server to differentiate EDE-aware clients from EDE-unaware
+      clients and respond appropriately.</t>
+    </section>
+      
+      <section numbered="true" toc="default">
       <name>Examples</name>
 
       <t>An example showing the nameserver at 'ns.example.net' that filtered a
@@ -925,7 +945,10 @@ Most importantly, EDE option does not offer
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-reddy-dnsop-error-page.xml"
+	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dnsop-dns-rpz.xml"
+                    xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-dnsop-error-page.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
       </references>
     </references>

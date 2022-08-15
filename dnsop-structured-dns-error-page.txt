@@ -6,11 +6,11 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: 8914 (if approved)                                     T. Reddy
 Intended status: Standards Track                                  Akamai
-Expires: 30 December 2022                                        N. Cook
+Expires: 16 February 2023                                        N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                            28 June 2022
+                                                          15 August 2022
 
 
                     Structured Data for Filtered DNS
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 December 2022.
+   This Internet-Draft will expire on 16 February 2023.
 
 
 
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 1]
+Wing, et al.            Expires 16 February 2023                [Page 1]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
 Copyright Notice
@@ -81,15 +81,16 @@ Table of Contents
      4.1.  Client Generating Request . . . . . . . . . . . . . . . .   7
      4.2.  Server Generating Response  . . . . . . . . . . . . . . .   7
      4.3.  Client Processing Response  . . . . . . . . . . . . . . .   7
-   5.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   7.  IANA Considerationsd  . . . . . . . . . . . . . . . . . . . .  10
-     7.1.  New registry for SubError Codes . . . . . . . . . . . . .  11
-   8.  Initial Sub-errors  . . . . . . . . . . . . . . . . . . . . .  12
-   9.  Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  14
+   5.  Interoperation with RPZ Servers . . . . . . . . . . . . . . .   9
+   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   8.  IANA Considerationsd  . . . . . . . . . . . . . . . . . . . .  10
+     8.1.  New registry for SubError Codes . . . . . . . . . . . . .  11
+   9.  Initial Sub-errors  . . . . . . . . . . . . . . . . . . . . .  12
+   10. Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  12
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  13
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
@@ -108,10 +109,9 @@ Table of Contents
 
 
 
-
-Wing, et al.            Expires 30 December 2022                [Page 2]
+Wing, et al.            Expires 16 February 2023                [Page 2]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    Users of DNS services which perform filtering may wish to receive
@@ -165,9 +165,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 3]
+Wing, et al.            Expires 16 February 2023                [Page 3]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
        *  However, configuring the local root certificate on endpoints
@@ -221,9 +221,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 4]
+Wing, et al.            Expires 16 February 2023                [Page 4]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    3.  The extended error codes Blocked, Censored, and Filtered defined
@@ -277,9 +277,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 5]
+Wing, et al.            Expires 16 February 2023                [Page 5]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    This document does not recommend DNS filtering but provides a
@@ -333,12 +333,12 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 6]
+Wing, et al.            Expires 16 February 2023                [Page 6]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
-   New JSON names MUST be defined in the IANA registry (Section 7),
+   New JSON names MUST be defined in the IANA registry (Section 8),
    consist only of lower-case ASCII characters, digits, and hyphens
    (that is, Unicode characters U+0061 through 007A, U+0030 through
    U+0039, and U+002D).  These names MUST be 63 characters or shorter
@@ -357,9 +357,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 4.1.  Client Generating Request
 
-   When generating a DNS query, the client MUST include the OPT pseudo-
-   RR [RFC6891] to elicit the Extended DNS Error option [RFC8914] in the
-   DNS response.
+   When generating a DNS query, the client MUST include the EDE OPT
+   pseudo-RR [RFC6891] to elicit the Extended DNS Error option [RFC8914]
+   in the DNS response.
 
 4.2.  Server Generating Response
 
@@ -389,9 +389,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 7]
+Wing, et al.            Expires 16 February 2023                [Page 7]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    *  Servers which don't support this specification might use plain
@@ -445,9 +445,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022                [Page 8]
+Wing, et al.            Expires 16 February 2023                [Page 8]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    *  When a forwarder receives an EDE option, whether or not (and how)
@@ -457,7 +457,24 @@ Internet-Draft            Data for Filtered DNS                June 2022
       create a new EDE option that conveys the information in the "c",
       "s" and "j" fields encoded in the JSON object.
 
-5.  Examples
+5.  Interoperation with RPZ Servers
+
+   This section discusses operation with an RPZ server
+   [I-D.ietf-dnsop-dns-rpz] that indicates filtering with a NXDOMAIN
+   response with the Recursion Available bit cleared (RA=0).
+
+   When the DNS client supports this specification but the server does
+   not, the server will continue replying when a query is RPZ filtered
+   with NXDOMAIN and RA=0.
+
+   When the DNS client supports this specification and the server
+   supports this specification, the client learns of the server's
+   support via [I-D.reddy-add-resolver-info] and the client includes the
+   EDE OPT pseudo-RR in the query.  This allows the server to
+   differentiate EDE-aware clients from EDE-unaware clients and respond
+   appropriately.
+
+6.  Examples
 
    An example showing the nameserver at 'ns.example.net' that filtered a
    DNS "A" record query for 'example.org' is shown in Figure 1.
@@ -477,6 +494,18 @@ Internet-Draft            Data for Filtered DNS                June 2022
    In Figure 2 the same content is shown with minified JSON (no
    whitespace, no blank lines) with '\' line wrapping per [RFC8792].
 
+
+
+
+
+
+
+
+Wing, et al.            Expires 16 February 2023                [Page 9]
+
+Internet-Draft            Data for Filtered DNS              August 2022
+
+
      ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
      {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
@@ -486,7 +515,7 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
                         Figure 2: Minified response
 
-6.  Security Considerations
+7.  Security Considerations
 
    Security considerations in Section 6 of [RFC8914] apply to this
    document.
@@ -498,14 +527,6 @@ Internet-Draft            Data for Filtered DNS                June 2022
    field if and only if the encrypted resolver has sufficient
    reputation, according to some local policy (e.g. user configuration,
    administrative configuration, or a built-in list of respectable
-
-
-
-Wing, et al.            Expires 30 December 2022                [Page 9]
-
-Internet-Draft            Data for Filtered DNS                June 2022
-
-
    resolvers).  This limits the ability of a malicious encrypted
    resolver to cause harm.  If the client decides not to display the all
    of the information in the EXTRA-TEXT field, it can be logged for
@@ -525,7 +546,7 @@ Internet-Draft            Data for Filtered DNS                June 2022
    [I-D.reddy-add-resolver-info], RESINFO should be retrieved over an
    encrypted DNS channel or integrity protected with DNSSEC.
 
-7.  IANA Considerationsd
+8.  IANA Considerationsd
 
    This document requests IANA to register the "application/
    json+structured-dns-error" media type in the "Media Types" registry
@@ -536,30 +557,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wing, et al.            Expires 30 December 2022               [Page 10]
+Wing, et al.            Expires 16 February 2023               [Page 10]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
       Type name: application
@@ -597,7 +597,7 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
       Provisional registration?  No
 
-7.1.  New registry for SubError Codes
+8.1.  New registry for SubError Codes
 
    IANA is requested to create a new registry, entitled "SubError Codes"
    under "Domain Name System (DNS) Parameters, Extended DNS Error Codes"
@@ -613,9 +613,9 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
 
 
-Wing, et al.            Expires 30 December 2022               [Page 11]
+Wing, et al.            Expires 16 February 2023               [Page 11]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    *  Change Controller: Person or entity, with contact information if
@@ -629,7 +629,7 @@ Internet-Draft            Data for Filtered DNS                June 2022
    any other source with similar assurances of stability and
    availability.
 
-8.  Initial Sub-errors
+9.  Initial Sub-errors
 
    The registry shall initially be populated with the following suberror
    codes. :
@@ -662,25 +662,25 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
                                   Table 1
 
-9.  Changes
+10.  Changes
 
    This section is to be removed before publishing as an RFC.
 
 
 
 
-Wing, et al.            Expires 30 December 2022               [Page 12]
+Wing, et al.            Expires 16 February 2023               [Page 12]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
-9.1.  Changes from 03 to 04
+10.1.  Changes from 03 to 04
 
    *  Clarified text content is for IT staff
 
    *  Introduced 'suberror' terminology and associated IANA registration
 
-9.2.  Changes from 02 to 03
+10.2.  Changes from 02 to 03
 
    *  Require using RESINFO [I-D.reddy-add-resolver-info] in client
       processing and added discussion of attack mitigation of using
@@ -695,7 +695,7 @@ Internet-Draft            Data for Filtered DNS                June 2022
 
    *  Removed 'partial URI' text
 
-9.3.  Changes from 01 to 02
+10.3.  Changes from 01 to 02
 
    *  repurpose Extended DNS Error's EXTRA-TEXT field to carry JSON,
       which also means this document updates RFC8914
@@ -703,7 +703,7 @@ Internet-Draft            Data for Filtered DNS                June 2022
    *  clarified DNS forwarders might forward EXTRA-TEXT without change
       or might rewrite "j" and "d"
 
-9.4.  Changes from 00 to 01
+10.4.  Changes from 00 to 01
 
    *  removed support for multiple responsible parties
 
@@ -716,18 +716,18 @@ Internet-Draft            Data for Filtered DNS                June 2022
       Considerations text, and some other text from
       [I-D.reddy-dnsop-error-page] to this document
 
-10.  References
+11.  References
 
-10.1.  Normative References
-
-
+11.1.  Normative References
 
 
 
 
-Wing, et al.            Expires 30 December 2022               [Page 13]
+
+
+Wing, et al.            Expires 16 February 2023               [Page 13]
 
-Internet-Draft            Data for Filtered DNS                June 2022
+Internet-Draft            Data for Filtered DNS              August 2022
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
@@ -767,31 +767,38 @@ Internet-Draft            Data for Filtered DNS                June 2022
               DOI 10.17487/RFC8310, March 2018,
               <https://www.rfc-editor.org/info/rfc8310>.
 
-10.2.  Informative References
+11.2.  Informative References
+
+   [I-D.ietf-dnsop-dns-rpz]
+              Vixie, P. and V. Schryver, "DNS Response Policy Zones
+              (RPZ)", Work in Progress, Internet-Draft, draft-ietf-
+              dnsop-dns-rpz-00, 9 March 2017,
+              <https://www.ietf.org/archive/id/draft-ietf-dnsop-dns-rpz-
+              00.txt>.
+
+
+
+
+
+
+Wing, et al.            Expires 16 February 2023               [Page 14]
+
+Internet-Draft            Data for Filtered DNS              August 2022
+
 
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
               Work in Progress, Internet-Draft, draft-reddy-add-
               resolver-info-05, 13 April 2022,
-              <https://datatracker.ietf.org/doc/html/draft-reddy-add-
-              resolver-info-05>.
-
-
-
-
-
-
-Wing, et al.            Expires 30 December 2022               [Page 14]
-
-Internet-Draft            Data for Filtered DNS                June 2022
-
+              <https://www.ietf.org/archive/id/draft-reddy-add-resolver-
+              info-05.txt>.
 
    [I-D.reddy-dnsop-error-page]
               Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
               Access Denied Error Page", Work in Progress, Internet-
               Draft, draft-reddy-dnsop-error-page-08, 4 June 2021,
-              <https://datatracker.ietf.org/doc/html/draft-reddy-dnsop-
-              error-page-08>.
+              <https://www.ietf.org/archive/id/draft-reddy-dnsop-error-
+              page-08.txt>.
 
    [IANA-MediaTypes]
               IANA, "Media Types",
@@ -824,6 +831,17 @@ Internet-Draft            Data for Filtered DNS                June 2022
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
+
+
+
+
+
+
+Wing, et al.            Expires 16 February 2023               [Page 15]
+
+Internet-Draft            Data for Filtered DNS              August 2022
+
+
    [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
               Lawrence, "Extended DNS Errors", RFC 8914,
               DOI 10.17487/RFC8914, October 2020,
@@ -833,14 +851,6 @@ Internet-Draft            Data for Filtered DNS                June 2022
               Dedicated QUIC Connections", RFC 9250,
               DOI 10.17487/RFC9250, May 2022,
               <https://www.rfc-editor.org/info/rfc9250>.
-
-
-
-
-Wing, et al.            Expires 30 December 2022               [Page 15]
-
-Internet-Draft            Data for Filtered DNS                June 2022
-
 
 Authors' Addresses
 
@@ -883,14 +893,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-Wing, et al.            Expires 30 December 2022               [Page 16]
+Wing, et al.            Expires 16 February 2023               [Page 16]
