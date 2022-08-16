@@ -6,11 +6,11 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: 8914 (if approved)                                     T. Reddy
 Intended status: Standards Track                                  Akamai
-Expires: 16 February 2023                                        N. Cook
+Expires: 17 February 2023                                        N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                          15 August 2022
+                                                          16 August 2022
 
 
                     Structured Data for Filtered DNS
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 February 2023.
+   This Internet-Draft will expire on 17 February 2023.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 1]
+Wing, et al.            Expires 17 February 2023                [Page 1]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 2]
+Wing, et al.            Expires 17 February 2023                [Page 2]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -165,7 +165,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 3]
+Wing, et al.            Expires 17 February 2023                [Page 3]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -221,7 +221,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 4]
+Wing, et al.            Expires 17 February 2023                [Page 4]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -277,7 +277,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 5]
+Wing, et al.            Expires 17 February 2023                [Page 5]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -333,7 +333,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 6]
+Wing, et al.            Expires 17 February 2023                [Page 6]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -357,9 +357,9 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 4.1.  Client Generating Request
 
-   When generating a DNS query, the client MUST include the EDE OPT
-   pseudo-RR [RFC6891] to elicit the Extended DNS Error option [RFC8914]
-   in the DNS response.
+   When generating a DNS query, the client includes the Extended DNS
+   Error option Section 2 of [RFC8914] in the OPT pseudo-RR [RFC6891] to
+   elicit the Extended DNS Error option in the DNS response.
 
 4.2.  Server Generating Response
 
@@ -389,7 +389,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 7]
+Wing, et al.            Expires 17 February 2023                [Page 7]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -445,7 +445,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 8]
+Wing, et al.            Expires 17 February 2023                [Page 8]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -459,9 +459,9 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 5.  Interoperation with RPZ Servers
 
-   This section discusses operation with an RPZ server
-   [I-D.ietf-dnsop-dns-rpz] that indicates filtering with a NXDOMAIN
-   response with the Recursion Available bit cleared (RA=0).
+   This section discusses operation with an RPZ server [RPZ] that
+   indicates filtering with a NXDOMAIN response with the Recursion
+   Available bit cleared (RA=0).
 
    When the DNS client supports this specification but the server does
    not, the server will continue replying when a query is RPZ filtered
@@ -501,7 +501,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023                [Page 9]
+Wing, et al.            Expires 17 February 2023                [Page 9]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -557,7 +557,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023               [Page 10]
+Wing, et al.            Expires 17 February 2023               [Page 10]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -613,7 +613,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023               [Page 11]
+Wing, et al.            Expires 17 February 2023               [Page 11]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -669,7 +669,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023               [Page 12]
+Wing, et al.            Expires 17 February 2023               [Page 12]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -725,7 +725,7 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 
 
-Wing, et al.            Expires 16 February 2023               [Page 13]
+Wing, et al.            Expires 17 February 2023               [Page 13]
 
 Internet-Draft            Data for Filtered DNS              August 2022
 
@@ -769,29 +769,22 @@ Internet-Draft            Data for Filtered DNS              August 2022
 
 11.2.  Informative References
 
-   [I-D.ietf-dnsop-dns-rpz]
-              Vixie, P. and V. Schryver, "DNS Response Policy Zones
-              (RPZ)", Work in Progress, Internet-Draft, draft-ietf-
-              dnsop-dns-rpz-00, 9 March 2017,
-              <https://www.ietf.org/archive/id/draft-ietf-dnsop-dns-rpz-
-              00.txt>.
-
-
-
-
-
-
-Wing, et al.            Expires 16 February 2023               [Page 14]
-
-Internet-Draft            Data for Filtered DNS              August 2022
-
-
    [I-D.reddy-add-resolver-info]
               Reddy, T. and M. Boucadair, "DNS Resolver Information",
               Work in Progress, Internet-Draft, draft-reddy-add-
               resolver-info-05, 13 April 2022,
               <https://www.ietf.org/archive/id/draft-reddy-add-resolver-
               info-05.txt>.
+
+
+
+
+
+
+Wing, et al.            Expires 17 February 2023               [Page 14]
+
+Internet-Draft            Data for Filtered DNS              August 2022
+
 
    [I-D.reddy-dnsop-error-page]
               Reddy, T., Cook, N., Wing, D., and M. Boucadair, "DNS
@@ -831,17 +824,6 @@ Internet-Draft            Data for Filtered DNS              August 2022
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
 
-
-
-
-
-
-
-Wing, et al.            Expires 16 February 2023               [Page 15]
-
-Internet-Draft            Data for Filtered DNS              August 2022
-
-
    [RFC8914]  Kumari, W., Hunt, E., Arends, R., Hardaker, W., and D.
               Lawrence, "Extended DNS Errors", RFC 8914,
               DOI 10.17487/RFC8914, October 2020,
@@ -851,6 +833,17 @@ Internet-Draft            Data for Filtered DNS              August 2022
               Dedicated QUIC Connections", RFC 9250,
               DOI 10.17487/RFC9250, May 2022,
               <https://www.rfc-editor.org/info/rfc9250>.
+
+
+
+
+Wing, et al.            Expires 17 February 2023               [Page 15]
+
+Internet-Draft            Data for Filtered DNS              August 2022
+
+
+   [RPZ]      Wikipedia, "Response policy zone",
+              <https://en.wikipedia.org/w/index.php>.
 
 Authors' Addresses
 
@@ -893,4 +886,11 @@ Authors' Addresses
 
 
 
-Wing, et al.            Expires 16 February 2023               [Page 16]
+
+
+
+
+
+
+
+Wing, et al.            Expires 17 February 2023               [Page 16]

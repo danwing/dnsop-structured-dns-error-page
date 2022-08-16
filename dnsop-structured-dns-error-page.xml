@@ -411,9 +411,10 @@ Most importantly, EDE option does not offer
       <section anchor="generate-request">
         <name>Client Generating Request</name>
 
-        <t>When generating a DNS query, the client MUST include the EDE OPT
-        pseudo-RR <xref target="RFC6891" /> to elicit the Extended DNS Error
-        option <xref target="RFC8914" /> in the DNS response.</t>
+        <t>When generating a DNS query, the client includes the Extended
+        DNS Error option <xref target="RFC8914">Section 2 of</xref> in the <xref
+        target="RFC6891">OPT pseudo-RR</xref> to elicit the Extended
+        DNS Error option in the DNS response.</t>
       </section>
 
       <section>
@@ -507,7 +508,7 @@ Most importantly, EDE option does not offer
       <name>Interoperation with RPZ Servers</name>
 
       <t>This section discusses operation with an <xref
-      target="I-D.ietf-dnsop-dns-rpz">RPZ server</xref> that indicates
+      target="RPZ">RPZ server</xref> that indicates
       filtering with a NXDOMAIN response with the Recursion Available
       bit cleared (RA=0).</t>
 
@@ -897,9 +898,6 @@ Most importantly, EDE option does not offer
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-        <!--
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8624.xml"/>
--->
       </references>
 
       <references>
@@ -918,6 +916,21 @@ Most importantly, EDE option does not offer
           </front>
         </reference>
 
+
+	<reference anchor="RPZ"
+                   target='https://en.wikipedia.org/w/index.php'>
+          <front>
+            <title>Response policy zone</title>
+
+            <author fullname="Wikipedia">
+              <organization />
+            </author>
+
+            <date />
+          </front>
+        </reference>
+
+	
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5625.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -945,8 +958,6 @@ Most importantly, EDE option does not offer
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dnsop-dns-rpz.xml"
-                    xmlns:xi="http://www.w3.org/2001/XInclude" />
 
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-dnsop-error-page.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
