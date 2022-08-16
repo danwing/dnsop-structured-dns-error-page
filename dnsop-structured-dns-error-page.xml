@@ -53,23 +53,23 @@
     </author>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
-      <organization abbrev="Akamai">Akamai</organization>
+      <organization abbrev="Nokia">Nokia</organization>
 
       <address>
-        <postal>
+          <postal>
           <street />
 
-          <city>Bangalore</city>
+          <city></city>
 
-          <region>Karnataka</region>
+          <region></region>
 
           <code />
 
-          <country>India</country>
+          <country></country>
         </postal>
 
         <email>kondtir@gmail.com</email>
-      </address>
+    </address>
     </author>
 
     <author fullname="Neil Cook" initials="N." surname="Cook">
@@ -925,7 +925,7 @@ Most importantly, EDE option does not offer
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-reddy-dnsop-error-page.xml"
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-dnsop-error-page.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
       </references>
     </references>
