@@ -56,20 +56,20 @@
       <organization abbrev="Nokia">Nokia</organization>
 
       <address>
-        <postal>
+          <postal>
           <street />
 
-          <city>Bangalore</city>
+          <city></city>
 
-          <region>Karnataka</region>
+          <region></region>
 
           <code />
 
-          <country>India</country>
+          <country></country>
         </postal>
 
         <email>kondtir@gmail.com</email>
-      </address>
+    </address>
     </author>
 
     <author fullname="Neil Cook" initials="N." surname="Cook">
@@ -363,6 +363,40 @@ Most importantly, EDE option does not offer
 
       <aside />
 
+
+      <t>This document describes a format for computer-parsable data in the
+      EXTRA-TEXT field of <xref target="RFC8914">Extended DNS
+      Errors</xref>.</t>
+
+      <t>This document does not recommend DNS filtering but provides a
+      mechanism for better transparency to explain to the users why some DNS
+      queries are filtered.</t>
+    </section>
+
+    <section anchor="notation" numbered="true" toc="default">
+      <name>Terminology</name>
+
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref format="default" target="RFC2119" /><xref format="default"
+      target="RFC8174" /> when, and only when, they appear in all capitals, as
+      shown here.</t>
+
+      <t>This document uses terms defined in <xref format="default"
+      target="RFC8499">DNS Terminology</xref>.</t>
+
+      <t>"Requestor" refers to the side that sends a request. "Responder"
+      refers to an authoritative, recursive resolver or other DNS component
+      that responds to questions. Other terminology is used here as defined in
+      the RFCs cited by this document.</t>
+
+      <t>"Encrypted DNS" refers to any encrypted scheme to convey DNS
+      messages, for example, DNS-over-HTTPS <xref format="default"
+      target="RFC8484" />, DNS-over-TLS <xref format="default"
+      target="RFC7858" />, or DNS-over-QUIC <xref format="default"
+      target="RFC9250" />.</t>
+
     </section>
 
     <section anchor="option-code">
@@ -577,6 +611,7 @@ Most importantly, EDE option does not offer
   "j":"malware present for 23 days","o":"example.net Filtering \
   Service"}]]></artwork>
       </figure>
+
     </section>
 
     <section anchor="Security" numbered="true" toc="default">
@@ -716,6 +751,7 @@ Most importantly, EDE option does not offer
         Format Reference may be any individual's Internet-Draft, or a document
         from any other source with similar assurances of stability and
         availability.</t>
+
       </section>
     </section>
 
@@ -819,6 +855,14 @@ Most importantly, EDE option does not offer
 
     <section numbered="true" removeInRFC="true" toc="default">
       <name>Changes</name>
+
+     <section numbered="true" toc="exclude">
+        <name>Changes from 03 to 04</name>
+       <ul>
+         <li>Clarified text content is for IT staff</li>
+         <li>Introduced 'suberror' terminology and associated IANA registration</li>
+       </ul>
+      </section>
 
       <section numbered="true" toc="exclude">
         <name>Changes from 03 to 04</name>
