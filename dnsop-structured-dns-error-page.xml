@@ -27,7 +27,7 @@
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="std" consensus="true"
-     docName="draft-wing-dnsop-structured-dns-error-page-03" ipr="trust200902"
+     docName="draft-wing-dnsop-structured-dns-error-page-04" ipr="trust200902"
      obsoletes="" sortRefs="true" submissionType="IETF" symRefs="true"
      tocDepth="4" tocInclude="true" updates="8914" version="3" xml:lang="en">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
@@ -53,7 +53,7 @@
     </author>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
-      <organization abbrev="Akamai">Akamai</organization>
+      <organization abbrev="Nokia">Nokia</organization>
 
       <address>
         <postal>
@@ -186,6 +186,80 @@
       </dl>
       -->
 
+      <t />
+
+      <ol>
+        <li>
+          <!--  Neil suggested removing these couple of sentences
+
+Most importantly, EDE option does not offer
+   authenticated information; it can thus be spoofed by an attacker.
+   In addition, the additional textual information may not be able to
+   convey all of the required information about the cause of the DNS
+   error because lengthy EXTRA-TEXT content would be truncated to
+   prevent fragmentation (<xref target="RFC8914">Section 3 of </xref>).
+-->
+        </li>
+      </ol>
+
+      <t>For both DNS filtering mechanisms described in <xref
+      target="filtering">Section 4 of</xref>, the DNS server can return
+      extended error codes Blocked, Censored, Filtered, or Forged Answer
+      defined in <xref target="RFC8914">Section 4 of</xref>. However, these
+      codes only explain that filtering occurred but lack detail for the user
+      to diagnose erroneous filtering.</t>
+
+      <t>No matter which type of response is generated (forged IP address(es),
+      NXDOMAIN or empty answer, even with an extended error code), the user
+      who triggered the DNS query has little chance to understand which entity
+      filtered the query, how to report a mistake in the filter, or why the
+      entity filtered it at all. This document describes a mechanism to
+      provide such detail.</t>
+
+      <t>One of the other benefits of this approach is to eliminate the need
+      to "spoof" block pages for HTTPS resources. This is achieved since
+      clients implementing this approach would be able to display a meaningful
+      error message, and would not need to connect to such a block page. This
+      approach thus avoids the need to install a local root certificate
+      authority on those IT-managed devices.</t>
+
+      <t>This document describes a format for computer-parsable data in the
+      EXTRA-TEXT field of <xref target="RFC8914">Extended DNS
+      Errors</xref>.</t>
+
+      <t>This document does not recommend DNS filtering but provides a
+      mechanism for better transparency to explain to the users why some DNS
+      queries are filtered.</t>
+    </section>
+
+    <section anchor="notation" numbered="true" toc="default">
+      <name>Terminology</name>
+
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref format="default" target="RFC2119" /><xref format="default"
+      target="RFC8174" /> when, and only when, they appear in all capitals, as
+      shown here.</t>
+
+      <t>This document uses terms defined in <xref format="default"
+      target="RFC8499">DNS Terminology</xref>.</t>
+
+      <t>"Requestor" refers to the side that sends a request. "Responder"
+      refers to an authoritative, recursive resolver or other DNS component
+      that responds to questions. Other terminology is used here as defined in
+      the RFCs cited by this document.</t>
+
+      <t>"Encrypted DNS" refers to any encrypted scheme to convey DNS
+      messages, for example, DNS-over-HTTPS <xref format="default"
+      target="RFC8484" />, DNS-over-TLS <xref format="default"
+      target="RFC7858" />, or DNS-over-QUIC <xref format="default"
+      target="RFC9250" />.</t>
+    </section>
+
+    <section anchor="filtering">
+      <name>Limitations of Filtering techniques</name>
+
       <t>DNS responses can be filtered by sending a bogus (also called,
       "forged") A or AAAA response, NXDOMAIN error or empty answer, or an
       extended DNS error (EDE) code defined in <xref target="RFC8914" />. Each
@@ -284,69 +358,11 @@
         <li>When a resolver or forwarder forwards the received EDE option, the
         EXTRA-TEXT field only conveys the source of the error (Section 3 of
         [RFC8914]) and does not provide additional textual information about
-        the cause of the error. <!--  Neil suggested removing these couple of sentences
-
-Most importantly, EDE option does not offer
-   authenticated information; it can thus be spoofed by an attacker.
-   In addition, the additional textual information may not be able to
-   convey all of the required information about the cause of the DNS
-   error because lengthy EXTRA-TEXT content would be truncated to
-   prevent fragmentation (<xref target="RFC8914">Section 3 of </xref>).
---></li>
+        the cause of the error.</li>
       </ol>
 
-      <t>For both DNS filtering mechanisms described above, the DNS server can
-      return extended error codes Blocked, Censored, Filtered, or Forged
-      Answer defined in <xref target="RFC8914">Section 4 of</xref>. However,
-      these codes only explain that filtering occurred but lack detail for the
-      user to diagnose erroneous filtering.</t>
+      <aside />
 
-      <t>No matter which type of response is generated (forged IP address(es),
-      NXDOMAIN or empty answer, even with an extended error code), the user
-      who triggered the DNS query has little chance to understand which entity
-      filtered the query, how to report a mistake in the filter, or why the
-      entity filtered it at all. This document describes a mechanism to
-      provide such detail.</t>
-
-      <t>One of the other benefits of this approach is to eliminate the need
-      to "spoof" block pages for HTTPS resources. This is achieved since
-      clients implementing this approach would be able to display a meaningful
-      error message, and would not need to connect to such a block page. This
-      approach thus avoids the need to install a local root certificate
-      authority on those IT-managed devices.</t>
-
-      <t>This document describes a format for computer-parsable data in the
-      EXTRA-TEXT field of <xref target="RFC8914">Extended DNS
-      Errors</xref>.</t>
-
-      <t>This document does not recommend DNS filtering but provides a
-      mechanism for better transparency to explain to the users why some DNS
-      queries are filtered.</t>
-    </section>
-
-    <section anchor="notation" numbered="true" toc="default">
-      <name>Terminology</name>
-
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-      "OPTIONAL" in this document are to be interpreted as described in BCP 14
-      <xref format="default" target="RFC2119" /><xref format="default"
-      target="RFC8174" /> when, and only when, they appear in all capitals, as
-      shown here.</t>
-
-      <t>This document uses terms defined in <xref format="default"
-      target="RFC8499">DNS Terminology</xref>.</t>
-
-      <t>"Requestor" refers to the side that sends a request. "Responder"
-      refers to an authoritative, recursive resolver or other DNS component
-      that responds to questions. Other terminology is used here as defined in
-      the RFCs cited by this document.</t>
-
-      <t>"Encrypted DNS" refers to any encrypted scheme to convey DNS
-      messages, for example, DNS-over-HTTPS <xref format="default"
-      target="RFC8484" />, DNS-over-TLS <xref format="default"
-      target="RFC7858" />, or DNS-over-QUIC <xref format="default"
-      target="I-D.ietf-dprive-dnsoquic" />.</t>
     </section>
 
     <section anchor="option-code">
@@ -411,9 +427,10 @@ Most importantly, EDE option does not offer
       <section anchor="generate-request">
         <name>Client Generating Request</name>
 
-        <t>When generating a DNS query, the client MUST include the OPT
-        pseudo-RR <xref target="RFC6891" /> to elicit the Extended DNS Error
-        option <xref target="RFC8914" /> in the DNS response.</t>
+        <t>When generating a DNS query, the client includes the Extended DNS
+        Error option <xref target="RFC8914">Section 2 of</xref> in the <xref
+        target="RFC6891">OPT pseudo-RR</xref> to elicit the Extended DNS Error
+        option in the DNS response.</t>
       </section>
 
       <section>
@@ -425,8 +442,6 @@ Most importantly, EDE option does not offer
         if the query contained the OPT pseudo-RR the DNS server MAY return
         more detail in the EXTRA-TEXT field as described in <xref
         target="process-response" />.</t>
-
-        <t />
 
         <t>Servers may decide to return small TTL values in filtered DNS
         responses (e.g., 2 seconds) to handle domain category and reputation
@@ -506,6 +521,27 @@ Most importantly, EDE option does not offer
     </section>
 
     <section numbered="true" toc="default">
+      <name>Interoperation with RPZ Servers</name>
+
+      <t>This section discusses operation with an <xref target="RPZ">RPZ
+      server</xref> that indicates filtering with a NXDOMAIN response with the
+      Recursion Available bit cleared (RA=0).</t>
+
+      <t>When the DNS client supports this specification but the server does
+      not, the server will continue replying when a query is RPZ filtered with
+      NXDOMAIN and RA=0. An DNS client upgraded to support this specification
+      can continue to accept responses with NXDOMAIN and RA=0 from the RPZ
+      server that does not support this specification.</t>
+
+      <t>When the DNS client supports this specification and the server
+      supports this specification, the client learns of the server's support
+      via <xref target="I-D.reddy-add-resolver-info" /> and the client
+      includes the EDE OPT pseudo-RR in the query. This allows the server to
+      differentiate EDE-aware clients from EDE-unaware clients and respond
+      appropriately.</t>
+    </section>
+
+    <section numbered="true" toc="default">
       <name>Examples</name>
 
       <t>An example showing the nameserver at 'ns.example.net' that filtered a
@@ -537,12 +573,10 @@ Most importantly, EDE option does not offer
   ============== NOTE: '\' line wrapping per RFC 8792 ===============
 
   {"c":["tel:+358-555-1234567","sips:bob@bobphone.example.com", \
-  "https://ticket.example.com?d=example.org&t=1650560748"],"s": 1, \
+  "https://ticket.example.com?d=example.org&t=1650560748"],"s":1, \
   "j":"malware present for 23 days","o":"example.net Filtering \
   Service"}]]></artwork>
       </figure>
-
-      <t />
     </section>
 
     <section anchor="Security" numbered="true" toc="default">
@@ -656,8 +690,6 @@ Most importantly, EDE option does not offer
 
    Provisional registration?  No]]></artwork>
 
-      <t />
-
       <section anchor="procedure">
         <name>New registry for SubError Codes</name>
 
@@ -677,8 +709,6 @@ Most importantly, EDE option does not offer
           appropriate.</li>
         </ul>
 
-        <t />
-
         <t>New entries in this registry are subject to an Expert Review
         registration policy <xref target="RFC8126" />. The designated expert
         MUST ensure that the Reference is stable and publicly available, and
@@ -686,12 +716,6 @@ Most importantly, EDE option does not offer
         Format Reference may be any individual's Internet-Draft, or a document
         from any other source with similar assurances of stability and
         availability.</t>
-
-        <t />
-
-        <t />
-
-        <t />
       </section>
     </section>
 
@@ -797,6 +821,17 @@ Most importantly, EDE option does not offer
       <name>Changes</name>
 
       <section numbered="true" toc="exclude">
+        <name>Changes from 03 to 04</name>
+
+        <ul>
+          <li>Clarified text content is for IT staff</li>
+
+          <li>Introduced 'suberror' terminology and associated IANA
+          registration</li>
+        </ul>
+      </section>
+
+      <section numbered="true" toc="exclude">
         <name>Changes from 02 to 03</name>
 
         <ul>
@@ -880,10 +915,6 @@ Most importantly, EDE option does not offer
 
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-        <!--
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8624.xml"/>
--->
       </references>
 
       <references>
@@ -895,6 +926,18 @@ Most importantly, EDE option does not offer
             <title>Media Types</title>
 
             <author fullname="IANA">
+              <organization />
+            </author>
+
+            <date />
+          </front>
+        </reference>
+
+        <reference anchor="RPZ" target="https://en.wikipedia.org/w/index.php">
+          <front>
+            <title>Response policy zone</title>
+
+            <author fullname="Wikipedia">
               <organization />
             </author>
 
@@ -923,13 +966,13 @@ Most importantly, EDE option does not offer
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8259.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dprive-dnsoquic.xml"
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.9250.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
         <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-add-resolver-info.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-reddy-dnsop-error-page.xml"
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.reddy-dnsop-error-page.xml"
                     xmlns:xi="http://www.w3.org/2001/XInclude" />
       </references>
     </references>
