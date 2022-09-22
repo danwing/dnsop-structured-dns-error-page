@@ -27,7 +27,7 @@
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="std" consensus="true"
-     docName="draft-wing-dnsop-structured-dns-error-page-04" ipr="trust200902"
+     docName="draft-wing-dnsop-structured-dns-error-page-05" ipr="trust200902"
      obsoletes="" sortRefs="true" submissionType="IETF" symRefs="true"
      tocDepth="4" tocInclude="true" updates="8914" version="3" xml:lang="en">
   <!-- xml2rfc v2v3 conversion 3.9.1 -->
