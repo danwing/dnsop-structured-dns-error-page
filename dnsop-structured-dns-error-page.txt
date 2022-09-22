@@ -6,15 +6,15 @@ DNSOP WG                                                         D. Wing
 Internet-Draft                                                    Citrix
 Updates: 8914 (if approved)                                     T. Reddy
 Intended status: Standards Track                                   Nokia
-Expires: 11 March 2023                                           N. Cook
+Expires: 25 March 2023                                           N. Cook
                                                             Open-Xchange
                                                             M. Boucadair
                                                                   Orange
-                                                        7 September 2022
+                                                       21 September 2022
 
 
                     Structured Data for Filtered DNS
-             draft-wing-dnsop-structured-dns-error-page-04
+             draft-wing-dnsop-structured-dns-error-page-05
 
 Abstract
 
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 March 2023.
+   This Internet-Draft will expire on 25 March 2023.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 1]
+Wing, et al.              Expires 25 March 2023                 [Page 1]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 2]
+Wing, et al.              Expires 25 March 2023                 [Page 2]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -165,7 +165,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 3]
+Wing, et al.              Expires 25 March 2023                 [Page 3]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -221,7 +221,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 4]
+Wing, et al.              Expires 25 March 2023                 [Page 4]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -277,7 +277,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 5]
+Wing, et al.              Expires 25 March 2023                 [Page 5]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -333,7 +333,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 6]
+Wing, et al.              Expires 25 March 2023                 [Page 6]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -389,7 +389,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 7]
+Wing, et al.              Expires 25 March 2023                 [Page 7]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -445,7 +445,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 8]
+Wing, et al.              Expires 25 March 2023                 [Page 8]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -501,7 +501,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                 [Page 9]
+Wing, et al.              Expires 25 March 2023                 [Page 9]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -557,7 +557,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 10]
+Wing, et al.              Expires 25 March 2023                [Page 10]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -613,7 +613,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 11]
+Wing, et al.              Expires 25 March 2023                [Page 11]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -669,7 +669,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 12]
+Wing, et al.              Expires 25 March 2023                [Page 12]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -725,7 +725,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 13]
+Wing, et al.              Expires 25 March 2023                [Page 13]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -781,7 +781,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 14]
+Wing, et al.              Expires 25 March 2023                [Page 14]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -837,7 +837,7 @@ Internet-Draft            Data for Filtered DNS           September 2022
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 15]
+Wing, et al.              Expires 25 March 2023                [Page 15]
 
 Internet-Draft            Data for Filtered DNS           September 2022
 
@@ -893,4 +893,4 @@ Authors' Addresses
 
 
 
-Wing, et al.              Expires 11 March 2023                [Page 16]
+Wing, et al.              Expires 25 March 2023                [Page 16]
