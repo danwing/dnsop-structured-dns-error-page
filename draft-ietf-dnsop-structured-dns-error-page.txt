@@ -86,12 +86,12 @@ Table of Contents
    7.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    9.  IANA Considerationsd  . . . . . . . . . . . . . . . . . . . .  11
-     9.1.  New registry for SubError Codes . . . . . . . . . . . . .  11
-   10. Initial Sub-errors  . . . . . . . . . . . . . . . . . . . . .  12
+     9.1.  New registry for SubError Codes . . . . . . . . . . . . .  12
+   10. Initial Sub-errors  . . . . . . . . . . . . . . . . . . . . .  13
    11. Changes . . . . . . . . . . . . . . . . . . . . . . . . . . .  13
    12. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  14
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     13.1.  Normative References . . . . . . . . . . . . . . . . . .  15
      13.2.  Informative References . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
@@ -489,13 +489,13 @@ Internet-Draft            Data for Filtered DNS            February 2023
    DNS "A" record query for 'example.org' is shown in Figure 1.
 
 
-     {
-     "c": ["tel:+358-555-1234567", "sips:bob@bobphone.example.com",
-           "https://ticket.example.com?d=example.org&t=1650560748"],
-       "j": "malware present for 23 days",
-       "s": 1,
-       "o": "example.net Filtering Service"
-     }
+
+
+
+
+
+
+
 
 
 
@@ -505,6 +505,17 @@ Wing, et al.              Expires 7 August 2023                 [Page 9]
 
 Internet-Draft            Data for Filtered DNS            February 2023
 
+
+   {
+     "c": [
+       "tel:+358-555-1234567",
+       "sips:bob@bobphone.example.com",
+       "https://ticket.example.com?d=example.org&t=1650560748"
+     ],
+     "j": "malware present for 23 days",
+     "s": 1,
+     "o": "example.net Filtering Service"
+   }
 
      Figure 1: JSON returned in EXTRA-TEXT field of Extended DNS Error
                                   response
@@ -543,6 +554,14 @@ Internet-Draft            Data for Filtered DNS            February 2023
    When displaying the free-form text of "c" and "o", the browser SHOULD
    NOT make any of those elements into actionable (clickable) links.
 
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 10]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
+
    An attacker might inject (or modify) the EDE EXTRA-TEXT field with an
    DNS proxy or DNS forwarder that is unaware of EDE.  Such a DNS proxy
    or DNS forwarder will forward that attacker-controlled EDE option.
@@ -552,22 +571,52 @@ Internet-Draft            Data for Filtered DNS            February 2023
    [I-D.reddy-add-resolver-info], RESINFO should be retrieved over an
    encrypted DNS channel or integrity protected with DNSSEC.
 
-
-
-
-
-
-Wing, et al.              Expires 7 August 2023                [Page 10]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
-
 9.  IANA Considerationsd
 
    This document requests IANA to register the "application/
    json+structured-dns-error" media type in the "Media Types" registry
    [IANA-MediaTypes].  This registration follows the procedures
    specified in [RFC6838]:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 11]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
 
       Type name: application
 
@@ -611,18 +660,19 @@ Internet-Draft            Data for Filtered DNS            February 2023
    registry.  A registration procedure for suberror codes MUST include
    the following fields:
 
-
-
-Wing, et al.              Expires 7 August 2023                [Page 11]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
-
    *  Number: wire format suberror code (range 0-255)
 
    *  Meaning: a short description
 
    *  Reference: pointer to the specification text
+
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 12]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
 
    *  Change Controller: Person or entity, with contact information if
       appropriate.
@@ -639,40 +689,6 @@ Internet-Draft            Data for Filtered DNS            February 2023
 
    The registry shall initially be populated with the following suberror
    codes. :
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 7 August 2023                [Page 12]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
 
      +========+=============================+===========+============+
      | Number | Meaning                     | Reference | Change     |
@@ -706,6 +722,14 @@ Internet-Draft            Data for Filtered DNS            February 2023
 
    This section is to be removed before publishing as an RFC.
 
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 13]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
+
 11.1.  Changes from 03 to 04
 
    *  Clarified text content is for IT staff
@@ -717,18 +741,6 @@ Internet-Draft            Data for Filtered DNS            February 2023
    *  Require using RESINFO [I-D.reddy-add-resolver-info] in client
       processing and added discussion of attack mitigation of using
       RESINFO.
-
-
-
-
-
-
-
-
-Wing, et al.              Expires 7 August 2023                [Page 13]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
 
    *  Removed validation of URI domain suffix, which we can't do for
       some URLs (e.g., tel:), is difficult/impossible for others when
@@ -766,6 +778,14 @@ Internet-Draft            Data for Filtered DNS            February 2023
    Viktor Dukhovni, Warren Kumari, Paul Wouters, John Levine and Bob
    Harold for the comments.
 
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 14]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
+
 13.  References
 
 13.1.  Normative References
@@ -778,13 +798,6 @@ Internet-Draft            Data for Filtered DNS            February 2023
    [RFC5198]  Klensin, J. and M. Padlipsky, "Unicode Format for Network
               Interchange", RFC 5198, DOI 10.17487/RFC5198, March 2008,
               <https://www.rfc-editor.org/info/rfc5198>.
-
-
-
-Wing, et al.              Expires 7 August 2023                [Page 14]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
 
    [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -820,6 +833,15 @@ Internet-Draft            Data for Filtered DNS            February 2023
 
 13.2.  Informative References
 
+
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 15]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
+
    [Chrome-Translate]
               "Google Translate",
               <https://chrome.google.com/webstore/detail/google-
@@ -832,15 +854,6 @@ Internet-Draft            Data for Filtered DNS            February 2023
               resolver-info-06, 31 August 2022,
               <https://www.ietf.org/archive/id/draft-reddy-add-resolver-
               info-06.txt>.
-
-
-
-
-
-Wing, et al.              Expires 7 August 2023                [Page 15]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
 
    [I-D.reddy-dnsop-error-page]
               Reddy.K, T., Cook, N., Wing, D., and M. Boucadair, "DNS
@@ -875,6 +888,16 @@ Internet-Draft            Data for Filtered DNS            February 2023
               Terminology", BCP 219, RFC 8499, DOI 10.17487/RFC8499,
               January 2019, <https://www.rfc-editor.org/info/rfc8499>.
 
+
+
+
+
+
+Wing, et al.              Expires 7 August 2023                [Page 16]
+
+Internet-Draft            Data for Filtered DNS            February 2023
+
+
    [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
               "Handling Long Lines in Content of Internet-Drafts and
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
@@ -889,14 +912,6 @@ Internet-Draft            Data for Filtered DNS            February 2023
               Dedicated QUIC Connections", RFC 9250,
               DOI 10.17487/RFC9250, May 2022,
               <https://www.rfc-editor.org/info/rfc9250>.
-
-
-
-
-Wing, et al.              Expires 7 August 2023                [Page 16]
-
-Internet-Draft            Data for Filtered DNS            February 2023
-
 
    [RPZ]      Wikipedia, "Response policy zone",
               <https://en.wikipedia.org/w/index.php>.
@@ -928,21 +943,6 @@ Authors' Addresses
    35000 Rennes
    France
    Email: mohamed.boucadair@orange.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
