@@ -117,11 +117,10 @@
       cause harm especially if the blocked DNS response is to an HTTPS
       website.</t>
 
-      <t>This document updates the EXTRA-TEXT field of Extended DNS Error to
-      provide details on the DNS filtering. This information can be parsed by
-      the client and displayed, logged, or used for other purposes.</t>
-
-      <t>This document updates RFC 8914.</t>
+      <t>This document updates RFC 8914 by structuring the EXTRA-TEXT field of the 
+      Extended DNS Error to provide details on the DNS filtering. Such details can be 
+      parsed by the client and displayed, logged, or used for other purposes. 
+      Other than that, this document does not change any thing written in RFC 8914.</t>
     </abstract>
   </front>
 
@@ -225,7 +224,9 @@ Most importantly, EDE option does not offer
 
       <t>This document describes a format for computer-parsable data in the
       EXTRA-TEXT field of <xref target="RFC8914">Extended DNS
-      Errors</xref>.</t>
+      Errors</xref>. It updates Section 2 of <xref target="RFC8914">Extended DNS
+      Errors</xref> which says the information in EXTRA-TEXT field is 
+      intended for human consumption (not automated parsing).</t>
 
       <t>This document does not recommend DNS filtering but provides a
       mechanism for better transparency to explain to the users why some DNS
